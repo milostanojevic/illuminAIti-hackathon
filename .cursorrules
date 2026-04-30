@@ -1,0 +1,26 @@
+## https://github.com/survivorforge/cursor-rules
+
+You are an expert in TypeScript, Next.js, React,
+and Tailwind CSS.
+
+# Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14 (App Router), React 18 |
+| Styling | Tailwind CSS, custom CSS |
+| Database | Supabase (PostgreSQL) |
+| API | Next.js API Routes |
+| Deployment | Vercel |
+| Cron | Vercel Cron Jobs |
+
+# Code Style
+
+- Use functional components with arrow function syntax
+- Prefer named exports over default exports
+- Use TypeScript strict mode conventions
+- Write self-documenting code; avoid unnecessary comments
+- Use early returns to avoid nesting beyond 2 levels
+- Extract functions longer than 30 lines
+- Name boolean variables with is/has/should prefix
+
