@@ -13,35 +13,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── BRAND SELECTOR ── */
-.brand-screen{background:linear-gradient(160deg,#1e2a5e 0%,#2d1a4a 40%,#1a1a3a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 36px;position:relative;overflow:hidden;}
-.brand-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:280px;height:280px;border-radius:50%;background:radial-gradient(rgba(100,120,255,0.18),transparent 70%);pointer-events:none;}
-.brand-grid{position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path d="M0 30 L30 0" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></svg>') repeat;pointer-events:none;}
-.brand-icon-big{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;}
-.brand-tagline{font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;text-align:center;}
-.brand-headline{font-size:17px;font-weight:700;color:#fff;text-align:center;line-height:1.35;margin-bottom:28px;position:relative;}
-.brand-cards{display:flex;flex-direction:column;gap:10px;width:100%;position:relative;}
-.brand-card{border-radius:14px;padding:16px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;border:1.5px solid rgba(255,255,255,0.15);transition:border-color .15s;}
-.bk-card{background:linear-gradient(135deg,rgba(30,50,120,0.9),rgba(15,28,80,0.9));}
-.bk-card:hover{border-color:#4dd9ac;}
-.ss-card{background:linear-gradient(135deg,rgba(35,60,210,0.9),rgba(18,30,160,0.9));}
-.ss-card:hover{border-color:#FFCD00;}
-.brand-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
-.bi-bk{background:rgba(77,217,172,0.15);border:1px solid rgba(77,217,172,0.2);}
-.bi-ss{background:rgba(255,205,0,0.12);border:1px solid rgba(255,205,0,0.2);}
-.brand-info{flex:1;}
-.brand-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
-.brand-region{font-size:10px;color:rgba(255,255,255,0.45);}
-.brand-arrow{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.4);}
-.brand-note{margin-top:16px;font-size:10px;color:rgba(255,255,255,0.3);text-align:center;position:relative;}
-
-/* ── HEROES ── */
-.hero-bk{position:relative;height:540px;overflow:hidden;background:#0d0d0d;}
-.stadium-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#3a1010 0%,#1a0505 40%,#000 100%);}
-.red-shape{position:absolute;top:0;left:0;right:0;height:58%;clip-path:polygon(0 0,100% 0,100% 72%,0 100%);background:linear-gradient(135deg,#c8102e 0%,#8b0000 60%,#3a0000 100%);}
-.red-noise{position:absolute;top:0;left:0;right:0;height:58%;clip-path:polygon(0 0,100% 0,100% 72%,0 100%);background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="0.5" fill="rgba(0,0,0,0.25)"/></svg>') repeat;opacity:0.5;}
+/* ── HERO ── */
 .crowd{position:absolute;top:46%;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;gap:1px;height:52px;padding:0 6px;}
-.hero-grad-bk{position:absolute;bottom:0;left:0;right:0;height:280px;background:linear-gradient(transparent,rgba(0,0,0,0.55) 25%,#000 65%);}
 .hero-ss{position:relative;height:540px;overflow:hidden;background:#1a2db8;}
 .ss-bg{position:absolute;inset:0;background:linear-gradient(160deg,#2a3dc8 0%,#1a2db8 50%,#0d1580 100%);}
 .ss-dots{position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="0.7" fill="rgba(255,255,255,0.07)"/></svg>') repeat;}
@@ -50,14 +23,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .partner-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
 .vdiv{width:1px;height:18px;background:rgba(255,255,255,0.25);}
 .hero-title{font-size:28px;font-weight:900;color:#fff;line-height:1.05;text-transform:uppercase;margin-bottom:22px;letter-spacing:-0.3px;}
-.btn-hero-bk{width:100%;padding:15px;border-radius:12px;background:#c8102e;border:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;}
 .btn-hero-ss{width:100%;padding:15px;border-radius:12px;background:#FFCD00;border:none;font-size:14px;font-weight:800;color:#0d1580;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;}
 .btn-hero-skip{width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);font-size:13px;font-weight:500;color:rgba(255,255,255,0.75);cursor:pointer;margin-top:10px;letter-spacing:0.2px;}
 .btn-hero-skip:hover{background:rgba(255,255,255,0.15);}
-.back-brands{position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:6px 12px;font-size:10px;color:rgba(255,255,255,0.7);cursor:pointer;}
 
 /* ── SHARED HEADER ── */
-.mh-bk{background:#1a2b6b;padding:16px 16px 0;position:relative;}
 .mh-ss{background:#1a2db8;padding:16px 16px 0;position:relative;}
 .mc{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;}
 .mc::before,.mc::after{content:'';position:absolute;width:10px;height:1.5px;background:#fff;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);}
@@ -66,11 +36,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ht{font-size:17px;font-weight:600;color:#fff;margin-bottom:8px;}
 .hs{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.55;margin-bottom:14px;}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.85);margin-bottom:14px;background:rgba(255,255,255,0.1);}
-.dot-bk{width:6px;height:6px;border-radius:50%;background:#4dd9ac;flex-shrink:0;}
 .dot-ss{width:6px;height:6px;border-radius:50%;background:#FFCD00;flex-shrink:0;}
 .pips{display:flex;gap:4px;margin-bottom:14px;}
 .pip{height:3px;flex:1;border-radius:2px;}
-.pd-bk{background:#4dd9ac;}.po-bk{background:#fff;}
 .pd-ss{background:#FFCD00;}.po-ss{background:#fff;}
 .pf{background:rgba(255,255,255,0.2);}
 .bk2{display:inline-flex;align-items:center;gap:6px;background:none;border:none;font-size:12px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:10px;padding:0;}
@@ -78,8 +46,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stl{font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;}
 .ss2{font-size:11px;color:#888;margin-bottom:12px;}
 .dv{height:0.5px;background:#eee;margin:14px 0;}
-.btn-bk{width:100%;padding:13px;border-radius:30px;background:#00d8c8;border:none;font-size:13px;font-weight:600;color:#003030;cursor:pointer;margin-bottom:9px;display:block;}
-.btn-bk:disabled{opacity:0.4;cursor:default;}
 .btn-ssb{width:100%;padding:13px;border-radius:30px;background:#FFCD00;border:none;font-size:13px;font-weight:700;color:#0d1580;cursor:pointer;margin-bottom:9px;display:block;}
 .btn-ssb:disabled{opacity:0.4;cursor:default;}
 .btn-ghost{width:100%;padding:11px;border-radius:30px;background:transparent;border:1px solid #e0e0e0;font-size:12px;color:#888;cursor:pointer;}
@@ -87,51 +53,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* ── LEAGUES ── */
 .lg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .lc{border-radius:12px;border:1.5px solid #e8e8e8;background:#fafafa;cursor:pointer;text-align:center;width:100%;height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
-.lc.on-bk{border-color:#1a2b6b;background:#eef1fb;}
 .lc.on-ss{border-color:#1a2db8;background:#eef2ff;}
 .lf{width:36px;height:24px;border-radius:3px;flex-shrink:0;}
 .ln{font-size:11px;font-weight:600;color:#1a1a2e;margin-top:7px;line-height:1;}
 .lsub{font-size:10px;color:#888;margin-top:3px;line-height:1;}
-.lc.on-bk .ln{color:#1a2b6b;}
 .lc.on-ss .ln{color:#1a2db8;}
 .ltick{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
 
 /* ── TEAM CELLS with crest ── */
 .tg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
 .tc{border-radius:10px;border:1.5px solid #e8e8e8;background:#f5f6fa;padding:6px 4px 7px;text-align:center;cursor:pointer;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
-.tc.on-bk{background:#eef1fb;border-color:#1a2b6b;}
 .tc.on-ss{background:#eef2ff;border-color:#1a2db8;}
 .tc-crest{width:32px;height:32px;margin:0 auto 4px;flex-shrink:0;position:relative;}
 .tc-crest svg{width:32px;height:32px;}
-.tc.on-bk .tc-tick,.tc.on-ss .tc-tick{display:flex;}
+.tc.on-ss .tc-tick{display:flex;}
 .tc-tick{display:none;position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;align-items:center;justify-content:center;border:1.5px solid #fff;}
 .tn{font-size:8px;color:#444;line-height:1.2;font-weight:500;word-break:break-word;}
-.tc.on-bk .tn{color:#1a2b6b;font-weight:700;}
 .tc.on-ss .tn{color:#1a2db8;font-weight:700;}
 .oc{border-radius:10px;border:1.5px dashed #ccc;background:#f5f6fa;padding:6px 4px 7px;text-align:center;cursor:pointer;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.oc.on-bk{background:#eef1fb;border-color:#1a2b6b;}
 .oc.on-ss{background:#eef2ff;border-color:#1a2db8;}
 .oi{width:32px;height:32px;border-radius:50%;background:#dde0ee;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;font-size:14px;color:#888;}
 .ol{font-size:8.5px;color:#666;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
 .tag{display:inline-flex;align-items:center;gap:4px;border:1px solid;border-radius:20px;padding:3px 9px;font-size:10px;}
-.tag-bk{background:#eef1fb;border-color:#b0b8d8;color:#1a2b6b;}
 .tag-ss{background:#eef2ff;border-color:#a0b0e8;color:#1a2db8;}
 .tf{width:14px;height:10px;border-radius:2px;flex-shrink:0;}
 .tcnt{font-size:10px;color:#888;margin-bottom:10px;}
 .tcnt span{font-weight:600;}
-.tcnt-bk span{color:#1a2b6b;}
 .tcnt-ss span{color:#1a2db8;}
 
 /* ── CASINO ── */
 .gc{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
 .gcd{border-radius:10px;border:2px solid transparent;overflow:hidden;cursor:pointer;position:relative;height:72px;}
-.gcd.on-bk{border-color:#00d8c8;}
 .gcd.on-ss{border-color:#FFCD00;}
-.gck-bk,.gck-ss{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
-.gck-bk{background:#00d8c8;}
+.gck-ss{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
 .gck-ss{background:#FFCD00;}
-.gcd.on-bk .gck-bk,.gcd.on-ss .gck-ss{display:flex;}
+.gcd.on-ss .gck-ss{display:flex;}
 .gf{position:absolute;bottom:0;left:0;right:0;padding:5px 7px;background:linear-gradient(transparent,rgba(0,0,0,0.65));display:flex;align-items:flex-end;justify-content:space-between;}
 .gn{font-size:10px;font-weight:600;color:#fff;}
 .bh{font-size:8px;padding:2px 5px;border-radius:4px;font-weight:600;background:#e24b4a;color:#fff;}
@@ -174,13 +131,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .style-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .style-card{border-radius:14px;border:1.5px solid #e8e8e8;background:#fafafa;cursor:pointer;padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative;transition:border-color .15s,background .15s;}
 .style-card:hover{border-color:#aab0d8;background:#f4f6ff;}
-.style-card.on-bk{border-color:#1a2b6b;background:#eef1fb;}
 .style-card.on-ss{border-color:#1a2db8;background:#eef2ff;}
 .style-card-icon{font-size:24px;line-height:1;margin-bottom:2px;}
 .style-card-title{font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.25;}
 .style-card-sub{font-size:9px;color:#888;line-height:1.3;}
 .style-tick{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
-.style-card.on-bk .style-tick,.style-card.on-ss .style-tick{display:flex;}
+.style-card.on-ss .style-tick{display:flex;}
 
 /* ── MAGIC ── */
 .magic-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;position:relative;overflow:hidden;}
@@ -200,11 +156,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .trending-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .trending-title{font-size:12px;font-weight:800;color:#1a1a2e;display:flex;align-items:center;gap:6px;}
 .trending-controls{display:flex;align-items:center;gap:6px;}
-.trending-nav{width:24px;height:24px;border-radius:50%;border:none;background:#eef1fb;color:#1a2b6b;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.trending-nav{width:24px;height:24px;border-radius:50%;border:none;background:#eef2ff;color:#1a2db8;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
 .trending-nav:active{transform:scale(0.96);}
 .trending-dots{display:flex;gap:4px;margin:0 2px;}
 .trending-dot{width:5px;height:5px;border-radius:50%;background:#d8dbe5;}
-.trending-dot.on{background:#1a2b6b;}
+.trending-dot.on{background:#1a2db8;}
 .trending-carousel{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding-bottom:2px;-webkit-overflow-scrolling:touch;touch-action:pan-x;cursor:grab;user-select:none;scroll-behavior:smooth;}
 .trending-carousel.dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;}
 .trending-carousel::-webkit-scrollbar{display:none;}
@@ -223,47 +179,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 <div class="modal">
 
-<!-- BRAND -->
-<div class="scr on" id="s-brand">
-  <div class="brand-screen">
-    <div class="brand-glow"></div><div class="brand-grid"></div>
-    <div class="brand-icon-big">🎮</div>
-    <div class="brand-tagline">Welcome — choose your brand</div>
-    <div class="brand-headline">Which platform<br>are you using?</div>
-    <div class="brand-cards">
-      <div class="brand-card bk-card" onclick="setBrand('bk');go('s-brand','s0-bk')">
-        <div class="brand-icon bi-bk">👑</div>
-        <div class="brand-info"><div class="brand-name">BetKing</div><div class="brand-region">Nigeria · Sports &amp; Casino</div></div>
-        <div class="brand-arrow">›</div>
-      </div>
-      <div class="brand-card ss-card" onclick="setBrand('ss');go('s-brand','s0-ss')">
-        <div class="brand-icon bi-ss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10 C3 6 6 3 10 3 C14 3 17 6 17 10" stroke="#FFCD00" stroke-width="2.2" stroke-linecap="round"/><path d="M6 14 C6 14 8 17 10 17 C12 17 14 14 14 14" stroke="#FFCD00" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div class="brand-info"><div class="brand-name" style="color:#FFCD00;">SuperSportBET</div><div class="brand-region">South Africa · Sports &amp; Casino</div></div>
-        <div class="brand-arrow">›</div>
-      </div>
-    </div>
-    <div class="brand-note">You can switch brands at any time</div>
-  </div>
-</div>
-
-<!-- BK HERO -->
-<div class="scr" id="s0-bk">
-  <div class="hero-bk">
-    <div class="stadium-bg"></div><div class="red-shape"></div><div class="red-noise"></div>
-    <div class="crowd" id="crowd-bk"></div>
-    <div class="hero-grad-bk"></div>
-    <div class="hero-content">
-      <div class="partner-row"><div style="display:flex;align-items:center;gap:5px;"><span style="font-size:14px;">👑</span><span style="font-size:13px;font-weight:800;color:#fff;">betking</span></div><div class="vdiv"></div><span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.4px;">Official Betting Partner</span></div>
-      <div class="hero-title">Personalise<br>your favourite<br><span style="color:#c8102e;">teams</span> &amp; games</div>
-      <button class="btn-hero-bk" onclick="showLeaguesStep_bk()">Get Started</button>
-      <button class="btn-hero-skip" onclick="buildHome();go('s0-bk','s-home')">Skip personalisation</button>
-    </div>
-    <button class="back-brands" onclick="go('s0-bk','s-brand')">‹ Brands</button>
-  </div>
-</div>
-
-<!-- SS HERO -->
-<div class="scr" id="s0-ss">
+<!-- HERO -->
+<div class="scr on" id="s0-ss">
   <div class="hero-ss">
     <div class="ss-bg"></div><div class="ss-dots"></div>
     <div style="position:absolute;top:18%;left:0;right:0;height:220px;">
@@ -278,18 +195,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button class="btn-hero-ss" onclick="go('s0-ss','s3-prov')">Get Started</button>
       <button class="btn-hero-skip" onclick="buildHome();go('s0-ss','s-home')">Skip personalisation</button>
     </div>
-    <button class="back-brands" onclick="go('s0-ss','s-brand')">‹ Brands</button>
   </div>
 </div>
 
 <!-- S1 LEAGUE -->
 <div class="scr" id="s1">
-  <div id="mh1" class="mh-bk">
+  <div id="mh1" class="mh-ss">
     <div class="mc"></div>
-    <button class="bk2" onclick="brand==='ss'?(clearLeagues(),go('s1','s3-games')):backToHero('s1')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <button class="bk2" onclick="clearLeagues();go('s1','s3-games')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
     <div class="ey">Personalise your experience</div><div class="ht">Pick your leagues</div>
     <div class="hs">Select one or more — we'll tailor your feed.</div>
-    <div class="pill"><div id="ldot" class="dot-bk"></div><span id="lpill">Step 1 of 5 — Leagues</span></div>
+    <div class="pill"><div id="ldot" class="dot-ss"></div><span id="lpill">Step 1 of 5 — Leagues</span></div>
     <div class="pips"><div class="pip" id="p1a"></div><div class="pip pf"></div><div class="pip pf"></div></div>
   </div>
   <div class="mb">
@@ -303,28 +219,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="lc" data-k="wc" onclick="toggleL(this)"><div class="ltick" id="lt-wc"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#006AA7 33%,#fff 33%,#fff 66%,#006AA7 66%);"></div><div class="ln">World Cup</div><div class="lsub">International</div></div>
     </div>
     <div class="dv"></div>
-    <button id="lbtn" class="btn-bk" disabled onclick="gotoTeams()">Continue →</button>
+    <button id="lbtn" class="btn-ssb" disabled onclick="gotoTeams()">Continue →</button>
     <button class="btn-ghost">Skip for now</button>
   </div>
 </div>
 
 <!-- S2 TEAM -->
 <div class="scr" id="s2">
-  <div id="mh2" class="mh-bk">
+  <div id="mh2" class="mh-ss">
     <div class="mc"></div>
-    <button class="bk2" onclick="brand==='ss'?clearTeamsAndGo('s2','s1'):goBackS2()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <button class="bk2" onclick="clearTeamsAndGo('s2','s1')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
     <div class="ey">Personalise your experience</div><div class="ht">Choose your teams</div>
     <div class="hs" id="tsub">Top clubs from your leagues.</div>
-    <div class="pill"><div id="tdot" class="dot-bk"></div><span id="tpill">Step 3 of 5 — Teams</span></div>
+    <div class="pill"><div id="tdot" class="dot-ss"></div><span id="tpill">Step 3 of 5 — Teams</span></div>
     <div class="pips"><div class="pip" id="p2a"></div><div class="pip" id="p2b"></div><div class="pip pf"></div></div>
   </div>
   <div class="mb">
     <div class="stl">Select your clubs</div>
     <div class="tags" id="ltags"></div>
-    <div class="tcnt tcnt-bk" id="tcount"><span>0</span> teams selected</div>
+    <div class="tcnt tcnt-ss" id="tcount"><span>0</span> teams selected</div>
     <div class="tg" id="tgrid"></div>
     <div class="dv"></div>
-    <button id="tbtn" class="btn-bk" disabled onclick="brand==='ss'?(go('s2','s-style')):go('s2','s3')">Continue →</button>
+    <button id="tbtn" class="btn-ssb" disabled onclick="go('s2','s-style')">Continue →</button>
     <button class="btn-ghost">Skip for now</button>
   </div>
 </div>
@@ -406,42 +322,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- S3 CASINO -->
-<div class="scr" id="s3">
-  <div id="mh3" class="mh-bk">
-    <div class="mc"></div>
-    <button class="bk2" onclick="clearGames();go('s3','s2')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-    <div class="ey">Personalise your experience</div><div class="ht">Top casino picks</div>
-    <div class="hs">Pin your favourite games to your home screen.</div>
-    <div class="pill"><div id="cdot" class="dot-bk"></div>Step 3 of 5 — Casino</div>
-    <div class="pips" id="s3pips"><div class="pip" id="p3a"></div><div class="pip" id="p3b"></div><div class="pip" id="p3c"></div><div class="pip pf" id="p3d" style="display:none;"></div><div class="pip pf" id="p3e" style="display:none;"></div></div>
-  </div>
-  <div class="mb">
-    <div class="stl">Select up to 4 games</div><div class="ss2">These will be pinned to your home</div>
-    <div class="gc">
-      <div class="gcd" data-name="Aviator" onclick="toggleG(this)" style="background:#3a0808;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a0808,#7a1010);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Aviator</span><span class="bh">HOT</span></div></div>
-      <div class="gcd" data-name="Crash King" onclick="toggleG(this)" style="background:#08183a;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#08183a,#182870);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Crash King</span><span class="be">EXCL</span></div></div>
-      <div class="gcd" data-name="Space XY" onclick="toggleG(this)" style="background:#082818;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#082818,#145830);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Space XY</span><span class="bn">NEW</span></div></div>
-      <div class="gcd" data-name="JetX" onclick="toggleG(this)" style="background:#281808;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#281808,#604010);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">JetX</span><span class="bn">NEW</span></div></div>
-      <div class="gcd" data-name="King of Spins" onclick="toggleG(this)" style="background:#180828;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#180828,#481868);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">King of Spins</span><span class="be">EXCL</span></div></div>
-      <div class="gcd" data-name="Mines" onclick="toggleG(this)" style="background:#082828;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#082828,#085858);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Mines</span><span class="be">EXCL</span></div></div>
-    </div>
-    <div style="font-size:10px;color:#aaa;text-align:right;margin-top:6px;" id="gcnt">0 / 4 selected</div>
-    <div class="dv"></div>
-    <button id="cbtn" class="btn-bk" disabled onclick="go('s3','s-style')">Finish setup →</button>
-    <button class="btn-ghost">Skip for now</button>
-  </div>
-</div>
-
 <!-- S-STYLE: Betting style -->
 <div class="scr" id="s-style">
-  <div id="mh-style" class="mh-bk">
+  <div id="mh-style" class="mh-ss">
     <div class="mc"></div>
     <button class="bk2" onclick="go('s-style','s2')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
     <div class="ey">Personalise your experience</div>
     <div class="ht">Your betting style</div>
     <div class="hs">Help us tailor your experience.</div>
-    <div class="pill"><div id="style-dot" class="dot-bk"></div><span id="style-pill">Step 5 of 5 — Style</span></div>
+    <div class="pill"><div id="style-dot" class="dot-ss"></div><span id="style-pill">Step 5 of 5 — Style</span></div>
     <div class="pips" id="style-pips"><div class="pip" id="sp1"></div><div class="pip" id="sp2"></div><div class="pip" id="sp3"></div></div>
   </div>
   <div class="mb">
@@ -449,13 +338,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="style-group-label">Risk preference</div>
       <div class="style-cards">
         <div class="style-card" id="sc-low" onclick="pickStyle('risk','low',this)">
-          <div class="style-tick" id="st-low" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-low" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">🛡️</div>
           <div class="style-card-title">Low risk</div>
           <div class="style-card-sub">Steady rewards &amp; safer bets</div>
         </div>
         <div class="style-card" id="sc-high" onclick="pickStyle('risk','high',this)">
-          <div class="style-tick" id="st-high" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-high" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">🚀</div>
           <div class="style-card-title">High risk</div>
           <div class="style-card-sub">Big promos &amp; high reward</div>
@@ -466,13 +355,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="style-group-label">Session style</div>
       <div class="style-cards">
         <div class="style-card" id="sc-quick" onclick="pickStyle('session','quick',this)">
-          <div class="style-tick" id="st-quick" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-quick" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">⚡</div>
           <div class="style-card-title">Quick play</div>
           <div class="style-card-sub">Fast bets, on the go</div>
         </div>
         <div class="style-card" id="sc-long" onclick="pickStyle('session','long',this)">
-          <div class="style-tick" id="st-long" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-long" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">🎯</div>
           <div class="style-card-title">Long sessions</div>
           <div class="style-card-sub">Deep dives &amp; research</div>
@@ -483,25 +372,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="style-group-label">Promo preferences <span style="font-size:9px;font-weight:400;color:#bbb;text-transform:none;letter-spacing:0;">(select all that apply)</span></div>
       <div class="style-cards">
         <div class="style-card" id="sc-freebets" onclick="togglePromo('freebets',this)">
-          <div class="style-tick" id="st-freebets" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-freebets" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">🎟️</div>
           <div class="style-card-title">Free bets</div>
           <div class="style-card-sub">Bet without risk</div>
         </div>
         <div class="style-card" id="sc-freespins" onclick="togglePromo('freespins',this)">
-          <div class="style-tick" id="st-freespins" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-freespins" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">🎰</div>
           <div class="style-card-title">Free spins</div>
           <div class="style-card-sub">Bonus casino rounds</div>
         </div>
         <div class="style-card" id="sc-cashback" onclick="togglePromo('cashback',this)">
-          <div class="style-tick" id="st-cashback" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-cashback" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">💰</div>
           <div class="style-card-title">Cashback</div>
           <div class="style-card-sub">Get losses back</div>
         </div>
         <div class="style-card" id="sc-odds" onclick="togglePromo('odds',this)">
-          <div class="style-tick" id="st-odds" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-tick" id="st-odds" style="background:#FFCD00;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="style-card-icon">📈</div>
           <div class="style-card-title">Odds boosts</div>
           <div class="style-card-sub">Enhanced winnings</div>
@@ -509,7 +398,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
     <div class="dv"></div>
-    <button id="style-btn" class="btn-bk" disabled onclick="buildDone();startMagic()">Personalise my experience! ✨</button>
+    <button id="style-btn" class="btn-ssb" disabled onclick="buildDone();startMagic()">Personalise my experience! ✨</button>
     <button class="btn-ghost" onclick="buildDone();startMagic()">Skip for now</button>
   </div>
 </div>
@@ -536,7 +425,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="home-screen">
     <div class="home-header" id="home-hdr">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Good morning 👋</div><div style="font-size:16px;font-weight:700;color:#fff;" id="home-brand-name">BetKing</div></div>
+        <div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Good morning 👋</div><div style="font-size:16px;font-weight:700;color:#fff;" id="home-brand-name">SuperSportBET</div></div>
         <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>
       </div>
       <div style="display:flex;gap:6px;overflow:hidden;" id="home-leagues-row"></div>
@@ -697,57 +586,44 @@ var CRESTS = {
   'Other': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#dde0ee"/><text x="16" y="20" text-anchor="middle" font-size="14" fill="#888">+</text></svg>'
 };
 
-var GAME_COLORS={'Aviator':'linear-gradient(135deg,#3a0808,#7a1010)','Crash King':'linear-gradient(135deg,#08183a,#182870)','Space XY':'linear-gradient(135deg,#082818,#145830)','JetX':'linear-gradient(135deg,#281808,#604010)','King of Spins':'linear-gradient(135deg,#180828,#481868)','Mines':'linear-gradient(135deg,#082828,#085858)'};
 var LNAMES={psl:'SA Premiership',epl:'Premier League',ll:'La Liga',bl:'Bundesliga',ucl:'Champions League',wc:'World Cup'};
 var LFLAGS={psl:'linear-gradient(#007A4D 33%,#FFB81C 33%,#FFB81C 66%,#007A4D 66%)',epl:'linear-gradient(#012169 33%,#fff 33%,#fff 66%,#C8102E 66%)',ll:'linear-gradient(#c60b1e 25%,#ffc400 25%,#ffc400 75%,#c60b1e 75%)',bl:'linear-gradient(#000 33%,#D00 33%,#D00 66%,#FFCE00 66%)',ucl:'linear-gradient(#001489 33%,#fff 33%,#fff 66%,#001489 66%)',wc:'linear-gradient(#006AA7 33%,#fff 33%,#fff 66%,#006AA7 66%)'};
 var TEAMS={psl:[{n:'Mamelodi Sundowns'},{n:'Orlando Pirates'},{n:'Kaizer Chiefs'},{n:'Cape Town City'},{n:'Stellenbosch'},{n:'SuperSport Utd'},{n:'AmaZulu'},{n:'Sekhukhune'},{n:'Richards Bay'},{n:'Chippa Utd'}],epl:[{n:'Arsenal'},{n:'Man City'},{n:'Liverpool'},{n:'Chelsea'},{n:'Tottenham'},{n:'Man Utd'},{n:'Newcastle'},{n:'Aston Villa'},{n:'West Ham'},{n:'Wolves'}],ll:[{n:'Real Madrid'},{n:'Barcelona'},{n:'Atletico'},{n:'Sevilla'},{n:'Real Betis'},{n:'Valencia'},{n:'Villarreal'},{n:'Athletic'},{n:'Sociedad'},{n:'Osasuna'}],bl:[{n:'Bayern'},{n:'Dortmund'},{n:'Leverkusen'},{n:'Leipzig'},{n:'Frankfurt'},{n:'Wolfsburg'},{n:'Gladbach'},{n:'Freiburg'},{n:'Hoffenheim'},{n:'Mainz'}],ucl:[{n:'Real Madrid'},{n:'Man City'},{n:'Bayern'},{n:'Barcelona'},{n:'PSG'},{n:'Liverpool'},{n:'Dortmund'},{n:'Arsenal'},{n:'Inter'},{n:'Atletico'}],wc:[{n:'Brazil'},{n:'France'},{n:'Argentina'},{n:'England'},{n:'Germany'},{n:'Spain'},{n:'Portugal'},{n:'Netherlands'},{n:'South Africa'},{n:'Morocco'}]};
 
-var brand='bk',selL=[],selTeams=[],selGames=[],gCnt=0;
+var selL=[],selTeams=[];
 
 function getCrest(name,size){
   var svg=CRESTS[name]||CRESTS['Other'];
   return svg.replace('viewBox="0 0 32 32"','viewBox="0 0 32 32" width="'+size+'" height="'+size+'"');
 }
 
-(function(){var h=[32,24,40,28,44,30,36,26,42,22,38,46,28,34,40,25,44,30,36,28,42,32,22,38,46,26,34,30,40,24];['crowd-bk','crowd-ss'].forEach(function(id){var c=document.getElementById(id);if(!c)return;h.forEach(function(v){var d=document.createElement('div');d.style.cssText='width:'+(Math.floor(Math.random()*3)+6)+'px;height:'+v+'px;background:rgba(0,0,0,'+(0.6+Math.random()*0.2)+');border-radius:3px 3px 0 0;';c.appendChild(d);});});})();
+(function(){var h=[32,24,40,28,44,30,36,26,42,22,38,46,28,34,40,25,44,30,36,28,42,32,22,38,46,26,34,30,40,24];var c=document.getElementById('crowd-ss');if(!c)return;h.forEach(function(v){var d=document.createElement('div');d.style.cssText='width:'+(Math.floor(Math.random()*3)+6)+'px;height:'+v+'px;background:rgba(0,0,0,'+(0.6+Math.random()*0.2)+');border-radius:3px 3px 0 0;';c.appendChild(d);});})();
 
-function setBrand(b){
-  brand=b;var isBk=b==='bk';
-  ['mh1','mh2','mh3'].forEach(function(id){document.getElementById(id).className=isBk?'mh-bk':'mh-ss';});
-  ['ldot','tdot','cdot'].forEach(function(id){document.getElementById(id).className=isBk?'dot-bk':'dot-ss';});
-  document.getElementById('p1a').className='pip '+(isBk?'po-bk':'po-ss');
-  document.getElementById('p2a').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p2b').className='pip '+(isBk?'po-bk':'po-ss');
-  document.getElementById('p3a').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p3b').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p3c').className='pip '+(isBk?'po-bk':'po-ss');
-  var cls=isBk?'btn-bk':'btn-ssb';
-  ['lbtn','tbtn','cbtn','style-btn'].forEach(function(id){var el=document.getElementById(id);if(el){el.className=cls;el.disabled=true;}});
-}
-
-function backToHero(from){go(from,brand==='bk'?'s0-bk':'s0-ss');}
+function backToHero(from){go(from,'s0-ss');}
 
 function toggleL(el){
-  var k=el.getAttribute('data-k');var oc=brand==='bk'?'on-bk':'on-ss';
+  var k=el.getAttribute('data-k');var oc='on-ss';
   var tick=document.getElementById('lt-'+k);
   if(el.classList.contains(oc)){el.classList.remove(oc);tick.style.display='none';var i=selL.indexOf(k);if(i>=0)selL.splice(i,1);}
-  else{el.classList.add(oc);tick.style.display='flex';tick.style.background=brand==='bk'?'#1a2b6b':'#FFCD00';tick.querySelector('path').setAttribute('stroke',brand==='bk'?'#fff':'#0d1580');selL.push(k);}
-  var n=selL.length;document.getElementById('lpill').textContent=n>0?(n+' league'+(n>1?'s':'')+' selected'):'Step '+(brand==='ss'?'3 of 5':'1 of 5')+' — Leagues';document.getElementById('lbtn').disabled=n===0;
+  else{el.classList.add(oc);tick.style.display='flex';tick.style.background='#FFCD00';tick.querySelector('path').setAttribute('stroke','#0d1580');selL.push(k);}
+  var n=selL.length;document.getElementById('lpill').textContent=n>0?(n+' league'+(n>1?'s':'')+' selected'):'Step 3 of 5 — Leagues';document.getElementById('lbtn').disabled=n===0;
 }
 
 function gotoTeams(){
   var keys=selL.slice();var tags=document.getElementById('ltags');tags.innerHTML='';
-  var tc=brand==='bk'?'tag-bk':'tag-ss';
-  keys.forEach(function(k){var t=document.createElement('div');t.className='tag '+tc;t.innerHTML='<div class="tf" style="background:'+LFLAGS[k]+';"></div>'+LNAMES[k];tags.appendChild(t);});
+  keys.forEach(function(k){var t=document.createElement('div');t.className='tag tag-ss';t.innerHTML='<div class="tf" style="background:'+LFLAGS[k]+';"></div>'+LNAMES[k];tags.appendChild(t);});
   document.getElementById('tsub').textContent=keys.length===1?('Top 10 clubs from '+LNAMES[keys[0]]+'.'):('Best clubs across '+keys.length+' leagues.');
   var grid=document.getElementById('tgrid');grid.innerHTML='';selTeams=[];
   document.getElementById('tbtn').disabled=true;document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
-  document.getElementById('tcount').className='tcnt tcnt-'+(brand==='bk'?'bk':'ss');
+  document.getElementById('tcount').className='tcnt tcnt-ss';
   var pool=[];
   if(keys.length===1){TEAMS[keys[0]].forEach(function(t){pool.push(t.n);});}
   else{var per=Math.ceil(10/keys.length);keys.forEach(function(k){TEAMS[k].slice(0,per).forEach(function(t){pool.push(t.n);});});pool=pool.slice(0,10);}
-  var oc=brand==='bk'?'on-bk':'on-ss';
-  var tickCol=brand==='bk'?'#4dd9ac':'#FFCD00';
+  var oc='on-ss';
+  var tickCol='#FFCD00';
   pool.forEach(function(name){
     var cell=document.createElement('div');cell.className='tc';
-    var crestDiv='<div class="tc-crest"><div class="tc-tick" style="background:'+tickCol+'"><svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="'+(brand==='bk'?'#003030':'#0d1580')+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+getCrest(name,32)+'</div>';
+    var crestDiv='<div class="tc-crest"><div class="tc-tick" style="background:'+tickCol+'"><svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+getCrest(name,32)+'</div>';
     var shortName=name;
     cell.innerHTML=crestDiv+'<div class="tn">'+shortName+'</div>';
     cell.onclick=function(){
@@ -767,31 +643,20 @@ function gotoTeams(){
     document.getElementById('tcount').innerHTML='<span>'+selTeams.length+'</span> team'+(selTeams.length!==1?'s':'')+' selected';
   };
   grid.appendChild(other);
-  if(brand==='ss'){
-    document.getElementById('mh2').className='mh-ss';
-    document.getElementById('tdot').className='dot-ss';
-    // S2 is step 4 for SS
-    document.getElementById('tpill').textContent='Step 4 of 5 — Teams';
-  }
+  document.getElementById('mh2').className='mh-ss';
+  document.getElementById('tdot').className='dot-ss';
+  document.getElementById('tpill').textContent='Step 4 of 5 — Teams';
   go('s1','s2');
-}
-
-function toggleG(el){
-  var oc=brand==='bk'?'on-bk':'on-ss';var n=el.getAttribute('data-name');
-  if(!el.classList.contains(oc)&&gCnt>=4)return;
-  el.classList.toggle(oc);
-  if(el.classList.contains(oc)){selGames.push(n);}else{var i=selGames.indexOf(n);if(i>=0)selGames.splice(i,1);}
-  gCnt=selGames.length;document.getElementById('gcnt').textContent=gCnt+' / 4 selected';document.getElementById('cbtn').disabled=gCnt===0;
 }
 
 function buildDone(){} // summary screen removed — kept as no-op for safety
 
 
 function startMagic(){
-  var isBk=brand==='bk';var ac=isBk?'#4dd9ac':'#FFCD00';var bg=isBk?'linear-gradient(160deg,#0d1a3a,#1a2b6b)':'linear-gradient(160deg,#0d1580,#1a2db8)';
+  var ac='#FFCD00';var bg='linear-gradient(160deg,#0d1580,#1a2db8)';
   var mbg=document.getElementById('magic-bg');mbg.style.background=bg;mbg.innerHTML='';
   document.getElementById('magic-bar').style.background=ac;
-  var steps=[{icon:'🏟',name:'Loading your leagues',sub:selL.map(function(k){return LNAMES[k];}).join(', ')||'None',pct:28},{icon:'⚽',name:'Setting up your teams',sub:selTeams.slice(0,3).join(', ')+(selTeams.length>3?' +more':'')||'None',pct:58},{icon:'🎮',name:'Pinning your games',sub:(brand==='ss'?selSSGames:selGames).join(', ')||'None',pct:82},{icon:'✨',name:'Finalising your feed',sub:'Almost there...',pct:100}];
+  var steps=[{icon:'🏟',name:'Loading your leagues',sub:selL.map(function(k){return LNAMES[k];}).join(', ')||'None',pct:28},{icon:'⚽',name:'Setting up your teams',sub:selTeams.slice(0,3).join(', ')+(selTeams.length>3?' +more':'')||'None',pct:58},{icon:'🎮',name:'Pinning your games',sub:selSSGames.join(', ')||'None',pct:82},{icon:'✨',name:'Finalising your feed',sub:'Almost there...',pct:100}];
   var stEl=document.getElementById('magic-steps');stEl.innerHTML='';
   go('s-style','s-magic');
   var barEl=document.getElementById('magic-bar'),pctEl=document.getElementById('magic-pct'),i=0;
@@ -803,7 +668,7 @@ function startMagic(){
     stEl.appendChild(d);
     setTimeout(function(el,p){return function(){
       var sp=el.querySelector('.spinner');sp.style.cssText='width:14px;height:14px;border-radius:50%;background:'+ac+';display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-      sp.innerHTML='<svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="'+(isBk?'#003030':'#0d1580')+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      sp.innerHTML='<svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       barEl.style.width=p+'%';pctEl.textContent=p+'%';i++;runStep();
     };}(d,s.pct),650+i*80);
     i++;
@@ -812,9 +677,8 @@ function startMagic(){
 }
 
 function buildHome(){
-  var isBk=brand==='bk';
-  document.getElementById('home-hdr').style.background=isBk?'#1a2b6b':'#1a2db8';
-  document.getElementById('home-brand-name').textContent=isBk?'BetKing':'SuperSportBET';
+  document.getElementById('home-hdr').style.background='#1a2db8';
+  document.getElementById('home-brand-name').textContent='SuperSportBET';
 
   var lr=document.getElementById('home-leagues-row');lr.innerHTML='';
   selL.forEach(function(k){
@@ -835,35 +699,28 @@ function buildHome(){
   var sports=document.getElementById('home-sports');
   var promos=document.getElementById('home-promos');
 
-  if(isBk){
-    deposit.style.background='#00d8c8';
-    casino.style.background='#1a2b6b';
-    sports.style.background='#c8102e';
-    promos.style.background='#FFCD00';
-  } else {
-    deposit.style.background='#FFCD00';
-    casino.style.background='#1a2db8';
-    sports.style.background='linear-gradient(135deg,#1a3dc8,#0d1580)';
-    promos.style.background='#00d8c8';
-  }
+  deposit.style.background='#FFCD00';
+  casino.style.background='#1a2db8';
+  sports.style.background='linear-gradient(135deg,#1a3dc8,#0d1580)';
+  promos.style.background='#00d8c8';
 
-  buildTrendingNow(isBk);
+  buildTrendingNow();
 }
 
-function buildTrendingNow(isBk){
+function buildTrendingNow(){
   var carousel=document.getElementById('trending-carousel');
   if(!carousel)return;
   carousel.innerHTML='';
 
   var preferredTeam=selTeams.length?selTeams[0]:'your team';
   var preferredLeague=selL.length?LNAMES[selL[0]]:'top football';
-  var preferredGame=(brand==='ss'&&selSSGames.length)?selSSGames[0]:(selGames.length?selGames[0]:'Aviator');
-  var casinoBg=isBk?'linear-gradient(135deg,#1a2b6b,#0d1a3a)':'linear-gradient(135deg,#1a2db8,#0d1580)';
-  var sportsBg=isBk?'linear-gradient(135deg,#c8102e,#740015)':'linear-gradient(135deg,#1a3dc8,#0d1580)';
-  var promoBg=isBk?'linear-gradient(135deg,#003030,#00a89c)':'linear-gradient(135deg,#0d1580,#00a89c)';
+  var preferredGame=selSSGames.length?selSSGames[0]:'Aviator';
+  var casinoBg='linear-gradient(135deg,#1a2db8,#0d1580)';
+  var sportsBg='linear-gradient(135deg,#1a3dc8,#0d1580)';
+  var promoBg='linear-gradient(135deg,#0d1580,#00a89c)';
 
   var cards=[
-    {chip:'Don\'t miss this',icon:'🎰',name:'Try '+preferredGame,desc:'Casino pick surfaced from your game preferences.',cta:'Play now',bg:casinoBg},
+    {chip:"Don't miss this",icon:'🎰',name:'Try '+preferredGame,desc:'Casino pick surfaced from your game preferences.',cta:'Play now',bg:casinoBg},
     {chip:'For you',icon:'⚽',name:preferredTeam+' next up',desc:'Sports event recommendations from '+preferredLeague+'.',cta:'View markets',bg:sportsBg},
     {chip:'Promo',icon:'🎁',name:'Boost your next bet',desc:'Personalised offer combining sports and casino activity.',cta:'Claim offer',bg:promoBg},
     {chip:'Trending',icon:'🔥',name:'Live picks today',desc:'Popular games and events other players are opening now.',cta:'Explore',bg:'linear-gradient(135deg,#281808,#604010)'}
@@ -924,19 +781,18 @@ function initTrendingCarousel(){
 var selRisk='', selSession='', selPromos=[];
 
 function pickStyle(group, val, el){
-  var isBk=brand==='bk';
-  var oc=isBk?'on-bk':'on-ss';
-  var tickColor=isBk?'#4dd9ac':'#FFCD00';
-  var checkStroke=isBk?'#003030':'#0d1580';
+  var oc='on-ss';
+  var tickColor='#FFCD00';
+  var checkStroke='#0d1580';
   var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   if(group==='risk'){
-    ['sc-low','sc-high'].forEach(function(id){document.getElementById(id).classList.remove('on-bk','on-ss');});
+    ['sc-low','sc-high'].forEach(function(id){document.getElementById(id).classList.remove('on-ss');});
     el.classList.add(oc);
     ['st-low','st-high'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
     selRisk=val;
   } else {
-    ['sc-quick','sc-long'].forEach(function(id){document.getElementById(id).classList.remove('on-bk','on-ss');});
+    ['sc-quick','sc-long'].forEach(function(id){document.getElementById(id).classList.remove('on-ss');});
     el.classList.add(oc);
     ['st-quick','st-long'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
     selSession=val;
@@ -945,10 +801,9 @@ function pickStyle(group, val, el){
 }
 
 function togglePromo(val, el){
-  var isBk=brand==='bk';
-  var oc=isBk?'on-bk':'on-ss';
-  var tickColor=isBk?'#4dd9ac':'#FFCD00';
-  var checkStroke=isBk?'#003030':'#0d1580';
+  var oc='on-ss';
+  var tickColor='#FFCD00';
+  var checkStroke='#0d1580';
   var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var tick=document.getElementById('st-'+val);
   if(el.classList.contains(oc)){
@@ -964,34 +819,24 @@ function togglePromo(val, el){
 }
 
 function applyStyleBrand(){
-  var isBk=brand==='bk';
-  document.getElementById('mh-style').className=isBk?'mh-bk':'mh-ss';
-  document.getElementById('style-dot').className=isBk?'dot-bk':'dot-ss';
-  document.getElementById('style-btn').className=isBk?'btn-bk':'btn-ssb';
-  var tickColor=isBk?'#4dd9ac':'#FFCD00';
-  var checkStroke=isBk?'#003030':'#0d1580';
+  document.getElementById('mh-style').className='mh-ss';
+  document.getElementById('style-dot').className='dot-ss';
+  document.getElementById('style-btn').className='btn-ssb';
+  var tickColor='#FFCD00';
+  var checkStroke='#0d1580';
   var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   ['st-low','st-high','st-quick','st-long','st-freebets','st-freespins','st-cashback','st-odds'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
-  // update pip count for SS (5 steps) vs BK (4 steps)
-  if(isBk){
-    document.getElementById('style-pill').textContent='Step 5 of 5 — Style';
-    document.getElementById('sp1').className='pip pd-bk';
-    document.getElementById('sp2').className='pip pd-bk';
-    document.getElementById('sp3').className='pip po-bk';
-  } else {
-    document.getElementById('style-pill').textContent='Step 5 of 5 — Style';
-    // SS has 5 pips — add extra two if needed
-    var pips=document.getElementById('style-pips');
-    if(!document.getElementById('sp4')){
-      var p4=document.createElement('div');p4.id='sp4';pips.appendChild(p4);
-      var p5=document.createElement('div');p5.id='sp5';pips.appendChild(p5);
-    }
-    document.getElementById('sp1').className='pip pd-ss';
-    document.getElementById('sp2').className='pip pd-ss';
-    document.getElementById('sp3').className='pip pd-ss';
-    document.getElementById('sp4').className='pip pd-ss';
-    document.getElementById('sp5').className='pip po-ss';
+  document.getElementById('style-pill').textContent='Step 5 of 5 — Style';
+  var pips=document.getElementById('style-pips');
+  if(!document.getElementById('sp4')){
+    var p4=document.createElement('div');p4.id='sp4';pips.appendChild(p4);
+    var p5=document.createElement('div');p5.id='sp5';pips.appendChild(p5);
   }
+  document.getElementById('sp1').className='pip pd-ss';
+  document.getElementById('sp2').className='pip pd-ss';
+  document.getElementById('sp3').className='pip pd-ss';
+  document.getElementById('sp4').className='pip pd-ss';
+  document.getElementById('sp5').className='pip po-ss';
 }
 
 
@@ -1003,22 +848,22 @@ function go(hide,show){
 }
 
 function restart(){
-  selL=[];selTeams=[];selGames=[];selSSGames=[];selProviders=[];selRisk='';selSession='';selPromos=[];gCnt=0;ssGCnt=0;
-  document.querySelectorAll('.style-card').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  selL=[];selTeams=[];selSSGames=[];selProviders=[];selRisk='';selSession='';selPromos=[];ssGCnt=0;
+  document.querySelectorAll('.style-card').forEach(function(c){c.classList.remove('on-ss');});
   if(document.getElementById('style-btn'))document.getElementById('style-btn').disabled=true;
   document.querySelectorAll('.lc').forEach(function(c){c.className='lc';});
   document.querySelectorAll('[id^="lt-"]').forEach(function(el){el.style.display='none';});
-  document.querySelectorAll('.gcd').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.querySelectorAll('.gcd').forEach(function(c){c.classList.remove('on-ss');});
   document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
   document.getElementById('prov-pill').textContent='Step 1 of 5 — Providers';
   document.querySelectorAll('.prov-card').forEach(function(c){c.classList.remove('on-ss');});
   if(document.getElementById('prov-btn'))document.getElementById('prov-btn').disabled=true;
-  document.getElementById('lbtn').disabled=true;document.getElementById('gcnt').textContent='0 / 4 selected';
+  document.getElementById('lbtn').disabled=true;
   document.getElementById('magic-steps').innerHTML='';
   document.getElementById('magic-bar').style.width='0%';document.getElementById('magic-pct').textContent='0%';
   document.getElementById('magic-bg').innerHTML='';
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
-  document.getElementById('s-brand').classList.add('on');
+  document.getElementById('s0-ss').classList.add('on');
 }
 
 // ── SS PROVIDERS ──────────────────────────────────────────────────
@@ -1171,30 +1016,17 @@ function buildProvGames(){
 
 
 function showLeaguesStep(){
-  if(brand==='ss'){
-    document.getElementById('lpill').textContent='Step 3 of 5 — Leagues';
-    document.getElementById('mh1').className='mh-ss';
-    document.getElementById('ldot').className='dot-ss';
-  } else {
-    document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
-    document.getElementById('mh1').className='mh-bk';
-    document.getElementById('ldot').className='dot-bk';
-  }
+  document.getElementById('lpill').textContent='Step 3 of 5 — Leagues';
+  document.getElementById('mh1').className='mh-ss';
+  document.getElementById('ldot').className='dot-ss';
   go('s3-games','s1');
-}
-
-function showLeaguesStep_bk(){
-  document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
-  document.getElementById('mh1').className='mh-bk';
-  document.getElementById('ldot').className='dot-bk';
-  go('s0-bk','s1');
 }
 
 function clearLeagues(){
   selL=[];
-  document.querySelectorAll('.lc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.querySelectorAll('.lc').forEach(function(c){c.classList.remove('on-ss');});
   document.querySelectorAll('[id^="lt-"]').forEach(function(el){el.style.display='none';});
-  document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
+  document.getElementById('lpill').textContent='Step 3 of 5 — Leagues';
   document.getElementById('lbtn').disabled=true;
 }
 
@@ -1213,27 +1045,12 @@ function clearSSGames(){
     document.getElementById('game-count').innerHTML='<span>0</span> games selected';
 }
 
-function clearGames(){
-  selGames=[];gCnt=0;
-  document.querySelectorAll('#s3 .gcd').forEach(function(c){c.classList.remove('on-bk','on-ss');});
-  document.getElementById('cbtn').disabled=true;
-  if(document.getElementById('gcnt'))document.getElementById('gcnt').textContent='0 / 4 selected';
-}
-
 function clearTeamsAndGo(from,to){
   selTeams=[];
-  document.querySelectorAll('#tgrid .tc,#tgrid .oc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.querySelectorAll('#tgrid .tc,#tgrid .oc').forEach(function(c){c.classList.remove('on-ss');});
   document.getElementById('tbtn').disabled=true;
   if(document.getElementById('tcount'))document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
   go(from,to);
-}
-
-function goBackS2(){
-  selTeams=[];
-  document.querySelectorAll('#tgrid .tc,#tgrid .oc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
-  document.getElementById('tbtn').disabled=true;
-  if(document.getElementById('tcount'))document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
-  backToHero('s2');
 }
 
 </script>
