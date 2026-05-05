@@ -13,7 +13,7 @@ type StepProgressProps = {
 export const StepProgress = ({ brand, currentStep }: StepProgressProps) => {
   const flow = FLOWS[brand];
   const currentIdx = getStepIndex(brand, currentStep);
-  const stepsWithoutMeta = flow.filter((s) => s !== "brand" && s !== "hero");
+  const stepsWithoutMeta = flow.filter((s) => s !== "hero");
 
   return (
     <div className="flex gap-1 mb-3.5">

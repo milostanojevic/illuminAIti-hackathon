@@ -9,7 +9,7 @@ import { TrendingCarousel } from "./TrendingCarousel";
 
 export const HomeShell = () => {
   const { state } = useOnboarding();
-  const brand = state.brand ?? "bk";
+  const brand = state.brand;
   const isBk = brand === "bk";
 
   const preferredTeam = state.teams.length > 0 ? state.teams[0] : "your team";

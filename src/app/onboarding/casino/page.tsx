@@ -8,8 +8,8 @@ import { CasinoGrid } from "@/components/onboarding/CasinoGrid";
 const CasinoPage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "casino")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "casino")) {
+    redirect("/onboarding/hero");
   }
 
   return <CasinoGrid />;

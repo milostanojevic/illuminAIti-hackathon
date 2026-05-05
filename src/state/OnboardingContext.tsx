@@ -31,7 +31,7 @@ type OnboardingContextValue = {
 };
 
 const initialState: OnboardingState = {
-  brand: null,
+  brand: "ss",
   leagues: [],
   teams: [],
   casinoGames: [],

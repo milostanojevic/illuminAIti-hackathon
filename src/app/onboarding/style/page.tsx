@@ -8,8 +8,8 @@ import { StyleForm } from "@/components/onboarding/StyleForm";
 const StylePage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "style")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "style")) {
+    redirect("/onboarding/hero");
   }
 
   return <StyleForm />;

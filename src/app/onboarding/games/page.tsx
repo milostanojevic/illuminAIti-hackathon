@@ -8,8 +8,8 @@ import { GameGrid } from "@/components/onboarding/GameGrid";
 const GamesPage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "games")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "games")) {
+    redirect("/onboarding/hero");
   }
 
   return <GameGrid />;

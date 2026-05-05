@@ -8,8 +8,8 @@ import { LeagueGrid } from "@/components/onboarding/LeagueGrid";
 const LeaguesPage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "leagues")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "leagues")) {
+    redirect("/onboarding/hero");
   }
 
   return <LeagueGrid />;

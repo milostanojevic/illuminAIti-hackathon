@@ -8,8 +8,8 @@ import { ProviderGrid } from "@/components/onboarding/ProviderGrid";
 const ProvidersPage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "providers")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "providers")) {
+    redirect("/onboarding/hero");
   }
 
   return <ProviderGrid />;

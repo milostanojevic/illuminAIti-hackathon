@@ -8,8 +8,8 @@ import { TeamGrid } from "@/components/onboarding/TeamGrid";
 const TeamsPage = () => {
   const { state } = useOnboarding();
 
-  if (!state.brand || !isStepInFlow(state.brand, "teams")) {
-    redirect("/onboarding");
+  if (!isStepInFlow(state.brand, "teams")) {
+    redirect("/onboarding/hero");
   }
 
   return <TeamGrid />;

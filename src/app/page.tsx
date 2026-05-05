@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 const HomePage = () => {
-  redirect("/onboarding");
+  redirect("/onboarding/hero");
 };
 
 export default HomePage;

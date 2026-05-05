@@ -1,9 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { BrandSelector } from "@/components/onboarding/BrandSelector";
-
-const BrandPage = () => {
-  return <BrandSelector />;
+const OnboardingIndexPage = () => {
+  redirect("/onboarding/hero");
 };
 
-export default BrandPage;
+export default OnboardingIndexPage;

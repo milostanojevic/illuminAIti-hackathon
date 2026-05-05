@@ -1,7 +1,6 @@
 import type { Brand } from "@/types/brand";
 
 export type StepKey =
-  | "brand"
   | "hero"
   | "providers"
   | "games"
@@ -12,12 +11,11 @@ export type StepKey =
   | "magic";
 
 export const FLOWS: Record<Brand, readonly StepKey[]> = {
-  bk: ["brand", "hero", "leagues", "teams", "casino", "style", "magic"],
-  ss: ["brand", "hero", "providers", "games", "leagues", "teams", "style", "magic"],
+  bk: ["hero", "leagues", "teams", "casino", "style", "magic"],
+  ss: ["hero", "providers", "games", "leagues", "teams", "style", "magic"],
 } as const;
 
 export const STEP_ROUTES: Record<StepKey, string> = {
-  brand: "/onboarding",
   hero: "/onboarding/hero",
   providers: "/onboarding/providers",
   games: "/onboarding/games",
@@ -28,7 +26,7 @@ export const STEP_ROUTES: Record<StepKey, string> = {
   magic: "/onboarding/magic",
 };
 
-const NON_WIZARD_STEPS: readonly StepKey[] = ["brand", "hero"];
+const NON_WIZARD_STEPS: readonly StepKey[] = ["hero"];
 
 const isWizardStep = (step: StepKey): boolean => !NON_WIZARD_STEPS.includes(step);
 

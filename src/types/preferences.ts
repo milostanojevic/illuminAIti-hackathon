@@ -7,7 +7,7 @@ export type BettingStyle = {
 };
 
 export type OnboardingState = {
-  brand: Brand | null;
+  brand: Brand;
   leagues: LeagueKey[];
   teams: string[];
   casinoGames: string[];

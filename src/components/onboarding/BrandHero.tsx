@@ -39,7 +39,6 @@ export const BrandHero = () => {
   };
 
   const handleSkip = () => router.push("/home");
-  const handleBackToBrands = () => router.push("/onboarding");
 
   if (isBk) {
     return (
@@ -87,13 +86,6 @@ export const BrandHero = () => {
             Skip personalisation
           </button>
         </div>
-
-        <button
-          onClick={handleBackToBrands}
-          className="absolute top-4 left-4 bg-white/[0.12] border border-white/15 rounded-full px-3 py-1.5 text-[10px] text-white/70 cursor-pointer"
-        >
-          ‹ Brands
-        </button>
       </div>
     );
   }
@@ -221,13 +213,6 @@ export const BrandHero = () => {
           Skip personalisation
         </button>
       </div>
-
-      <button
-        onClick={handleBackToBrands}
-        className="absolute top-4 left-4 bg-white/[0.12] border border-white/15 rounded-full px-3 py-1.5 text-[10px] text-white/70 cursor-pointer"
-      >
-        ‹ Brands
-      </button>
     </div>
   );
 };
