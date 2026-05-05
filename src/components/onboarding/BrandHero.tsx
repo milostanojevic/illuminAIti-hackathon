@@ -42,20 +42,20 @@ export const BrandHero = () => {
 
   if (isBk) {
     return (
-      <div className="relative h-[540px] overflow-hidden bg-[#0d0d0d]">
+      <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-[#0d0d0d]">
         <div className="stadium-bg" />
         <div className="red-shape" />
         <div className="red-noise" />
         <CrowdRow />
         <div
-          className="absolute bottom-0 left-0 right-0 h-[280px]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 top-[32%]"
           style={{
             background:
-              "linear-gradient(transparent, rgba(0,0,0,0.55) 25%, #000 65%)",
+              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.45) 28%, rgba(0,0,0,0.55) 42%, #000 92%)",
           }}
         />
 
-        <div className="absolute bottom-0 left-0 right-0 px-5 pt-5 pb-6">
+        <div className="relative z-10 mt-auto px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
           <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center gap-1.5">
               <span className="text-sm">👑</span>
@@ -67,7 +67,7 @@ export const BrandHero = () => {
             </span>
           </div>
 
-          <div className="text-[28px] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
+          <div className="text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
             Personalise<br />
             your favourite<br />
             <span className="text-bk-red">teams</span> &amp; games
@@ -91,7 +91,7 @@ export const BrandHero = () => {
   }
 
   return (
-    <div className="relative h-[540px] overflow-hidden bg-[#1a2db8]">
+    <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-[#1a2db8]">
       <div
         className="absolute inset-0"
         style={{
@@ -99,9 +99,9 @@ export const BrandHero = () => {
             "linear-gradient(160deg, #2a3dc8 0%, #1a2db8 50%, #0d1580 100%)",
         }}
       />
-      <div className="ss-dots" />
+      <div className="ss-dots absolute inset-0" />
 
-      <div className="absolute top-[18%] left-0 right-0 h-[220px]">
+      <div className="absolute top-[min(18vh,120px)] left-0 right-0 min-h-[160px] max-h-[42vh]">
         <div className="absolute left-3 bottom-0 flex flex-col items-center">
           <div className="w-[14px] h-[14px] rounded-full bg-white/30 mb-0.5" />
           <div
@@ -162,14 +162,14 @@ export const BrandHero = () => {
       <CrowdRow />
 
       <div
-        className="absolute bottom-0 left-0 right-0 h-[300px]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-[26%]"
         style={{
           background:
-            "linear-gradient(transparent, rgba(13,21,128,0.6) 20%, #0d1580 65%)",
+            "linear-gradient(to bottom, transparent 0%, rgba(13,21,128,0.35) 28%, rgba(13,21,128,0.65) 52%, #0d1580 92%)",
         }}
       />
 
-      <div className="absolute bottom-0 left-0 right-0 px-5 pt-5 pb-6">
+      <div className="relative z-10 mt-auto px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
         <div className="flex items-center gap-2 mb-4">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
@@ -194,7 +194,7 @@ export const BrandHero = () => {
           </span>
         </div>
 
-        <div className="text-[28px] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
+        <div className="text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
           Personalise<br />
           your favourite<br />
           <span className="text-ss-accent">games</span> &amp; teams

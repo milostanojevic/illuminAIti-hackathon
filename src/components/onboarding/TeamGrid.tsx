@@ -5,6 +5,7 @@ import { useOnboarding } from "@/state/OnboardingContext";
 import { buildTeamPool } from "@/lib/data/teams";
 import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 import { Crest } from "@/components/ui/Crest";
@@ -28,15 +29,17 @@ export const TeamGrid = () => {
     : `Best clubs across ${state.leagues.length} leagues.`;
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="teams"
-        title="Choose your teams"
-        subtitle={subtitle}
-        stepLabel="Teams"
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="teams"
+          title="Choose your teams"
+          subtitle={subtitle}
+          stepLabel="Teams"
+        />
+      }
+    >
         <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
           Select your clubs
         </div>
@@ -117,7 +120,6 @@ export const TeamGrid = () => {
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
         <GhostButton />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };

@@ -5,6 +5,7 @@ import { useOnboarding } from "@/state/OnboardingContext";
 import { SS_GAMES } from "@/lib/data/ssGames";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 import type { ProviderKey } from "@/types/brand";
@@ -57,15 +58,17 @@ export const GameGrid = () => {
   const providerNames = state.providers.map((k) => PROVIDER_LABELS[k]).join(", ");
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="games"
-        title="Choose your games"
-        subtitle={`Top picks from ${providerNames}.`}
-        stepLabel="Games"
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="games"
+          title="Choose your games"
+          subtitle={`Top picks from ${providerNames}.`}
+          stepLabel="Games"
+        />
+      }
+    >
         <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
           Pin your favourite games
         </div>
@@ -99,8 +102,7 @@ export const GameGrid = () => {
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
         <GhostButton />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };
 

@@ -46,7 +46,7 @@ export const ScreenHeader = ({
 
   return (
     <div
-      className="px-4 pt-4 pb-0 relative"
+      className="relative w-full min-w-0 flex-shrink-0 px-4 pt-4 pb-0"
       style={{ background: isBk ? "#1a2b6b" : "#1a2db8" }}
     >
       <div className="close-btn" />

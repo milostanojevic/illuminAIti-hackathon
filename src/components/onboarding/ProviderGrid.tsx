@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 import type { ProviderKey } from "@/types/brand";
@@ -40,15 +41,17 @@ export const ProviderGrid = () => {
     : "Providers";
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="providers"
-        title="Pick your providers"
-        subtitle="Choose the game studios you enjoy most."
-        stepLabel={stepLabel}
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="providers"
+          title="Pick your providers"
+          subtitle="Choose the game studios you enjoy most."
+          stepLabel={stepLabel}
+        />
+      }
+    >
         <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
           Select game providers
         </div>
@@ -88,7 +91,6 @@ export const ProviderGrid = () => {
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
         <GhostButton />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };

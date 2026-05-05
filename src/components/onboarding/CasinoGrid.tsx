@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { BK_GAMES } from "@/lib/data/bkGames";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 
@@ -19,15 +20,17 @@ export const CasinoGrid = () => {
   };
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="casino"
-        title="Top casino picks"
-        subtitle="Pin your favourite games to your home screen."
-        stepLabel="Casino"
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="casino"
+          title="Top casino picks"
+          subtitle="Pin your favourite games to your home screen."
+          stepLabel="Casino"
+        />
+      }
+    >
         <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
           Select up to 4 games
         </div>
@@ -80,7 +83,6 @@ export const CasinoGrid = () => {
           label="Finish setup →"
         />
         <GhostButton />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };

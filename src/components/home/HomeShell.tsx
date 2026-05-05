@@ -21,9 +21,9 @@ export const HomeShell = () => {
   const trendingCards = buildTrendingCards(brand, preferredTeam, preferredLeague, preferredGame);
 
   return (
-    <div className="flex flex-col bg-[#f5f6fa]">
+    <div className="flex flex-1 flex-col min-h-0 w-full min-w-0 bg-[#f5f6fa]">
       <div
-        className="px-3.5 pt-3.5 pb-3"
+        className="flex-shrink-0 px-3.5 pt-3.5 pb-3 w-full min-w-0"
         style={{ background: isBk ? "#1a2b6b" : "#1a2db8" }}
       >
         <div className="flex items-center justify-between mb-2.5">
@@ -40,7 +40,7 @@ export const HomeShell = () => {
         <LeagueChips leagues={state.leagues} />
       </div>
 
-      <div className="p-3 flex flex-col gap-2.5">
+      <div className="scroll-touch flex flex-1 min-h-0 flex-col gap-2.5 overflow-y-auto overflow-x-hidden overscroll-y-contain p-3 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
         <HomeCTA
           icon="💳"
           title="Deposit now"

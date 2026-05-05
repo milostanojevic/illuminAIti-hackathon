@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 import type { LeagueKey } from "@/types/brand";
@@ -36,15 +37,17 @@ export const LeagueGrid = () => {
     : "Leagues";
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="leagues"
-        title="Pick your leagues"
-        subtitle="Select one or more — we'll tailor your feed."
-        stepLabel={stepLabel}
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="leagues"
+          title="Pick your leagues"
+          subtitle="Select one or more — we'll tailor your feed."
+          stepLabel={stepLabel}
+        />
+      }
+    >
         <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
           Select leagues
         </div>
@@ -98,7 +101,6 @@ export const LeagueGrid = () => {
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
         <GhostButton />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };

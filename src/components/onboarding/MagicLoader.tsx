@@ -96,7 +96,7 @@ export const MagicLoader = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center px-6 py-7 relative overflow-hidden min-h-[400px]"
+      className="flex flex-1 flex-col items-center justify-center min-h-0 px-6 py-7 relative overflow-hidden"
       style={{ background: bgGradient }}
     >
       <div className="relative text-center mb-5">

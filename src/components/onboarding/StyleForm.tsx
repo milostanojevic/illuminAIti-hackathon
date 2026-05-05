@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
 import type { PromoKey, RiskLevel, SessionStyle } from "@/types/brand";
@@ -48,15 +49,17 @@ export const StyleForm = () => {
   const onClass = isBk ? "border-bk-primary bg-[#eef1fb]" : "border-ss-primary bg-[#eef2ff]";
 
   return (
-    <>
-      <ScreenHeader
-        brand={brand}
-        currentStep="style"
-        title="Your betting style"
-        subtitle="Help us tailor your experience."
-        stepLabel="Style"
-      />
-      <div className="p-4 bg-white">
+    <OnboardingStepShell
+      header={
+        <ScreenHeader
+          brand={brand}
+          currentStep="style"
+          title="Your betting style"
+          subtitle="Help us tailor your experience."
+          stepLabel="Style"
+        />
+      }
+    >
         <StyleGroup label="Risk preference">
           {RISK_OPTIONS.map((opt) => (
             <StyleCard
@@ -107,8 +110,7 @@ export const StyleForm = () => {
           label="Personalise my experience! ✨"
         />
         <GhostButton onClick={handleContinue} />
-      </div>
-    </>
+    </OnboardingStepShell>
   );
 };
 
