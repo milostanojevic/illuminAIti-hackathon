@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding v12 — with crests</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#2a2a3a;display:flex;justify-content:center;padding:32px 20px;}
+.modal{width:300px;border-radius:24px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,0.7);}
+.scr{display:none;}.scr.on{display:block;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── BRAND SELECTOR ── */
+.brand-screen{background:linear-gradient(160deg,#1e2a5e 0%,#2d1a4a 40%,#1a1a3a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 36px;position:relative;overflow:hidden;}
+.brand-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:280px;height:280px;border-radius:50%;background:radial-gradient(rgba(100,120,255,0.18),transparent 70%);pointer-events:none;}
+.brand-grid{position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path d="M0 30 L30 0" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></svg>') repeat;pointer-events:none;}
+.brand-icon-big{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;}
+.brand-tagline{font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;text-align:center;}
+.brand-headline{font-size:17px;font-weight:700;color:#fff;text-align:center;line-height:1.35;margin-bottom:28px;position:relative;}
+.brand-cards{display:flex;flex-direction:column;gap:10px;width:100%;position:relative;}
+.brand-card{border-radius:14px;padding:16px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;border:1.5px solid rgba(255,255,255,0.15);transition:border-color .15s;}
+.bk-card{background:linear-gradient(135deg,rgba(30,50,120,0.9),rgba(15,28,80,0.9));}
+.bk-card:hover{border-color:#4dd9ac;}
+.ss-card{background:linear-gradient(135deg,rgba(35,60,210,0.9),rgba(18,30,160,0.9));}
+.ss-card:hover{border-color:#FFCD00;}
+.brand-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.bi-bk{background:rgba(77,217,172,0.15);border:1px solid rgba(77,217,172,0.2);}
+.bi-ss{background:rgba(255,205,0,0.12);border:1px solid rgba(255,205,0,0.2);}
+.brand-info{flex:1;}
+.brand-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.brand-region{font-size:10px;color:rgba(255,255,255,0.45);}
+.brand-arrow{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.4);}
+.brand-note{margin-top:16px;font-size:10px;color:rgba(255,255,255,0.3);text-align:center;position:relative;}
+
+/* ── HEROES ── */
+.hero-bk{position:relative;height:540px;overflow:hidden;background:#0d0d0d;}
+.stadium-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#3a1010 0%,#1a0505 40%,#000 100%);}
+.red-shape{position:absolute;top:0;left:0;right:0;height:58%;clip-path:polygon(0 0,100% 0,100% 72%,0 100%);background:linear-gradient(135deg,#c8102e 0%,#8b0000 60%,#3a0000 100%);}
+.red-noise{position:absolute;top:0;left:0;right:0;height:58%;clip-path:polygon(0 0,100% 0,100% 72%,0 100%);background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="0.5" fill="rgba(0,0,0,0.25)"/></svg>') repeat;opacity:0.5;}
+.crowd{position:absolute;top:46%;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;gap:1px;height:52px;padding:0 6px;}
+.hero-grad-bk{position:absolute;bottom:0;left:0;right:0;height:280px;background:linear-gradient(transparent,rgba(0,0,0,0.55) 25%,#000 65%);}
+.hero-ss{position:relative;height:540px;overflow:hidden;background:#1a2db8;}
+.ss-bg{position:absolute;inset:0;background:linear-gradient(160deg,#2a3dc8 0%,#1a2db8 50%,#0d1580 100%);}
+.ss-dots{position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6"><circle cx="3" cy="3" r="0.7" fill="rgba(255,255,255,0.07)"/></svg>') repeat;}
+.ss-grad{position:absolute;bottom:0;left:0;right:0;height:300px;background:linear-gradient(transparent,rgba(13,21,128,0.6) 20%,#0d1580 65%);}
+.hero-content{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 24px;}
+.partner-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.vdiv{width:1px;height:18px;background:rgba(255,255,255,0.25);}
+.hero-title{font-size:28px;font-weight:900;color:#fff;line-height:1.05;text-transform:uppercase;margin-bottom:22px;letter-spacing:-0.3px;}
+.btn-hero-bk{width:100%;padding:15px;border-radius:12px;background:#c8102e;border:none;font-size:14px;font-weight:700;color:#fff;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;}
+.btn-hero-ss{width:100%;padding:15px;border-radius:12px;background:#FFCD00;border:none;font-size:14px;font-weight:800;color:#0d1580;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;}
+.btn-hero-skip{width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);font-size:13px;font-weight:500;color:rgba(255,255,255,0.75);cursor:pointer;margin-top:10px;letter-spacing:0.2px;}
+.btn-hero-skip:hover{background:rgba(255,255,255,0.15);}
+.back-brands{position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:6px 12px;font-size:10px;color:rgba(255,255,255,0.7);cursor:pointer;}
+
+/* ── SHARED HEADER ── */
+.mh-bk{background:#1a2b6b;padding:16px 16px 0;position:relative;}
+.mh-ss{background:#1a2db8;padding:16px 16px 0;position:relative;}
+.mc{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;}
+.mc::before,.mc::after{content:'';position:absolute;width:10px;height:1.5px;background:#fff;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);}
+.mc::after{transform:translate(-50%,-50%) rotate(-45deg);}
+.ey{font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:4px;}
+.ht{font-size:17px;font-weight:600;color:#fff;margin-bottom:8px;}
+.hs{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.55;margin-bottom:14px;}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,0.85);margin-bottom:14px;background:rgba(255,255,255,0.1);}
+.dot-bk{width:6px;height:6px;border-radius:50%;background:#4dd9ac;flex-shrink:0;}
+.dot-ss{width:6px;height:6px;border-radius:50%;background:#FFCD00;flex-shrink:0;}
+.pips{display:flex;gap:4px;margin-bottom:14px;}
+.pip{height:3px;flex:1;border-radius:2px;}
+.pd-bk{background:#4dd9ac;}.po-bk{background:#fff;}
+.pd-ss{background:#FFCD00;}.po-ss{background:#fff;}
+.pf{background:rgba(255,255,255,0.2);}
+.bk2{display:inline-flex;align-items:center;gap:6px;background:none;border:none;font-size:12px;color:rgba(255,255,255,0.7);cursor:pointer;margin-bottom:10px;padding:0;}
+.mb{padding:16px;background:#fff;}
+.stl{font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;}
+.ss2{font-size:11px;color:#888;margin-bottom:12px;}
+.dv{height:0.5px;background:#eee;margin:14px 0;}
+.btn-bk{width:100%;padding:13px;border-radius:30px;background:#00d8c8;border:none;font-size:13px;font-weight:600;color:#003030;cursor:pointer;margin-bottom:9px;display:block;}
+.btn-bk:disabled{opacity:0.4;cursor:default;}
+.btn-ssb{width:100%;padding:13px;border-radius:30px;background:#FFCD00;border:none;font-size:13px;font-weight:700;color:#0d1580;cursor:pointer;margin-bottom:9px;display:block;}
+.btn-ssb:disabled{opacity:0.4;cursor:default;}
+.btn-ghost{width:100%;padding:11px;border-radius:30px;background:transparent;border:1px solid #e0e0e0;font-size:12px;color:#888;cursor:pointer;}
+
+/* ── LEAGUES ── */
+.lg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lc{border-radius:12px;border:1.5px solid #e8e8e8;background:#fafafa;cursor:pointer;text-align:center;width:100%;height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.lc.on-bk{border-color:#1a2b6b;background:#eef1fb;}
+.lc.on-ss{border-color:#1a2db8;background:#eef2ff;}
+.lf{width:36px;height:24px;border-radius:3px;flex-shrink:0;}
+.ln{font-size:11px;font-weight:600;color:#1a1a2e;margin-top:7px;line-height:1;}
+.lsub{font-size:10px;color:#888;margin-top:3px;line-height:1;}
+.lc.on-bk .ln{color:#1a2b6b;}
+.lc.on-ss .ln{color:#1a2db8;}
+.ltick{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+
+/* ── TEAM CELLS with crest ── */
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.tc{border-radius:10px;border:1.5px solid #e8e8e8;background:#f5f6fa;padding:6px 4px 7px;text-align:center;cursor:pointer;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+.tc.on-bk{background:#eef1fb;border-color:#1a2b6b;}
+.tc.on-ss{background:#eef2ff;border-color:#1a2db8;}
+.tc-crest{width:32px;height:32px;margin:0 auto 4px;flex-shrink:0;position:relative;}
+.tc-crest svg{width:32px;height:32px;}
+.tc.on-bk .tc-tick,.tc.on-ss .tc-tick{display:flex;}
+.tc-tick{display:none;position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;align-items:center;justify-content:center;border:1.5px solid #fff;}
+.tn{font-size:8px;color:#444;line-height:1.2;font-weight:500;word-break:break-word;}
+.tc.on-bk .tn{color:#1a2b6b;font-weight:700;}
+.tc.on-ss .tn{color:#1a2db8;font-weight:700;}
+.oc{border-radius:10px;border:1.5px dashed #ccc;background:#f5f6fa;padding:6px 4px 7px;text-align:center;cursor:pointer;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.oc.on-bk{background:#eef1fb;border-color:#1a2b6b;}
+.oc.on-ss{background:#eef2ff;border-color:#1a2db8;}
+.oi{width:32px;height:32px;border-radius:50%;background:#dde0ee;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;font-size:14px;color:#888;}
+.ol{font-size:8.5px;color:#666;}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid;border-radius:20px;padding:3px 9px;font-size:10px;}
+.tag-bk{background:#eef1fb;border-color:#b0b8d8;color:#1a2b6b;}
+.tag-ss{background:#eef2ff;border-color:#a0b0e8;color:#1a2db8;}
+.tf{width:14px;height:10px;border-radius:2px;flex-shrink:0;}
+.tcnt{font-size:10px;color:#888;margin-bottom:10px;}
+.tcnt span{font-weight:600;}
+.tcnt-bk span{color:#1a2b6b;}
+.tcnt-ss span{color:#1a2db8;}
+
+/* ── CASINO ── */
+.gc{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.gcd{border-radius:10px;border:2px solid transparent;overflow:hidden;cursor:pointer;position:relative;height:72px;}
+.gcd.on-bk{border-color:#00d8c8;}
+.gcd.on-ss{border-color:#FFCD00;}
+.gck-bk,.gck-ss{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.gck-bk{background:#00d8c8;}
+.gck-ss{background:#FFCD00;}
+.gcd.on-bk .gck-bk,.gcd.on-ss .gck-ss{display:flex;}
+.gf{position:absolute;bottom:0;left:0;right:0;padding:5px 7px;background:linear-gradient(transparent,rgba(0,0,0,0.65));display:flex;align-items:flex-end;justify-content:space-between;}
+.gn{font-size:10px;font-weight:600;color:#fff;}
+.bh{font-size:8px;padding:2px 5px;border-radius:4px;font-weight:600;background:#e24b4a;color:#fff;}
+.bn{font-size:8px;padding:2px 5px;border-radius:4px;font-weight:600;background:#1a8c5b;color:#fff;}
+.be{font-size:8px;padding:2px 5px;border-radius:4px;font-weight:600;background:#1a2b6b;color:#fff;}
+
+/* ── DONE ── */
+.done-outer{display:flex;flex-direction:column;}
+.done-header{padding:20px 16px 0;position:relative;display:flex;flex-direction:column;align-items:center;}
+.done-check{width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;}
+.done-body{padding:14px 16px 16px;background:#fff;display:flex;flex-direction:column;gap:12px;}
+.pref-box{background:#f4f6fb;border-radius:10px;padding:12px;margin-bottom:12px;}
+.pref-label{font-size:10px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;}
+.game-section-label{font-size:10px;font-weight:700;color:#1a2db8;text-transform:uppercase;letter-spacing:0.06em;margin:12px 0 8px;display:flex;align-items:center;gap:6px;}
+.game-section-label::after{content:'';flex:1;height:1px;background:#e8e8f0;}
+.game-section-label:first-child{margin-top:0;}
+.pref-row{display:flex;gap:6px;margin-bottom:8px;align-items:flex-start;}
+.pref-key{font-size:11px;color:#888;flex-shrink:0;width:50px;padding-top:2px;}
+.pref-imgs{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+.pref-flag{width:28px;height:20px;border-radius:3px;flex-shrink:0;border:1px solid rgba(0,0,0,0.08);}
+.pref-crest-wrap{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pref-game-thumb{width:44px;height:30px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+
+/* ── PROVIDER CARDS ── */
+.prov-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.prov-card{border-radius:12px;border:1.5px solid #e8e8e8;background:#fafafa;cursor:pointer;height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;flex-shrink:0;transition:border-color .15s,background .15s;}
+.prov-card.on-ss{border-color:#1a2db8;background:#eef2ff;}
+.prov-card:hover{border-color:#aab0d8;background:#f4f6ff;}
+.prov-icon{font-size:22px;line-height:1;margin-bottom:2px;}
+.prov-logo{font-size:11px;font-weight:800;letter-spacing:0.3px;text-align:center;line-height:1.2;}
+.prov-sub{font-size:9px;color:#aaa;text-align:center;}
+.prov-tick{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;background:#FFCD00;display:none;align-items:center;justify-content:center;}
+.prov-card.on-ss .prov-tick{display:flex;}
+
+.pref-game-label{position:absolute;bottom:1px;left:2px;right:2px;font-size:6px;font-weight:700;color:#fff;text-align:center;line-height:1.1;}
+
+/* ── BETTING STYLE ── */
+.style-group{margin-bottom:18px;}
+.style-group-label{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.style-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.style-card{border-radius:14px;border:1.5px solid #e8e8e8;background:#fafafa;cursor:pointer;padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative;transition:border-color .15s,background .15s;}
+.style-card:hover{border-color:#aab0d8;background:#f4f6ff;}
+.style-card.on-bk{border-color:#1a2b6b;background:#eef1fb;}
+.style-card.on-ss{border-color:#1a2db8;background:#eef2ff;}
+.style-card-icon{font-size:24px;line-height:1;margin-bottom:2px;}
+.style-card-title{font-size:11px;font-weight:700;color:#1a1a2e;line-height:1.25;}
+.style-card-sub{font-size:9px;color:#888;line-height:1.3;}
+.style-tick{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.style-card.on-bk .style-tick,.style-card.on-ss .style-tick{display:flex;}
+
+/* ── MAGIC ── */
+.magic-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;position:relative;overflow:hidden;}
+.magic-bar-track{width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.magic-bar-fill{height:100%;border-radius:2px;width:0%;transition:width 0.5s ease;}
+
+/* ── HOME ── */
+.home-screen{display:flex;flex-direction:column;background:#f5f6fa;}
+.home-header{padding:14px 14px 12px;}
+.home-body{padding:12px;display:flex;flex-direction:column;gap:10px;}
+.home-soon{border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;}
+.home-section-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.ph{flex:1;border-radius:10px;background:#e8eaf0;height:56px;animation:pulse 1.8s infinite;}
+.home-cta{border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+.home-cta-btn{background:rgba(255,255,255,0.2);border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:#fff;cursor:pointer;}
+.trending-wrap{background:#fff;border-radius:14px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.trending-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.trending-title{font-size:12px;font-weight:800;color:#1a1a2e;display:flex;align-items:center;gap:6px;}
+.trending-controls{display:flex;align-items:center;gap:6px;}
+.trending-nav{width:24px;height:24px;border-radius:50%;border:none;background:#eef1fb;color:#1a2b6b;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.trending-nav:active{transform:scale(0.96);}
+.trending-dots{display:flex;gap:4px;margin:0 2px;}
+.trending-dot{width:5px;height:5px;border-radius:50%;background:#d8dbe5;}
+.trending-dot.on{background:#1a2b6b;}
+.trending-carousel{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding-bottom:2px;-webkit-overflow-scrolling:touch;touch-action:pan-x;cursor:grab;user-select:none;scroll-behavior:smooth;}
+.trending-carousel.dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;}
+.trending-carousel::-webkit-scrollbar{display:none;}
+.trending-card{flex:0 0 210px;border-radius:12px;padding:12px;scroll-snap-align:start;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;gap:10px;}
+.trending-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(255,255,255,0.18),transparent 45%);pointer-events:none;}
+.trending-chip{align-self:flex-start;font-size:8.5px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;border-radius:999px;padding:4px 7px;background:rgba(255,255,255,0.16);position:relative;}
+.trending-main{display:flex;align-items:center;gap:10px;position:relative;}
+.trending-icon{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.trending-copy{flex:1;}
+.trending-name{font-size:13px;font-weight:800;line-height:1.2;margin-bottom:3px;}
+.trending-desc{font-size:10px;color:rgba(255,255,255,0.72);line-height:1.35;}
+.trending-action{position:relative;display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:700;color:rgba(255,255,255,0.92);}
+.trending-action span:last-child{font-size:13px;}
+</style>
+</head>
+<body>
+<div class="modal">
+
+<!-- BRAND -->
+<div class="scr on" id="s-brand">
+  <div class="brand-screen">
+    <div class="brand-glow"></div><div class="brand-grid"></div>
+    <div class="brand-icon-big">🎮</div>
+    <div class="brand-tagline">Welcome — choose your brand</div>
+    <div class="brand-headline">Which platform<br>are you using?</div>
+    <div class="brand-cards">
+      <div class="brand-card bk-card" onclick="setBrand('bk');go('s-brand','s0-bk')">
+        <div class="brand-icon bi-bk">👑</div>
+        <div class="brand-info"><div class="brand-name">BetKing</div><div class="brand-region">Nigeria · Sports &amp; Casino</div></div>
+        <div class="brand-arrow">›</div>
+      </div>
+      <div class="brand-card ss-card" onclick="setBrand('ss');go('s-brand','s0-ss')">
+        <div class="brand-icon bi-ss"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10 C3 6 6 3 10 3 C14 3 17 6 17 10" stroke="#FFCD00" stroke-width="2.2" stroke-linecap="round"/><path d="M6 14 C6 14 8 17 10 17 C12 17 14 14 14 14" stroke="#FFCD00" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <div class="brand-info"><div class="brand-name" style="color:#FFCD00;">SuperSportBET</div><div class="brand-region">South Africa · Sports &amp; Casino</div></div>
+        <div class="brand-arrow">›</div>
+      </div>
+    </div>
+    <div class="brand-note">You can switch brands at any time</div>
+  </div>
+</div>
+
+<!-- BK HERO -->
+<div class="scr" id="s0-bk">
+  <div class="hero-bk">
+    <div class="stadium-bg"></div><div class="red-shape"></div><div class="red-noise"></div>
+    <div class="crowd" id="crowd-bk"></div>
+    <div class="hero-grad-bk"></div>
+    <div class="hero-content">
+      <div class="partner-row"><div style="display:flex;align-items:center;gap:5px;"><span style="font-size:14px;">👑</span><span style="font-size:13px;font-weight:800;color:#fff;">betking</span></div><div class="vdiv"></div><span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.4px;">Official Betting Partner</span></div>
+      <div class="hero-title">Personalise<br>your favourite<br><span style="color:#c8102e;">teams</span> &amp; games</div>
+      <button class="btn-hero-bk" onclick="showLeaguesStep_bk()">Get Started</button>
+      <button class="btn-hero-skip" onclick="buildHome();go('s0-bk','s-home')">Skip personalisation</button>
+    </div>
+    <button class="back-brands" onclick="go('s0-bk','s-brand')">‹ Brands</button>
+  </div>
+</div>
+
+<!-- SS HERO -->
+<div class="scr" id="s0-ss">
+  <div class="hero-ss">
+    <div class="ss-bg"></div><div class="ss-dots"></div>
+    <div style="position:absolute;top:18%;left:0;right:0;height:220px;">
+      <div style="position:absolute;left:12px;bottom:0;display:flex;flex-direction:column;align-items:center;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.28);margin-bottom:2px;"></div><div style="width:26px;height:56px;background:rgba(180,0,0,0.65);border-radius:4px 4px 0 0;"></div><div style="display:flex;gap:2px;"><div style="width:11px;height:46px;background:rgba(150,0,0,0.55);border-radius:0 0 3px 3px;"></div><div style="width:11px;height:40px;background:rgba(150,0,0,0.55);border-radius:0 0 3px 3px;"></div></div></div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:0;display:flex;flex-direction:column;align-items:center;"><div style="width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.32);margin-bottom:2px;"></div><div style="width:36px;height:66px;background:rgba(20,20,120,0.75);border-radius:6px 6px 0 0;"><div style="width:10px;height:28px;background:rgba(180,40,40,0.75);border-radius:2px;margin:8px auto 0;"></div></div><div style="width:56px;height:28px;background:rgba(10,10,80,0.65);border-radius:0 0 18px 18px;"></div></div>
+      <div style="position:absolute;right:12px;bottom:0;display:flex;flex-direction:column;align-items:center;"><div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.28);margin-bottom:2px;"></div><div style="width:26px;height:56px;background:rgba(200,200,200,0.45);border-radius:4px 4px 0 0;"></div><div style="display:flex;gap:2px;"><div style="width:11px;height:44px;background:rgba(180,180,180,0.4);border-radius:0 0 3px 3px;"></div><div style="width:11px;height:38px;background:rgba(180,180,180,0.4);border-radius:0 0 3px 3px;"></div></div></div>
+    </div>
+    <div class="crowd" id="crowd-ss"></div><div class="ss-grad"></div>
+    <div class="hero-content">
+      <div class="partner-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 C2 4 4 2 7 2 C10 2 12 4 12 7" stroke="#FFCD00" stroke-width="1.8" stroke-linecap="round"/><path d="M4 10 C4 10 5.5 12 7 12 C8.5 12 10 10 10 10" stroke="#FFCD00" stroke-width="1.8" stroke-linecap="round"/></svg><span style="font-size:13px;font-weight:900;color:#fff;">SuperSport<span style="color:#FFCD00;">BET</span></span><div class="vdiv"></div><span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.4px;">Official Betting Partner</span></div>
+      <div class="hero-title">Personalise<br>your favourite<br><span style="color:#FFCD00;">games</span> &amp; teams</div>
+      <button class="btn-hero-ss" onclick="go('s0-ss','s3-prov')">Get Started</button>
+      <button class="btn-hero-skip" onclick="buildHome();go('s0-ss','s-home')">Skip personalisation</button>
+    </div>
+    <button class="back-brands" onclick="go('s0-ss','s-brand')">‹ Brands</button>
+  </div>
+</div>
+
+<!-- S1 LEAGUE -->
+<div class="scr" id="s1">
+  <div id="mh1" class="mh-bk">
+    <div class="mc"></div>
+    <button class="bk2" onclick="brand==='ss'?(clearLeagues(),go('s1','s3-games')):backToHero('s1')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div><div class="ht">Pick your leagues</div>
+    <div class="hs">Select one or more — we'll tailor your feed.</div>
+    <div class="pill"><div id="ldot" class="dot-bk"></div><span id="lpill">Step 1 of 5 — Leagues</span></div>
+    <div class="pips"><div class="pip" id="p1a"></div><div class="pip pf"></div><div class="pip pf"></div></div>
+  </div>
+  <div class="mb">
+    <div class="stl">Select leagues</div><div class="ss2">Tap to toggle — select as many as you like</div>
+    <div class="lg">
+      <div class="lc" data-k="psl" onclick="toggleL(this)"><div class="ltick" id="lt-psl"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#007A4D 33%,#FFB81C 33%,#FFB81C 66%,#007A4D 66%);"></div><div class="ln">SA Premiership</div><div class="lsub">South Africa</div></div>
+      <div class="lc" data-k="epl" onclick="toggleL(this)"><div class="ltick" id="lt-epl"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#012169 33%,#fff 33%,#fff 66%,#C8102E 66%);"></div><div class="ln">Premier League</div><div class="lsub">England</div></div>
+      <div class="lc" data-k="ll" onclick="toggleL(this)"><div class="ltick" id="lt-ll"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#c60b1e 25%,#ffc400 25%,#ffc400 75%,#c60b1e 75%);"></div><div class="ln">La Liga</div><div class="lsub">Spain</div></div>
+      <div class="lc" data-k="bl" onclick="toggleL(this)"><div class="ltick" id="lt-bl"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#000 33%,#D00 33%,#D00 66%,#FFCE00 66%);"></div><div class="ln">Bundesliga</div><div class="lsub">Germany</div></div>
+      <div class="lc" data-k="ucl" onclick="toggleL(this)"><div class="ltick" id="lt-ucl"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#001489 33%,#fff 33%,#fff 66%,#001489 66%);"></div><div class="ln">Champions League</div><div class="lsub">Europe</div></div>
+      <div class="lc" data-k="wc" onclick="toggleL(this)"><div class="ltick" id="lt-wc"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="lf" style="background:linear-gradient(#006AA7 33%,#fff 33%,#fff 66%,#006AA7 66%);"></div><div class="ln">World Cup</div><div class="lsub">International</div></div>
+    </div>
+    <div class="dv"></div>
+    <button id="lbtn" class="btn-bk" disabled onclick="gotoTeams()">Continue →</button>
+    <button class="btn-ghost">Skip for now</button>
+  </div>
+</div>
+
+<!-- S2 TEAM -->
+<div class="scr" id="s2">
+  <div id="mh2" class="mh-bk">
+    <div class="mc"></div>
+    <button class="bk2" onclick="brand==='ss'?clearTeamsAndGo('s2','s1'):goBackS2()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div><div class="ht">Choose your teams</div>
+    <div class="hs" id="tsub">Top clubs from your leagues.</div>
+    <div class="pill"><div id="tdot" class="dot-bk"></div><span id="tpill">Step 3 of 5 — Teams</span></div>
+    <div class="pips"><div class="pip" id="p2a"></div><div class="pip" id="p2b"></div><div class="pip pf"></div></div>
+  </div>
+  <div class="mb">
+    <div class="stl">Select your clubs</div>
+    <div class="tags" id="ltags"></div>
+    <div class="tcnt tcnt-bk" id="tcount"><span>0</span> teams selected</div>
+    <div class="tg" id="tgrid"></div>
+    <div class="dv"></div>
+    <button id="tbtn" class="btn-bk" disabled onclick="brand==='ss'?(go('s2','s-style')):go('s2','s3')">Continue →</button>
+    <button class="btn-ghost">Skip for now</button>
+  </div>
+</div>
+
+<!-- S3-PROV: SS only — choose providers -->
+<div class="scr" id="s3-prov">
+  <div class="mh-ss">
+    <div class="mc"></div>
+    <button class="bk2" onclick="clearProviders();backToHero('s3-prov')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div><div class="ht">Pick your providers</div>
+    <div class="hs">Choose the game studios you enjoy most.</div>
+    <div class="pill"><div class="dot-ss"></div><span id="prov-pill">Step 1 of 5 — Providers</span></div>
+    <div class="pips"><div class="pip po-ss"></div><div class="pip pf"></div><div class="pip pf"></div><div class="pip pf"></div></div>
+  </div>
+  <div class="mb">
+    <div class="stl">Select game providers</div><div class="ss2">Tap to toggle — multiple allowed</div>
+    <div class="prov-grid" id="prov-grid">
+      <div class="prov-card" data-prov="habanero" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">🌶️</div>
+        <div class="prov-logo" style="color:#E8521A;">HABANERO</div>
+        <div class="prov-sub">177 Slots</div>
+      </div>
+      <div class="prov-card" data-prov="spribe" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">🚀</div>
+        <div class="prov-logo" style="color:#1a2db8;">SPRIBE</div>
+        <div class="prov-sub">Crash Games</div>
+      </div>
+      <div class="prov-card" data-prov="pragmatic" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">⚡</div>
+        <div class="prov-logo" style="color:#d40000;">PRAGMATIC</div>
+        <div class="prov-sub">119 Slots</div>
+      </div>
+      <div class="prov-card" data-prov="lw" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">🎰</div>
+        <div class="prov-logo" style="color:#1a6a2a;">L&amp;W</div>
+        <div class="prov-sub">Table Games</div>
+      </div>
+      <div class="prov-card" data-prov="betgames" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">🎲</div>
+        <div class="prov-logo" style="color:#8b1a8b;">BET GAMES</div>
+        <div class="prov-sub">Live Dealer</div>
+      </div>
+      <div class="prov-card" data-prov="evolution" onclick="toggleProv(this)">
+        <div class="prov-tick"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="prov-icon">♠️</div>
+        <div class="prov-logo" style="color:#6d0a0a;">EVOLUTION</div>
+        <div class="prov-sub">961 Games</div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <button id="prov-btn" class="btn-ssb" disabled onclick="buildProvGames();go('s3-prov','s3-games')">Continue →</button>
+    <button class="btn-ghost">Skip for now</button>
+  </div>
+</div>
+
+<!-- S3-GAMES: SS only — pick top games from selected providers -->
+<div class="scr" id="s3-games">
+  <div class="mh-ss">
+    <div class="mc"></div>
+    <button class="bk2" onclick="clearSSGames();go('s3-games','s3-prov')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div><div class="ht">Choose your games</div>
+    <div class="hs" id="games-hs">Top games from your selected providers.</div>
+    <div class="pill"><div class="dot-ss"></div>Step 2 of 5 — Games</div>
+    <div class="pips"><div class="pip pd-ss"></div><div class="pip po-ss"></div><div class="pip pf"></div><div class="pip pf"></div></div>
+  </div>
+  <div class="mb">
+    <div class="stl">Pin your favourite games</div>
+    <div class="tags" id="prov-tags"></div>
+    <div class="tcnt tcnt-ss" id="game-count"><span>0</span> games selected</div>
+    <div id="ss-game-grid"></div>
+    <div class="dv"></div>
+    <button id="sg-btn" class="btn-ssb" disabled onclick="showLeaguesStep()">Continue →</button>
+    <button class="btn-ghost">Skip for now</button>
+  </div>
+</div>
+
+<!-- S3 CASINO -->
+<div class="scr" id="s3">
+  <div id="mh3" class="mh-bk">
+    <div class="mc"></div>
+    <button class="bk2" onclick="clearGames();go('s3','s2')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div><div class="ht">Top casino picks</div>
+    <div class="hs">Pin your favourite games to your home screen.</div>
+    <div class="pill"><div id="cdot" class="dot-bk"></div>Step 3 of 5 — Casino</div>
+    <div class="pips" id="s3pips"><div class="pip" id="p3a"></div><div class="pip" id="p3b"></div><div class="pip" id="p3c"></div><div class="pip pf" id="p3d" style="display:none;"></div><div class="pip pf" id="p3e" style="display:none;"></div></div>
+  </div>
+  <div class="mb">
+    <div class="stl">Select up to 4 games</div><div class="ss2">These will be pinned to your home</div>
+    <div class="gc">
+      <div class="gcd" data-name="Aviator" onclick="toggleG(this)" style="background:#3a0808;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a0808,#7a1010);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Aviator</span><span class="bh">HOT</span></div></div>
+      <div class="gcd" data-name="Crash King" onclick="toggleG(this)" style="background:#08183a;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#08183a,#182870);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Crash King</span><span class="be">EXCL</span></div></div>
+      <div class="gcd" data-name="Space XY" onclick="toggleG(this)" style="background:#082818;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#082818,#145830);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Space XY</span><span class="bn">NEW</span></div></div>
+      <div class="gcd" data-name="JetX" onclick="toggleG(this)" style="background:#281808;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#281808,#604010);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">JetX</span><span class="bn">NEW</span></div></div>
+      <div class="gcd" data-name="King of Spins" onclick="toggleG(this)" style="background:#180828;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#180828,#481868);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">King of Spins</span><span class="be">EXCL</span></div></div>
+      <div class="gcd" data-name="Mines" onclick="toggleG(this)" style="background:#082828;"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#082828,#085858);"></div><div class="gck-bk"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="gf"><span class="gn">Mines</span><span class="be">EXCL</span></div></div>
+    </div>
+    <div style="font-size:10px;color:#aaa;text-align:right;margin-top:6px;" id="gcnt">0 / 4 selected</div>
+    <div class="dv"></div>
+    <button id="cbtn" class="btn-bk" disabled onclick="go('s3','s-style')">Finish setup →</button>
+    <button class="btn-ghost">Skip for now</button>
+  </div>
+</div>
+
+<!-- S-STYLE: Betting style -->
+<div class="scr" id="s-style">
+  <div id="mh-style" class="mh-bk">
+    <div class="mc"></div>
+    <button class="bk2" onclick="go('s-style','s2')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L3 6l5 4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="ey">Personalise your experience</div>
+    <div class="ht">Your betting style</div>
+    <div class="hs">Help us tailor your experience.</div>
+    <div class="pill"><div id="style-dot" class="dot-bk"></div><span id="style-pill">Step 5 of 5 — Style</span></div>
+    <div class="pips" id="style-pips"><div class="pip" id="sp1"></div><div class="pip" id="sp2"></div><div class="pip" id="sp3"></div></div>
+  </div>
+  <div class="mb">
+    <div class="style-group">
+      <div class="style-group-label">Risk preference</div>
+      <div class="style-cards">
+        <div class="style-card" id="sc-low" onclick="pickStyle('risk','low',this)">
+          <div class="style-tick" id="st-low" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">🛡️</div>
+          <div class="style-card-title">Low risk</div>
+          <div class="style-card-sub">Steady rewards &amp; safer bets</div>
+        </div>
+        <div class="style-card" id="sc-high" onclick="pickStyle('risk','high',this)">
+          <div class="style-tick" id="st-high" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">🚀</div>
+          <div class="style-card-title">High risk</div>
+          <div class="style-card-sub">Big promos &amp; high reward</div>
+        </div>
+      </div>
+    </div>
+    <div class="style-group">
+      <div class="style-group-label">Session style</div>
+      <div class="style-cards">
+        <div class="style-card" id="sc-quick" onclick="pickStyle('session','quick',this)">
+          <div class="style-tick" id="st-quick" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">⚡</div>
+          <div class="style-card-title">Quick play</div>
+          <div class="style-card-sub">Fast bets, on the go</div>
+        </div>
+        <div class="style-card" id="sc-long" onclick="pickStyle('session','long',this)">
+          <div class="style-tick" id="st-long" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">🎯</div>
+          <div class="style-card-title">Long sessions</div>
+          <div class="style-card-sub">Deep dives &amp; research</div>
+        </div>
+      </div>
+    </div>
+    <div class="style-group">
+      <div class="style-group-label">Promo preferences <span style="font-size:9px;font-weight:400;color:#bbb;text-transform:none;letter-spacing:0;">(select all that apply)</span></div>
+      <div class="style-cards">
+        <div class="style-card" id="sc-freebets" onclick="togglePromo('freebets',this)">
+          <div class="style-tick" id="st-freebets" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">🎟️</div>
+          <div class="style-card-title">Free bets</div>
+          <div class="style-card-sub">Bet without risk</div>
+        </div>
+        <div class="style-card" id="sc-freespins" onclick="togglePromo('freespins',this)">
+          <div class="style-tick" id="st-freespins" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">🎰</div>
+          <div class="style-card-title">Free spins</div>
+          <div class="style-card-sub">Bonus casino rounds</div>
+        </div>
+        <div class="style-card" id="sc-cashback" onclick="togglePromo('cashback',this)">
+          <div class="style-tick" id="st-cashback" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">💰</div>
+          <div class="style-card-title">Cashback</div>
+          <div class="style-card-sub">Get losses back</div>
+        </div>
+        <div class="style-card" id="sc-odds" onclick="togglePromo('odds',this)">
+          <div class="style-tick" id="st-odds" style="background:#4dd9ac;"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#003030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="style-card-icon">📈</div>
+          <div class="style-card-title">Odds boosts</div>
+          <div class="style-card-sub">Enhanced winnings</div>
+        </div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <button id="style-btn" class="btn-bk" disabled onclick="buildDone();startMagic()">Personalise my experience! ✨</button>
+    <button class="btn-ghost" onclick="buildDone();startMagic()">Skip for now</button>
+  </div>
+</div>
+
+<!-- S5 MAGIC -->
+<div class="scr" id="s-magic">
+  <div class="magic-screen">
+    <div style="position:absolute;inset:0;pointer-events:none;" id="magic-bg"></div>
+    <div style="position:relative;text-align:center;margin-bottom:20px;">
+      <div style="font-size:44px;margin-bottom:10px;">✨</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:8px;">Building your<br>personal experience</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;">Hang tight — setting<br>everything up just for you.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;position:relative;" id="magic-steps"></div>
+    <div style="width:100%;position:relative;margin-top:14px;">
+      <div class="magic-bar-track"><div class="magic-bar-fill" id="magic-bar"></div></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.5);text-align:center;margin-top:6px;" id="magic-pct">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- S6 HOME -->
+<div class="scr" id="s-home">
+  <div class="home-screen">
+    <div class="home-header" id="home-hdr">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div><div style="font-size:11px;color:rgba(255,255,255,0.6);">Good morning 👋</div><div style="font-size:16px;font-weight:700;color:#fff;" id="home-brand-name">BetKing</div></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>
+      </div>
+      <div style="display:flex;gap:6px;overflow:hidden;" id="home-leagues-row"></div>
+    </div>
+    <div class="home-body">
+      <div class="home-cta" id="home-deposit" style="background:#00d8c8;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:17px;">💳</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#003030;">Deposit now</div>
+            <div style="font-size:10px;color:rgba(0,48,48,0.72);margin-top:2px;">Top up your account</div>
+          </div>
+        </div>
+        <button class="home-cta-btn" style="background:#003030;color:#fff;">Deposit</button>
+      </div>
+
+      <div class="home-cta" id="home-casino" style="background:#1a2b6b;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;">🎰</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#fff;">Casino</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;">Slots, live games &amp; more</div>
+          </div>
+        </div>
+        <button class="home-cta-btn">Play</button>
+      </div>
+
+      <div class="home-cta" id="home-sports" style="background:#c8102e;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;">⚽</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#fff;">Sports</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;">Matches, markets &amp; live odds</div>
+          </div>
+        </div>
+        <button class="home-cta-btn">Bet</button>
+      </div>
+
+      <div class="home-cta" id="home-promos" style="background:#FFCD00;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(13,21,128,0.12);display:flex;align-items:center;justify-content:center;font-size:17px;">🎁</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#0d1580;">Promos</div>
+            <div style="font-size:10px;color:rgba(13,21,128,0.72);margin-top:2px;">Offers and rewards</div>
+          </div>
+        </div>
+        <button class="home-cta-btn" style="background:#0d1580;color:#fff;">View</button>
+      </div>
+
+      <div class="trending-wrap">
+        <div class="trending-head">
+          <div class="trending-title"><span>🔥</span><span>Trending now</span></div>
+          <div class="trending-controls">
+            <button class="trending-nav" type="button" onclick="moveTrending(-1)">‹</button>
+            <div class="trending-dots" id="trending-dots"><div class="trending-dot on"></div><div class="trending-dot"></div><div class="trending-dot"></div><div class="trending-dot"></div></div>
+            <button class="trending-nav" type="button" onclick="moveTrending(1)">›</button>
+          </div>
+        </div>
+        <div class="trending-carousel" id="trending-carousel"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── CREST SVGs — shield-shaped inline SVGs for each team ──
+var CRESTS = {
+  // EPL
+  'Arsenal': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 6 L28 18 C28 25 22 30 16 30 C10 30 4 25 4 18 L4 6 Z" fill="#EF0107"/><path d="M10 10 L16 8 L22 10 L22 20 C22 23 19 26 16 26 C13 26 10 23 10 20 Z" fill="#9B111E"/><text x="16" y="20" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">AFC</text></svg>',
+  'Man City': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#6CABDD"/><circle cx="16" cy="16" r="10" fill="#1C2C5B"/><path d="M16 8 L18 14 L24 14 L19 18 L21 24 L16 20 L11 24 L13 18 L8 14 L14 14 Z" fill="#6CABDD"/><text x="16" y="28" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">MCFC</text></svg>',
+  'Liverpool': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 6 L28 18 C28 25 22 30 16 30 C10 30 4 25 4 18 L4 6 Z" fill="#C8102E"/><path d="M16 10 L18 15 L23 15 L19 18 L21 23 L16 20 L11 23 L13 18 L9 15 L14 15 Z" fill="#F6EB61"/><text x="16" y="29" text-anchor="middle" font-size="4.5" font-weight="bold" fill="white" font-family="Arial">LFC</text></svg>',
+  'Chelsea': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#034694"/><ellipse cx="16" cy="16" rx="7" ry="9" fill="#EE242C"/><text x="16" y="19" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">CFC</text></svg>',
+  'Tottenham': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#132257"/><path d="M16 8 L17.5 13 L22 13 L18.5 16 L20 21 L16 18 L12 21 L13.5 16 L10 13 L14.5 13 Z" fill="white"/><text x="16" y="28" text-anchor="middle" font-size="4.5" font-weight="bold" fill="white" font-family="Arial">SPURS</text></svg>',
+  'Man Utd': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#DA291C"/><rect x="8" y="14" width="16" height="3" fill="white"/><path d="M16 9 L17.5 13 L8 13 L16 9 Z" fill="#FBE122"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">MUFC</text></svg>',
+  'Newcastle': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#241F20"/><rect x="4" y="14" width="12" height="14" fill="white" clip-path="url(#sh)"/><rect x="16" y="2" width="12" height="12" fill="white" clip-path="url(#sh)"/><text x="16" y="28" text-anchor="middle" font-size="5" font-weight="bold" fill="#241F20" font-family="Arial">NUFC</text></svg>',
+  'Aston Villa': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#7A263A"/><path d="M7 14 L25 14 L25 17 L7 17 Z" fill="#95BFE5"/><text x="16" y="24" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">AVFC</text></svg>',
+  'West Ham': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#7A263A"/><path d="M8 9 Q16 16 24 9 Q24 20 16 26 Q8 20 8 9 Z" fill="#1BB1E7" opacity="0.6"/><text x="16" y="27" text-anchor="middle" font-size="4.5" font-weight="bold" fill="white" font-family="Arial">WHU</text></svg>',
+  'Wolves': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#FDB913"/><path d="M10 10 L16 8 L22 10 L22 16 L16 24 L10 16 Z" fill="#231F20"/><text x="16" y="28" text-anchor="middle" font-size="4.5" font-weight="bold" fill="#231F20" font-family="Arial">WWFC</text></svg>',
+  // SERIE A
+  'Inter': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#010E80"/><path d="M10 10 L16 6 L22 10 L22 22 L16 26 L10 22 Z" fill="#black"/><rect x="8" y="10" width="4" height="12" fill="white"/><rect x="20" y="10" width="4" height="12" fill="white"/><text x="16" y="20" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">INT</text></svg>',
+  'AC Milan': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#C80000"/><rect x="4" y="7" width="8" height="23" fill="#1C1C1C" clip-path="url(#s)"/><rect x="12" y="7" width="8" height="23" fill="#C80000" clip-path="url(#s)"/><rect x="20" y="7" width="8" height="23" fill="#1C1C1C" clip-path="url(#s)"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">ACM</text></svg>',
+  'Juventus': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#1C1C1C"/><rect x="4" y="7" width="12" height="23" fill="white" opacity="0.9" clip-path="url(#s2)"/><text x="16" y="20" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">JUV</text></svg>',
+  'Napoli': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#0A6E9E"/><circle cx="16" cy="16" r="9" fill="white"/><circle cx="16" cy="16" r="6" fill="#0A6E9E"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">SSC</text></svg>',
+  'AS Roma': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#8B1A10"/><path d="M16 8 L18 14 L24 14 L19 17 L21 23 L16 20 L11 23 L13 17 L8 14 L14 14 Z" fill="#F5C518"/><text x="16" y="28" text-anchor="middle" font-size="4.5" font-weight="bold" fill="white" font-family="Arial">ROMA</text></svg>',
+  'Lazio': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#2A8FBD"/><path d="M16 8 L18 14 L24 14 L19 17 L21 23 L16 20 L11 23 L13 17 L8 14 L14 14 Z" fill="white"/><text x="16" y="28" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">SS</text></svg>',
+  'Atalanta': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#1B4DA0"/><path d="M10 7 L16 4 L22 7 L22 24 L16 28 L10 24 Z" fill="black" opacity="0.3"/><text x="16" y="20" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">ATA</text></svg>',
+  'Fiorentina': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#5B2D8E"/><path d="M16 8 L18 13 L23 13 L19 16 L20 21 L16 18 L12 21 L13 16 L9 13 L14 13 Z" fill="white"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">ACF</text></svg>',
+  'Torino': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#8B1A1A"/><rect x="12" y="6" width="8" height="18" fill="#8B1A1A"/><rect x="8" y="10" width="16" height="6" fill="#8B1A1A"/><path d="M12 6 L20 6 L20 8 L12 8 Z" fill="#C8A040"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">TOR</text></svg>',
+  'Bologna': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#9B1C1C"/><rect x="4" y="7" width="12" height="23" fill="#002366" opacity="0.8" clip-path="url(#s3)"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">BFC</text></svg>',
+  // BUNDESLIGA
+  'Bayern': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#C8102E"/><circle cx="16" cy="16" r="9" fill="white"/><rect x="10" y="10" width="6" height="6" fill="#C8102E"/><rect x="16" y="16" width="6" height="6" fill="#C8102E"/><rect x="10" y="16" width="6" height="6" fill="#003366"/><rect x="16" y="10" width="6" height="6" fill="#003366"/><text x="16" y="28" text-anchor="middle" font-size="4.5" font-weight="bold" fill="#C8102E" font-family="Arial">FCB</text></svg>',
+  'Dortmund': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FFE500"/><circle cx="16" cy="16" r="9" fill="#1C1C1C"/><path d="M12 11 L20 11 L20 21 L16 24 L12 21 Z" fill="#FFE500"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#FFE500" font-family="Arial">BVB</text></svg>',
+  'Leverkusen': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#E32221"/><path d="M8 14 L24 14 L24 18 L8 18 Z" fill="black"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">B04</text></svg>',
+  'Leipzig': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003C8F"/><text x="16" y="14" text-anchor="middle" font-size="8" font-weight="bold" fill="#DD0741" font-family="Arial">RB</text><text x="16" y="23" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">Leipzig</text></svg>',
+  'Frankfurt': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#D40000"/><path d="M16 8 C16 8 10 12 10 20 C10 20 16 22 22 20 C22 12 16 8 16 8 Z" fill="black" opacity="0.5"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">SGE</text></svg>',
+  'Wolfsburg': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#3A8B3A"/><circle cx="16" cy="16" r="8" fill="white"/><path d="M12 12 L16 10 L20 12 L20 20 L16 22 L12 20 Z" fill="#3A8B3A"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">VfL</text></svg>',
+  'Gladbach': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#1a1a1a"/><path d="M10 7 L22 7 L22 25 L16 29 L10 25 Z" fill="white" opacity="0.15"/><text x="16" y="18" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">BMG</text></svg>',
+  'Freiburg': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#CC0000"/><rect x="4" y="14" width="24" height="5" fill="black"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">SCF</text></svg>',
+  'Hoffenheim': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#1566AA"/><text x="16" y="14" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">TSG</text><text x="16" y="23" text-anchor="middle" font-size="5" fill="white" font-family="Arial">1899</text></svg>',
+  'Mainz': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#C8102E"/><rect x="4" y="7" width="12" height="23" fill="white" opacity="0.2"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">M05</text></svg>',
+  // LIGUE 1
+  'PSG': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003F7F"/><circle cx="16" cy="16" r="9" fill="#D4002A"/><text x="16" y="14" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">PSG</text><path d="M12 16 L20 16 L18 20 L14 20 Z" fill="#F5C518"/></svg>',
+  'Monaco': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#D4002A"/><rect x="4" y="16" width="24" height="14" fill="white" clip-path="url(#s4)"/><text x="16" y="14" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">ASM</text></svg>',
+  'Marseille': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#0070C0"/><circle cx="16" cy="16" r="9" fill="white"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#0070C0" font-family="Arial">OM</text></svg>',
+  'Lyon': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003B7B"/><path d="M16 8 L18 13 L24 13 L19 16 L21 22 L16 19 L11 22 L13 16 L8 13 L14 13 Z" fill="#D4002A"/><text x="16" y="27" text-anchor="middle" font-size="4.5" font-weight="bold" fill="white" font-family="Arial">OL</text></svg>',
+  'Lille': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#C8102E"/><text x="16" y="18" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">LOSC</text></svg>',
+  'Rennes': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#B30000"/><path d="M10 7 L22 7 L22 16 L16 16 L16 28 L10 28 Z" fill="black" opacity="0.3"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">SRF</text></svg>',
+  'Nice': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#CC0000"/><path d="M10 10 L16 8 L22 10 L22 22 L16 24 L10 22 Z" fill="black" opacity="0.4"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">OGC</text></svg>',
+  'Lens': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#D40000"/><path d="M16 6 L26 10 L26 18 L16 22 L6 18 L6 10 Z" fill="#F5C518" opacity="0.7"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#D40000" font-family="Arial">RCL</text></svg>',
+  'Strasbourg': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003B7B"/><path d="M10 12 L22 12 L22 20 L10 20 Z" fill="#D40000"/><text x="16" y="18" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">RCS</text></svg>',
+  'Nantes': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#D4A017"/><circle cx="16" cy="16" r="8" fill="#1C1C1C"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#D4A017" font-family="Arial">FCN</text></svg>',
+  // LALIGA
+  'Real Madrid': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FEBE10"/><circle cx="16" cy="16" r="9" fill="#1a2b6b"/><path d="M16 9 L17.5 13 L22 13 L18.5 16 L20 20 L16 17.5 L12 20 L13.5 16 L10 13 L14.5 13 Z" fill="#FEBE10"/></svg>',
+  'Barcelona': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#004D98"/><rect x="3" y="10" width="26" height="6" fill="#A50044"/><rect x="3" y="10" width="26" height="2" fill="#EDBB00"/><rect x="3" y="14" width="26" height="2" fill="#EDBB00"/><text x="16" y="26" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">FCB</text></svg>',
+  'Atletico': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#C8102E"/><rect x="4" y="7" width="8" height="23" fill="#003087" clip-path="url(#s5)"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">ATM</text></svg>',
+  'Sevilla': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#D40000"/><circle cx="16" cy="16" r="9" fill="white"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#D40000" font-family="Arial">SFC</text></svg>',
+  'Real Betis': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#007A33"/><rect x="4" y="7" width="12" height="23" fill="white" opacity="0.3" clip-path="url(#s6)"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">RBB</text></svg>',
+  'Valencia': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#F0820F"/><path d="M12 8 L20 8 L20 22 L16 26 L12 22 Z" fill="black" opacity="0.5"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">VCF</text></svg>',
+  'Villarreal': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#A89000"/><circle cx="16" cy="16" r="9" fill="#FFE500"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#1C1C1C" font-family="Arial">VIL</text></svg>',
+  'Athletic': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#CC0000"/><rect x="4" y="7" width="8" height="23" fill="white" clip-path="url(#s7)"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">ATH</text></svg>',
+  'Sociedad': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003B7B"/><path d="M8 8 L24 8 L24 14 L8 14 Z" fill="#CC0000"/><text x="16" y="24" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">RSO</text></svg>',
+  'Osasuna': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2 L28 7 L28 20 C28 26 22 30 16 30 C10 30 4 26 4 20 L4 7 Z" fill="#B30000"/><rect x="4" y="14" width="24" height="5" fill="#1C1C1C"/><text x="16" y="27" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">OSA</text></svg>',
+  // MLS
+  'LA Galaxy': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#00245D"/><path d="M16 8 L18 13 L24 13 L19 16 L21 22 L16 19 L11 22 L13 16 L8 13 L14 13 Z" fill="#C4B400"/></svg>',
+  'LAFC': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#1C1C1C"/><path d="M10 10 L22 10 L22 22 L16 26 L10 22 Z" fill="#C39E6D" opacity="0.7"/><text x="16" y="19" text-anchor="middle" font-size="6" font-weight="bold" fill="white" font-family="Arial">LAF</text></svg>',
+  'Inter Miami': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#F7B5CD"/><circle cx="16" cy="16" r="9" fill="#231F20"/><path d="M12 12 L20 12 L20 16 L12 16 Z" fill="#F7B5CD"/><text x="16" y="24" text-anchor="middle" font-size="5" font-weight="bold" fill="#F7B5CD" font-family="Arial">MIA</text></svg>',
+  'Seattle': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#4A7A30"/><path d="M16 8 L18 13 L24 13 L19 16 L21 22 L16 19 L11 22 L13 16 L8 13 L14 13 Z" fill="#5B9BD5" opacity="0.8"/></svg>',
+  'Portland': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#003820"/><path d="M10 10 L22 10 L16 26 Z" fill="#A5C8E4" opacity="0.7"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">POR</text></svg>',
+  'Atlanta': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#700010"/><text x="16" y="14" text-anchor="middle" font-size="9" font-weight="bold" fill="#9ECFEE" font-family="Arial">A</text><text x="16" y="23" text-anchor="middle" font-size="5" fill="white" font-family="Arial">UTD</text></svg>',
+  'NYC FC': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#6CACE4"/><circle cx="16" cy="16" r="9" fill="#003087"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">NYC</text></svg>',
+  'Toronto': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#B81137"/><rect x="13" y="6" width="6" height="20" fill="white" opacity="0.3"/><rect x="6" y="13" width="20" height="6" fill="white" opacity="0.3"/><text x="16" y="20" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">TFC</text></svg>',
+  'New England': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#C63323"/><circle cx="16" cy="16" r="9" fill="#002244"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">NE</text></svg>',
+  'Columbus': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FEF200"/><circle cx="16" cy="16" r="9" fill="#1C1C1C"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="#FEF200" font-family="Arial">CLB</text></svg>',
+  // PSL
+  'Mamelodi Sundowns': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FFD700"/><circle cx="16" cy="16" r="9" fill="#003580"/><path d="M16 9 L17.5 13 L22 13 L18.5 16 L20 20 L16 17.5 L12 20 L13.5 16 L10 13 L14.5 13 Z" fill="#FFD700"/></svg>',
+  'Orlando Pirates': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#1C1C1C"/><text x="16" y="13" text-anchor="middle" font-size="11" fill="white" font-family="Arial">☠</text><text x="16" y="24" text-anchor="middle" font-size="5" font-weight="bold" fill="white" font-family="Arial">OPL</text></svg>',
+  'Kaizer Chiefs': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FFD700"/><circle cx="16" cy="16" r="9" fill="#C8102E"/><text x="16" y="19" text-anchor="middle" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">KAI</text></svg>',
+  'Cape Town City': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#00A0DC"/><circle cx="16" cy="16" r="9" fill="#fff"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#00A0DC" font-family="Arial">CTC</text></svg>',
+  'Stellenbosch': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#8B0000"/><circle cx="16" cy="16" r="9" fill="#FFD700"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#8B0000" font-family="Arial">SFC</text></svg>',
+  'SuperSport Utd': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#0057A8"/><circle cx="16" cy="16" r="9" fill="#fff"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#0057A8" font-family="Arial">SSU</text></svg>',
+  'AmaZulu': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FFD700"/><circle cx="16" cy="16" r="9" fill="#1C1C1C"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#FFD700" font-family="Arial">AZL</text></svg>',
+  'Sekhukhune': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FF6600"/><circle cx="16" cy="16" r="9" fill="#1C1C1C"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#FF6600" font-family="Arial">SEK</text></svg>',
+  'Richards Bay': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#007A4D"/><circle cx="16" cy="16" r="9" fill="#FFD700"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#007A4D" font-family="Arial">RBF</text></svg>',
+  'Chippa Utd': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FF4500"/><circle cx="16" cy="16" r="9" fill="#fff"/><text x="16" y="19" text-anchor="middle" font-size="5" font-weight="bold" fill="#FF4500" font-family="Arial">CPU</text></svg>',
+  // WORLD CUP nations
+  'Brazil': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#009C3B"/><path d="M16 6 L28 16 L16 26 L4 16 Z" fill="#FFDF00"/><circle cx="16" cy="16" r="5" fill="#002776"/></svg>',
+  'France': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#ED2939"/><path d="M3 16 A13 13 0 0 1 16 3 L16 29 A13 13 0 0 1 3 16 Z" fill="#002395"/><rect x="11" y="3" width="10" height="26" fill="#fff" clip-path="circle(13px at 16px 16px)"/></svg>',
+  'Argentina': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#74ACDF"/><rect x="3" y="12" width="26" height="8" fill="#fff"/><circle cx="16" cy="16" r="3" fill="#F6B40E"/></svg>',
+  'England': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#fff"/><rect x="14" y="3" width="4" height="26" fill="#C8102E" clip-path="circle(13px at 16px 16px)"/><rect x="3" y="14" width="26" height="4" fill="#C8102E" clip-path="circle(13px at 16px 16px)"/></svg>',
+  'Germany': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#FFCE00"/><path d="M3 12 A13 13 0 0 1 29 12 Z" fill="#1C1C1C"/><path d="M3 20 A13 13 0 0 0 29 20 Z" fill="#DD0000"/><rect x="3" y="12" width="26" height="8" fill="#DD0000" opacity="0"/></svg>',
+  'Spain': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#c60b1e"/><rect x="3" y="12" width="26" height="8" fill="#ffc400" clip-path="circle(13px at 16px 16px)"/></svg>',
+  'Portugal': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#C8102E"/><path d="M3 16 A13 13 0 0 1 16 3 L16 29 A13 13 0 0 1 3 16 Z" fill="#006600"/><circle cx="13" cy="16" r="4" fill="#FFD700" stroke="#C8102E" stroke-width="0.5"/></svg>',
+  'Netherlands': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#fff"/><path d="M3 10 A13 13 0 0 1 29 10 Z" fill="#AE1C28" clip-path="circle(13px at 16px 16px)"/><path d="M3 22 A13 13 0 0 0 29 22 Z" fill="#21468B" clip-path="circle(13px at 16px 16px)"/><rect x="3" y="10" width="26" height="12" fill="#fff" clip-path="circle(13px at 16px 16px)"/><rect x="3" y="3" width="26" height="9" fill="#AE1C28" clip-path="circle(13px at 16px 16px)"/><rect x="3" y="20" width="26" height="9" fill="#21468B" clip-path="circle(13px at 16px 16px)"/></svg>',
+  'South Africa': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#007A4D"/><path d="M3 12 L16 16 L3 20 Z" fill="#FFD700"/><path d="M3 10 L18 16 L3 22 Z" fill="#000" opacity="0.4"/><rect x="3" y="10" width="26" height="4" fill="#007A4D" clip-path="circle(13px at 16px 16px)"/><rect x="3" y="18" width="26" height="4" fill="#C8102E" clip-path="circle(13px at 16px 16px)"/></svg>',
+  'Morocco': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#C1272D"/><path d="M16 9 L17.2 13.2 L21.5 13.2 L18.2 15.8 L19.4 20 L16 17.4 L12.6 20 L13.8 15.8 L10.5 13.2 L14.8 13.2 Z" fill="none" stroke="#006233" stroke-width="1.2"/></svg>',
+  'Other': '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" fill="#dde0ee"/><text x="16" y="20" text-anchor="middle" font-size="14" fill="#888">+</text></svg>'
+};
+
+var GAME_COLORS={'Aviator':'linear-gradient(135deg,#3a0808,#7a1010)','Crash King':'linear-gradient(135deg,#08183a,#182870)','Space XY':'linear-gradient(135deg,#082818,#145830)','JetX':'linear-gradient(135deg,#281808,#604010)','King of Spins':'linear-gradient(135deg,#180828,#481868)','Mines':'linear-gradient(135deg,#082828,#085858)'};
+var LNAMES={psl:'SA Premiership',epl:'Premier League',ll:'La Liga',bl:'Bundesliga',ucl:'Champions League',wc:'World Cup'};
+var LFLAGS={psl:'linear-gradient(#007A4D 33%,#FFB81C 33%,#FFB81C 66%,#007A4D 66%)',epl:'linear-gradient(#012169 33%,#fff 33%,#fff 66%,#C8102E 66%)',ll:'linear-gradient(#c60b1e 25%,#ffc400 25%,#ffc400 75%,#c60b1e 75%)',bl:'linear-gradient(#000 33%,#D00 33%,#D00 66%,#FFCE00 66%)',ucl:'linear-gradient(#001489 33%,#fff 33%,#fff 66%,#001489 66%)',wc:'linear-gradient(#006AA7 33%,#fff 33%,#fff 66%,#006AA7 66%)'};
+var TEAMS={psl:[{n:'Mamelodi Sundowns'},{n:'Orlando Pirates'},{n:'Kaizer Chiefs'},{n:'Cape Town City'},{n:'Stellenbosch'},{n:'SuperSport Utd'},{n:'AmaZulu'},{n:'Sekhukhune'},{n:'Richards Bay'},{n:'Chippa Utd'}],epl:[{n:'Arsenal'},{n:'Man City'},{n:'Liverpool'},{n:'Chelsea'},{n:'Tottenham'},{n:'Man Utd'},{n:'Newcastle'},{n:'Aston Villa'},{n:'West Ham'},{n:'Wolves'}],ll:[{n:'Real Madrid'},{n:'Barcelona'},{n:'Atletico'},{n:'Sevilla'},{n:'Real Betis'},{n:'Valencia'},{n:'Villarreal'},{n:'Athletic'},{n:'Sociedad'},{n:'Osasuna'}],bl:[{n:'Bayern'},{n:'Dortmund'},{n:'Leverkusen'},{n:'Leipzig'},{n:'Frankfurt'},{n:'Wolfsburg'},{n:'Gladbach'},{n:'Freiburg'},{n:'Hoffenheim'},{n:'Mainz'}],ucl:[{n:'Real Madrid'},{n:'Man City'},{n:'Bayern'},{n:'Barcelona'},{n:'PSG'},{n:'Liverpool'},{n:'Dortmund'},{n:'Arsenal'},{n:'Inter'},{n:'Atletico'}],wc:[{n:'Brazil'},{n:'France'},{n:'Argentina'},{n:'England'},{n:'Germany'},{n:'Spain'},{n:'Portugal'},{n:'Netherlands'},{n:'South Africa'},{n:'Morocco'}]};
+
+var brand='bk',selL=[],selTeams=[],selGames=[],gCnt=0;
+
+function getCrest(name,size){
+  var svg=CRESTS[name]||CRESTS['Other'];
+  return svg.replace('viewBox="0 0 32 32"','viewBox="0 0 32 32" width="'+size+'" height="'+size+'"');
+}
+
+(function(){var h=[32,24,40,28,44,30,36,26,42,22,38,46,28,34,40,25,44,30,36,28,42,32,22,38,46,26,34,30,40,24];['crowd-bk','crowd-ss'].forEach(function(id){var c=document.getElementById(id);if(!c)return;h.forEach(function(v){var d=document.createElement('div');d.style.cssText='width:'+(Math.floor(Math.random()*3)+6)+'px;height:'+v+'px;background:rgba(0,0,0,'+(0.6+Math.random()*0.2)+');border-radius:3px 3px 0 0;';c.appendChild(d);});});})();
+
+function setBrand(b){
+  brand=b;var isBk=b==='bk';
+  ['mh1','mh2','mh3'].forEach(function(id){document.getElementById(id).className=isBk?'mh-bk':'mh-ss';});
+  ['ldot','tdot','cdot'].forEach(function(id){document.getElementById(id).className=isBk?'dot-bk':'dot-ss';});
+  document.getElementById('p1a').className='pip '+(isBk?'po-bk':'po-ss');
+  document.getElementById('p2a').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p2b').className='pip '+(isBk?'po-bk':'po-ss');
+  document.getElementById('p3a').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p3b').className='pip '+(isBk?'pd-bk':'pd-ss');document.getElementById('p3c').className='pip '+(isBk?'po-bk':'po-ss');
+  var cls=isBk?'btn-bk':'btn-ssb';
+  ['lbtn','tbtn','cbtn','style-btn'].forEach(function(id){var el=document.getElementById(id);if(el){el.className=cls;el.disabled=true;}});
+}
+
+function backToHero(from){go(from,brand==='bk'?'s0-bk':'s0-ss');}
+
+function toggleL(el){
+  var k=el.getAttribute('data-k');var oc=brand==='bk'?'on-bk':'on-ss';
+  var tick=document.getElementById('lt-'+k);
+  if(el.classList.contains(oc)){el.classList.remove(oc);tick.style.display='none';var i=selL.indexOf(k);if(i>=0)selL.splice(i,1);}
+  else{el.classList.add(oc);tick.style.display='flex';tick.style.background=brand==='bk'?'#1a2b6b':'#FFCD00';tick.querySelector('path').setAttribute('stroke',brand==='bk'?'#fff':'#0d1580');selL.push(k);}
+  var n=selL.length;document.getElementById('lpill').textContent=n>0?(n+' league'+(n>1?'s':'')+' selected'):'Step '+(brand==='ss'?'3 of 5':'1 of 5')+' — Leagues';document.getElementById('lbtn').disabled=n===0;
+}
+
+function gotoTeams(){
+  var keys=selL.slice();var tags=document.getElementById('ltags');tags.innerHTML='';
+  var tc=brand==='bk'?'tag-bk':'tag-ss';
+  keys.forEach(function(k){var t=document.createElement('div');t.className='tag '+tc;t.innerHTML='<div class="tf" style="background:'+LFLAGS[k]+';"></div>'+LNAMES[k];tags.appendChild(t);});
+  document.getElementById('tsub').textContent=keys.length===1?('Top 10 clubs from '+LNAMES[keys[0]]+'.'):('Best clubs across '+keys.length+' leagues.');
+  var grid=document.getElementById('tgrid');grid.innerHTML='';selTeams=[];
+  document.getElementById('tbtn').disabled=true;document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
+  document.getElementById('tcount').className='tcnt tcnt-'+(brand==='bk'?'bk':'ss');
+  var pool=[];
+  if(keys.length===1){TEAMS[keys[0]].forEach(function(t){pool.push(t.n);});}
+  else{var per=Math.ceil(10/keys.length);keys.forEach(function(k){TEAMS[k].slice(0,per).forEach(function(t){pool.push(t.n);});});pool=pool.slice(0,10);}
+  var oc=brand==='bk'?'on-bk':'on-ss';
+  var tickCol=brand==='bk'?'#4dd9ac':'#FFCD00';
+  pool.forEach(function(name){
+    var cell=document.createElement('div');cell.className='tc';
+    var crestDiv='<div class="tc-crest"><div class="tc-tick" style="background:'+tickCol+'"><svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="'+(brand==='bk'?'#003030':'#0d1580')+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+getCrest(name,32)+'</div>';
+    var shortName=name;
+    cell.innerHTML=crestDiv+'<div class="tn">'+shortName+'</div>';
+    cell.onclick=function(){
+      if(cell.classList.contains(oc)){cell.classList.remove(oc);var i=selTeams.indexOf(name);if(i>=0)selTeams.splice(i,1);}
+      else{cell.classList.add(oc);selTeams.push(name);}
+      document.getElementById('tbtn').disabled=selTeams.length===0;
+      document.getElementById('tcount').innerHTML='<span>'+selTeams.length+'</span> team'+(selTeams.length!==1?'s':'')+' selected';
+    };
+    grid.appendChild(cell);
+  });
+  var other=document.createElement('div');other.className='oc';
+  other.innerHTML='<div class="oi">'+getCrest('Other',28)+'</div><div class="ol">Other</div>';
+  other.onclick=function(){
+    if(other.classList.contains(oc)){other.classList.remove(oc);var i=selTeams.indexOf('Other');if(i>=0)selTeams.splice(i,1);}
+    else{other.classList.add(oc);selTeams.push('Other');}
+    document.getElementById('tbtn').disabled=selTeams.length===0;
+    document.getElementById('tcount').innerHTML='<span>'+selTeams.length+'</span> team'+(selTeams.length!==1?'s':'')+' selected';
+  };
+  grid.appendChild(other);
+  if(brand==='ss'){
+    document.getElementById('mh2').className='mh-ss';
+    document.getElementById('tdot').className='dot-ss';
+    // S2 is step 4 for SS
+    document.getElementById('tpill').textContent='Step 4 of 5 — Teams';
+  }
+  go('s1','s2');
+}
+
+function toggleG(el){
+  var oc=brand==='bk'?'on-bk':'on-ss';var n=el.getAttribute('data-name');
+  if(!el.classList.contains(oc)&&gCnt>=4)return;
+  el.classList.toggle(oc);
+  if(el.classList.contains(oc)){selGames.push(n);}else{var i=selGames.indexOf(n);if(i>=0)selGames.splice(i,1);}
+  gCnt=selGames.length;document.getElementById('gcnt').textContent=gCnt+' / 4 selected';document.getElementById('cbtn').disabled=gCnt===0;
+}
+
+function buildDone(){} // summary screen removed — kept as no-op for safety
+
+
+function startMagic(){
+  var isBk=brand==='bk';var ac=isBk?'#4dd9ac':'#FFCD00';var bg=isBk?'linear-gradient(160deg,#0d1a3a,#1a2b6b)':'linear-gradient(160deg,#0d1580,#1a2db8)';
+  var mbg=document.getElementById('magic-bg');mbg.style.background=bg;mbg.innerHTML='';
+  document.getElementById('magic-bar').style.background=ac;
+  var steps=[{icon:'🏟',name:'Loading your leagues',sub:selL.map(function(k){return LNAMES[k];}).join(', ')||'None',pct:28},{icon:'⚽',name:'Setting up your teams',sub:selTeams.slice(0,3).join(', ')+(selTeams.length>3?' +more':'')||'None',pct:58},{icon:'🎮',name:'Pinning your games',sub:(brand==='ss'?selSSGames:selGames).join(', ')||'None',pct:82},{icon:'✨',name:'Finalising your feed',sub:'Almost there...',pct:100}];
+  var stEl=document.getElementById('magic-steps');stEl.innerHTML='';
+  go('s-style','s-magic');
+  var barEl=document.getElementById('magic-bar'),pctEl=document.getElementById('magic-pct'),i=0;
+  function runStep(){
+    if(i>=steps.length){setTimeout(function(){buildHome();go('s-magic','s-home');},700);return;}
+    var s=steps[i];
+    var d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;width:100%;animation:fadeUp 0.35s ease both;';
+    d.innerHTML='<div style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;">'+s.icon+'</div><div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;">'+s.name+'</div><div style="font-size:10px;color:rgba(255,255,255,0.45);">'+s.sub+'</div></div><div class="spinner" style="width:14px;height:14px;border-radius:50%;border:2px solid '+ac+';border-top-color:transparent;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>';
+    stEl.appendChild(d);
+    setTimeout(function(el,p){return function(){
+      var sp=el.querySelector('.spinner');sp.style.cssText='width:14px;height:14px;border-radius:50%;background:'+ac+';display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+      sp.innerHTML='<svg width="7" height="5" viewBox="0 0 7 5" fill="none"><path d="M1 2.5l1.5 1.5 3-3" stroke="'+(isBk?'#003030':'#0d1580')+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      barEl.style.width=p+'%';pctEl.textContent=p+'%';i++;runStep();
+    };}(d,s.pct),650+i*80);
+    i++;
+  }
+  setTimeout(runStep,300);
+}
+
+function buildHome(){
+  var isBk=brand==='bk';
+  document.getElementById('home-hdr').style.background=isBk?'#1a2b6b':'#1a2db8';
+  document.getElementById('home-brand-name').textContent=isBk?'BetKing':'SuperSportBET';
+
+  var lr=document.getElementById('home-leagues-row');lr.innerHTML='';
+  selL.forEach(function(k){
+    var p=document.createElement('div');
+    p.style.cssText='display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.12);border-radius:20px;padding:3px 9px;flex-shrink:0;';
+    var f=document.createElement('div');
+    f.style.cssText='width:12px;height:8px;border-radius:2px;background:'+LFLAGS[k]+';flex-shrink:0;';
+    p.appendChild(f);
+    var t=document.createElement('span');
+    t.style.cssText='font-size:9px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;';
+    t.textContent=LNAMES[k];
+    p.appendChild(t);
+    lr.appendChild(p);
+  });
+
+  var deposit=document.getElementById('home-deposit');
+  var casino=document.getElementById('home-casino');
+  var sports=document.getElementById('home-sports');
+  var promos=document.getElementById('home-promos');
+
+  if(isBk){
+    deposit.style.background='#00d8c8';
+    casino.style.background='#1a2b6b';
+    sports.style.background='#c8102e';
+    promos.style.background='#FFCD00';
+  } else {
+    deposit.style.background='#FFCD00';
+    casino.style.background='#1a2db8';
+    sports.style.background='linear-gradient(135deg,#1a3dc8,#0d1580)';
+    promos.style.background='#00d8c8';
+  }
+
+  buildTrendingNow(isBk);
+}
+
+function buildTrendingNow(isBk){
+  var carousel=document.getElementById('trending-carousel');
+  if(!carousel)return;
+  carousel.innerHTML='';
+
+  var preferredTeam=selTeams.length?selTeams[0]:'your team';
+  var preferredLeague=selL.length?LNAMES[selL[0]]:'top football';
+  var preferredGame=(brand==='ss'&&selSSGames.length)?selSSGames[0]:(selGames.length?selGames[0]:'Aviator');
+  var casinoBg=isBk?'linear-gradient(135deg,#1a2b6b,#0d1a3a)':'linear-gradient(135deg,#1a2db8,#0d1580)';
+  var sportsBg=isBk?'linear-gradient(135deg,#c8102e,#740015)':'linear-gradient(135deg,#1a3dc8,#0d1580)';
+  var promoBg=isBk?'linear-gradient(135deg,#003030,#00a89c)':'linear-gradient(135deg,#0d1580,#00a89c)';
+
+  var cards=[
+    {chip:'Don\'t miss this',icon:'🎰',name:'Try '+preferredGame,desc:'Casino pick surfaced from your game preferences.',cta:'Play now',bg:casinoBg},
+    {chip:'For you',icon:'⚽',name:preferredTeam+' next up',desc:'Sports event recommendations from '+preferredLeague+'.',cta:'View markets',bg:sportsBg},
+    {chip:'Promo',icon:'🎁',name:'Boost your next bet',desc:'Personalised offer combining sports and casino activity.',cta:'Claim offer',bg:promoBg},
+    {chip:'Trending',icon:'🔥',name:'Live picks today',desc:'Popular games and events other players are opening now.',cta:'Explore',bg:'linear-gradient(135deg,#281808,#604010)'}
+  ];
+
+  cards.forEach(function(card){
+    var el=document.createElement('div');
+    el.className='trending-card';
+    el.style.background=card.bg;
+    el.innerHTML='<div class="trending-chip">'+card.chip+'</div>'
+      +'<div class="trending-main"><div class="trending-icon">'+card.icon+'</div><div class="trending-copy"><div class="trending-name">'+card.name+'</div><div class="trending-desc">'+card.desc+'</div></div></div>'
+      +'<div class="trending-action"><span>'+card.cta+'</span><span>›</span></div>';
+    carousel.appendChild(el);
+  });
+  initTrendingCarousel();
+  updateTrendingDots();
+}
+
+function moveTrending(direction){
+  var carousel=document.getElementById('trending-carousel');
+  if(!carousel)return;
+  var card=carousel.querySelector('.trending-card');
+  var amount=card?(card.offsetWidth+8):218;
+  carousel.scrollBy({left:direction*amount,behavior:'smooth'});
+  setTimeout(updateTrendingDots,260);
+}
+
+function updateTrendingDots(){
+  var carousel=document.getElementById('trending-carousel');
+  var dots=document.querySelectorAll('#trending-dots .trending-dot');
+  if(!carousel||!dots.length)return;
+  var card=carousel.querySelector('.trending-card');
+  var amount=card?(card.offsetWidth+8):218;
+  var idx=Math.round(carousel.scrollLeft/amount);
+  dots.forEach(function(dot,i){dot.classList.toggle('on',i===idx);});
+}
+
+function initTrendingCarousel(){
+  var carousel=document.getElementById('trending-carousel');
+  if(!carousel||carousel.getAttribute('data-ready')==='1')return;
+  carousel.setAttribute('data-ready','1');
+  var isDown=false,startX=0,startLeft=0;
+  carousel.addEventListener('scroll',function(){window.clearTimeout(carousel._dotTimer);carousel._dotTimer=window.setTimeout(updateTrendingDots,80);});
+  carousel.addEventListener('pointerdown',function(e){
+    isDown=true;startX=e.clientX;startLeft=carousel.scrollLeft;carousel.classList.add('dragging');carousel.setPointerCapture(e.pointerId);
+  });
+  carousel.addEventListener('pointermove',function(e){
+    if(!isDown)return;
+    carousel.scrollLeft=startLeft-(e.clientX-startX);
+  });
+  function stopDrag(){if(!isDown)return;isDown=false;carousel.classList.remove('dragging');updateTrendingDots();}
+  carousel.addEventListener('pointerup',stopDrag);
+  carousel.addEventListener('pointercancel',stopDrag);
+  carousel.addEventListener('pointerleave',stopDrag);
+}
+
+// ── BETTING STYLE ──────────────────────────────────────────────────
+var selRisk='', selSession='', selPromos=[];
+
+function pickStyle(group, val, el){
+  var isBk=brand==='bk';
+  var oc=isBk?'on-bk':'on-ss';
+  var tickColor=isBk?'#4dd9ac':'#FFCD00';
+  var checkStroke=isBk?'#003030':'#0d1580';
+  var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  if(group==='risk'){
+    ['sc-low','sc-high'].forEach(function(id){document.getElementById(id).classList.remove('on-bk','on-ss');});
+    el.classList.add(oc);
+    ['st-low','st-high'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
+    selRisk=val;
+  } else {
+    ['sc-quick','sc-long'].forEach(function(id){document.getElementById(id).classList.remove('on-bk','on-ss');});
+    el.classList.add(oc);
+    ['st-quick','st-long'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
+    selSession=val;
+  }
+  document.getElementById('style-btn').disabled=(selRisk===''||selSession==='');
+}
+
+function togglePromo(val, el){
+  var isBk=brand==='bk';
+  var oc=isBk?'on-bk':'on-ss';
+  var tickColor=isBk?'#4dd9ac':'#FFCD00';
+  var checkStroke=isBk?'#003030':'#0d1580';
+  var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var tick=document.getElementById('st-'+val);
+  if(el.classList.contains(oc)){
+    el.classList.remove(oc);
+    var i=selPromos.indexOf(val);if(i>=0)selPromos.splice(i,1);
+  } else {
+    el.classList.add(oc);
+    tick.style.background=tickColor;
+    tick.innerHTML=tickSvg;
+    selPromos.push(val);
+  }
+  document.getElementById('style-btn').disabled=(selRisk===''||selSession==='');
+}
+
+function applyStyleBrand(){
+  var isBk=brand==='bk';
+  document.getElementById('mh-style').className=isBk?'mh-bk':'mh-ss';
+  document.getElementById('style-dot').className=isBk?'dot-bk':'dot-ss';
+  document.getElementById('style-btn').className=isBk?'btn-bk':'btn-ssb';
+  var tickColor=isBk?'#4dd9ac':'#FFCD00';
+  var checkStroke=isBk?'#003030':'#0d1580';
+  var tickSvg='<svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="'+checkStroke+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  ['st-low','st-high','st-quick','st-long','st-freebets','st-freespins','st-cashback','st-odds'].forEach(function(id){var t=document.getElementById(id);t.style.background=tickColor;t.innerHTML=tickSvg;});
+  // update pip count for SS (5 steps) vs BK (4 steps)
+  if(isBk){
+    document.getElementById('style-pill').textContent='Step 5 of 5 — Style';
+    document.getElementById('sp1').className='pip pd-bk';
+    document.getElementById('sp2').className='pip pd-bk';
+    document.getElementById('sp3').className='pip po-bk';
+  } else {
+    document.getElementById('style-pill').textContent='Step 5 of 5 — Style';
+    // SS has 5 pips — add extra two if needed
+    var pips=document.getElementById('style-pips');
+    if(!document.getElementById('sp4')){
+      var p4=document.createElement('div');p4.id='sp4';pips.appendChild(p4);
+      var p5=document.createElement('div');p5.id='sp5';pips.appendChild(p5);
+    }
+    document.getElementById('sp1').className='pip pd-ss';
+    document.getElementById('sp2').className='pip pd-ss';
+    document.getElementById('sp3').className='pip pd-ss';
+    document.getElementById('sp4').className='pip pd-ss';
+    document.getElementById('sp5').className='pip po-ss';
+  }
+}
+
+
+
+function go(hide,show){
+  document.getElementById(hide).classList.remove('on');
+  document.getElementById(show).classList.add('on');
+  if(show==='s-style') applyStyleBrand();
+}
+
+function restart(){
+  selL=[];selTeams=[];selGames=[];selSSGames=[];selProviders=[];selRisk='';selSession='';selPromos=[];gCnt=0;ssGCnt=0;
+  document.querySelectorAll('.style-card').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  if(document.getElementById('style-btn'))document.getElementById('style-btn').disabled=true;
+  document.querySelectorAll('.lc').forEach(function(c){c.className='lc';});
+  document.querySelectorAll('[id^="lt-"]').forEach(function(el){el.style.display='none';});
+  document.querySelectorAll('.gcd').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
+  document.getElementById('prov-pill').textContent='Step 1 of 5 — Providers';
+  document.querySelectorAll('.prov-card').forEach(function(c){c.classList.remove('on-ss');});
+  if(document.getElementById('prov-btn'))document.getElementById('prov-btn').disabled=true;
+  document.getElementById('lbtn').disabled=true;document.getElementById('gcnt').textContent='0 / 4 selected';
+  document.getElementById('magic-steps').innerHTML='';
+  document.getElementById('magic-bar').style.width='0%';document.getElementById('magic-pct').textContent='0%';
+  document.getElementById('magic-bg').innerHTML='';
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('s-brand').classList.add('on');
+}
+
+// ── SS PROVIDERS ──────────────────────────────────────────────────
+var SS_GAMES = {
+  habanero:[
+    {n:'Hot Hot Fruit',      bg:'linear-gradient(135deg,#2a0060,#9b008b)',  tag:'HOT',  icon:'🍉'},
+    {n:'Mystic Fortune Deluxe',bg:'linear-gradient(135deg,#0a3020,#1a7a40)', tag:'',    icon:'🌺'},
+    {n:'Wild Trucks',        bg:'linear-gradient(135deg,#1a0a00,#6b2800)',   tag:'',     icon:'🚛'},
+    {n:'Disco Beats',        bg:'linear-gradient(135deg,#10006a,#7000bb)',   tag:'NEW',  icon:'🕺'},
+    {n:'Laughing Buddha',    bg:'linear-gradient(135deg,#3a1800,#9a5000)',   tag:'',     icon:'🪙'},
+    {n:'Lantern Luck',       bg:'linear-gradient(135deg,#3a0010,#aa0030)',   tag:'',     icon:'🏮'},
+    {n:'New Years Bash',     bg:'linear-gradient(135deg,#1a0040,#6a00aa)',   tag:'NEW',  icon:'🎆'},
+    {n:'Wealth Inn',         bg:'linear-gradient(135deg,#3a1000,#8a3800)',   tag:'',     icon:'🏯'},
+  ],
+  spribe:[
+    {n:'Aviator',            bg:'linear-gradient(135deg,#2a0000,#aa0000)',   tag:'HOT',  icon:'✈️'},
+    {n:'Mines',              bg:'linear-gradient(135deg,#003020,#006a40)',   tag:'',     icon:'💣'},
+    {n:'Plinko',             bg:'linear-gradient(135deg,#001060,#0030bb)',   tag:'NEW',  icon:'🎯'},
+    {n:'Goal',               bg:'linear-gradient(135deg,#003a10,#007a30)',   tag:'',     icon:'⚽'},
+    {n:'Hilo',               bg:'linear-gradient(135deg,#200040,#700090)',   tag:'',     icon:'🃏'},
+    {n:'Dice',               bg:'linear-gradient(135deg,#1a1a1a,#444444)',   tag:'',     icon:'🎲'},
+  ],
+  pragmatic:[
+    {n:'Gates of Olympus',   bg:'linear-gradient(135deg,#1a0040,#7a00cc)',   tag:'HOT',  icon:'⚡'},
+    {n:'Sugar Rush 1000',    bg:'linear-gradient(135deg,#4a0060,#cc00cc)',   tag:'',     icon:'🍬'},
+    {n:'Gates of Olympus 1000',bg:'linear-gradient(135deg,#1a0050,#6600cc)',tag:'',     icon:'🏛'},
+    {n:'Joker\'s Jewels',  bg:'linear-gradient(135deg,#000a60,#0020cc)',   tag:'',     icon:'💎'},
+    {n:'Sweet Bonanza 1000', bg:'linear-gradient(135deg,#3a0050,#bb00aa)',   tag:'',     icon:'🍭'},
+    {n:'5 Lions Megaways',   bg:'linear-gradient(135deg,#3a0800,#9a1800)',   tag:'',     icon:'🦁'},
+    {n:'Fire Strike',        bg:'linear-gradient(135deg,#3a0200,#cc0800)',   tag:'HOT',  icon:'🔥'},
+    {n:'Chests of Cai Shen', bg:'linear-gradient(135deg,#001a10,#006a30)',   tag:'',     icon:'🀄'},
+  ],
+  lw:[
+    {n:'777 Strike',         bg:'linear-gradient(135deg,#002200,#006600)',   tag:'HOT',  icon:'7️⃣'},
+    {n:'Fortune House',      bg:'linear-gradient(135deg,#3a1000,#cc4400)',   tag:'',     icon:'🏠'},
+    {n:'Mega Jade',          bg:'linear-gradient(135deg,#003010,#007a30)',   tag:'',     icon:'💚'},
+    {n:'Jade Charms',        bg:'linear-gradient(135deg,#002a20,#006a50)',   tag:'NEW',  icon:'🔮'},
+    {n:'Jester Spins',       bg:'linear-gradient(135deg,#100030,#4400aa)',   tag:'',     icon:'🃏'},
+  ],
+  betgames:[
+    {n:'Bet on Poker',       bg:'linear-gradient(135deg,#1a0030,#5a0088)',   tag:'',     icon:'♠️'},
+    {n:'Lucky 5',            bg:'linear-gradient(135deg,#003a10,#009a30)',   tag:'HOT',  icon:'🍀'},
+    {n:'Bet on Baccarat',    bg:'linear-gradient(135deg,#200030,#700080)',   tag:'',     icon:'🎴'},
+    {n:'Wheel of Fortune',   bg:'linear-gradient(135deg,#3a1800,#9a4400)',   tag:'NEW',  icon:'🎡'},
+    {n:'War of Bets',        bg:'linear-gradient(135deg,#1a0000,#660000)',   tag:'',     icon:'⚔️'},
+  ],
+  evolution:[
+    {n:'Crazy Time',         bg:'linear-gradient(135deg,#3a0000,#cc0000)',   tag:'HOT',  icon:'🎡'},
+    {n:'777 Strike',         bg:'linear-gradient(135deg,#002200,#006600)',   tag:'',     icon:'7️⃣'},
+    {n:"Thor's Rage",        bg:'linear-gradient(135deg,#000a50,#001aaa)',   tag:'',     icon:'⚡'},
+    {n:'Duck Hunters',       bg:'linear-gradient(135deg,#0a1800,#204000)',   tag:'',     icon:'🦆'},
+    {n:'Jester Spins',       bg:'linear-gradient(135deg,#100030,#4400aa)',   tag:'NEW',  icon:'🎪'},
+    {n:'Mega Jade',          bg:'linear-gradient(135deg,#003010,#007a30)',   tag:'',     icon:'💚'},
+    {n:'Fortune House',      bg:'linear-gradient(135deg,#3a1000,#cc4400)',   tag:'',     icon:'🏮'},
+    {n:'Jade Charms',        bg:'linear-gradient(135deg,#002a20,#006a50)',   tag:'',     icon:'🀄'},
+  ]
+};
+var PROV_LABELS={habanero:'Habanero',spribe:'Spribe',pragmatic:'Pragmatic Play',lw:'L&W',betgames:'Bet Games',evolution:'Evolution'};
+var selProviders=[];
+var selSSGames=[];
+var ssGCnt=0;
+
+function toggleProv(el){
+  var k=el.getAttribute('data-prov');
+  if(el.classList.contains('on-ss')){
+    el.classList.remove('on-ss');
+    var i=selProviders.indexOf(k);if(i>=0)selProviders.splice(i,1);
+  } else {
+    el.classList.add('on-ss');
+    selProviders.push(k);
+  }
+  var n=selProviders.length;
+  document.getElementById('prov-pill').textContent=n>0?(n+' provider'+(n>1?'s':'')+' selected'):'Step 1 of 5 — Providers';
+  document.getElementById('prov-btn').disabled=n===0;
+}
+
+function buildProvGames(){
+  var keys=selProviders.slice();
+  var tagsEl=document.getElementById('prov-tags');tagsEl.innerHTML='';
+  keys.forEach(function(k){
+    var t=document.createElement('div');t.className='tag tag-ss';
+    t.textContent=PROV_LABELS[k];tagsEl.appendChild(t);
+  });
+  document.getElementById('games-hs').textContent='Top picks from '+keys.map(function(k){return PROV_LABELS[k];}).join(', ')+'.';
+  // gather unique games, HOT ones first
+  var pool=[];var seen={};
+  // first pass: HOT games
+  keys.forEach(function(k){
+    (SS_GAMES[k]||[]).forEach(function(g){
+      if(g.tag==='HOT'&&!seen[g.n]){seen[g.n]=1;pool.push(g);}
+    });
+  });
+  // second pass: rest
+  keys.forEach(function(k){
+    (SS_GAMES[k]||[]).forEach(function(g){
+      if(!seen[g.n]){seen[g.n]=1;pool.push(g);}
+    });
+  });
+  // cap at 10 total
+  pool=pool.slice(0,10);
+  var popular=pool.slice(0,4);
+  var rest=pool.slice(4);
+
+  var wrap=document.getElementById('ss-game-grid');wrap.innerHTML='';
+  selSSGames=[];ssGCnt=0;
+  document.getElementById('sg-btn').disabled=true;
+  document.getElementById('game-count').innerHTML='<span>0</span> games selected';
+
+  function makeCard(game){
+    var el=document.createElement('div');el.className='gcd';el.setAttribute('data-name',game.n);
+    el.style.cssText='position:relative;';
+    el.innerHTML='<div style="position:absolute;inset:0;background:'+game.bg+';border-radius:9px;"></div>'
+      +'<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:22px;line-height:1;">'+game.icon+'</div>'
+      +'<div class="gck-ss"><svg width="8" height="6" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="#0d1580" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
+      +'<div class="gf"><span class="gn">'+game.n+'</span>'+(game.tag?'<span class="'+(game.tag==='HOT'?'bh':'bn')+'">'+game.tag+'</span>':'')+'</div>';
+    el.onclick=function(){
+      var oc='on-ss';var nm=game.n;
+      if(!el.classList.contains(oc)&&ssGCnt>=6)return;
+      el.classList.toggle(oc);
+      if(el.classList.contains(oc)){selSSGames.push(nm);ssGCnt++;}
+      else{var i=selSSGames.indexOf(nm);if(i>=0)selSSGames.splice(i,1);ssGCnt--;}
+      document.getElementById('sg-btn').disabled=ssGCnt===0;
+      document.getElementById('game-count').innerHTML='<span>'+ssGCnt+'</span> game'+(ssGCnt!==1?'s':'')+' selected';
+    };
+    return el;
+  }
+
+  // Popular section
+  var popLabel=document.createElement('div');
+  popLabel.className='game-section-label';
+  popLabel.innerHTML='🔥 Popular games';
+  wrap.appendChild(popLabel);
+  var popGrid=document.createElement('div');popGrid.className='gc';
+  popular.forEach(function(g){popGrid.appendChild(makeCard(g));});
+  wrap.appendChild(popGrid);
+
+  // More games section
+  if(rest.length>0){
+    var moreLabel=document.createElement('div');
+    moreLabel.className='game-section-label';
+    moreLabel.innerHTML='More games';
+    wrap.appendChild(moreLabel);
+    var moreGrid=document.createElement('div');moreGrid.className='gc';
+    rest.forEach(function(g){moreGrid.appendChild(makeCard(g));});
+    wrap.appendChild(moreGrid);
+  }
+}
+
+
+
+
+function showLeaguesStep(){
+  if(brand==='ss'){
+    document.getElementById('lpill').textContent='Step 3 of 5 — Leagues';
+    document.getElementById('mh1').className='mh-ss';
+    document.getElementById('ldot').className='dot-ss';
+  } else {
+    document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
+    document.getElementById('mh1').className='mh-bk';
+    document.getElementById('ldot').className='dot-bk';
+  }
+  go('s3-games','s1');
+}
+
+function showLeaguesStep_bk(){
+  document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
+  document.getElementById('mh1').className='mh-bk';
+  document.getElementById('ldot').className='dot-bk';
+  go('s0-bk','s1');
+}
+
+function clearLeagues(){
+  selL=[];
+  document.querySelectorAll('.lc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.querySelectorAll('[id^="lt-"]').forEach(function(el){el.style.display='none';});
+  document.getElementById('lpill').textContent='Step 1 of 5 — Leagues';
+  document.getElementById('lbtn').disabled=true;
+}
+
+function clearProviders(){
+  selProviders=[];
+  document.querySelectorAll('.prov-card').forEach(function(c){c.classList.remove('on-ss');});
+  document.getElementById('prov-pill').textContent='Step 1 of 5 — Providers';
+  document.getElementById('prov-btn').disabled=true;
+}
+
+function clearSSGames(){
+  selSSGames=[];ssGCnt=0;
+  document.querySelectorAll('#ss-game-grid .gcd').forEach(function(c){c.classList.remove('on-ss');});
+  document.getElementById('sg-btn').disabled=true;
+  if(document.getElementById('game-count'))
+    document.getElementById('game-count').innerHTML='<span>0</span> games selected';
+}
+
+function clearGames(){
+  selGames=[];gCnt=0;
+  document.querySelectorAll('#s3 .gcd').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.getElementById('cbtn').disabled=true;
+  if(document.getElementById('gcnt'))document.getElementById('gcnt').textContent='0 / 4 selected';
+}
+
+function clearTeamsAndGo(from,to){
+  selTeams=[];
+  document.querySelectorAll('#tgrid .tc,#tgrid .oc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.getElementById('tbtn').disabled=true;
+  if(document.getElementById('tcount'))document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
+  go(from,to);
+}
+
+function goBackS2(){
+  selTeams=[];
+  document.querySelectorAll('#tgrid .tc,#tgrid .oc').forEach(function(c){c.classList.remove('on-bk','on-ss');});
+  document.getElementById('tbtn').disabled=true;
+  if(document.getElementById('tcount'))document.getElementById('tcount').innerHTML='<span>0</span> teams selected';
+  backToHero('s2');
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useOnboarding } from "@/state/OnboardingContext";
+import { PROVIDER_LABELS } from "@/lib/data/providers";
+import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { ScreenHeader } from "./ScreenHeader";
+import { ContinueButton, GhostButton } from "./ContinueButton";
+import type { ProviderKey } from "@/types/brand";
+
+type ProviderInfo = {
+  key: ProviderKey;
+  icon: string;
+  color: string;
+  sub: string;
+};
+
+const PROVIDERS: ProviderInfo[] = [
+  { key: "habanero", icon: "🌶️", color: "#E8521A", sub: "177 Slots" },
+  { key: "spribe", icon: "🚀", color: "#1a2db8", sub: "Crash Games" },
+  { key: "pragmatic", icon: "⚡", color: "#d40000", sub: "119 Slots" },
+  { key: "lw", icon: "🎰", color: "#1a6a2a", sub: "Table Games" },
+  { key: "betgames", icon: "🎲", color: "#8b1a8b", sub: "Live Dealer" },
+  { key: "evolution", icon: "♠️", color: "#6d0a0a", sub: "961 Games" },
+];
+
+export const ProviderGrid = () => {
+  const router = useRouter();
+  const { state, toggleProvider } = useOnboarding();
+  const brand = state.brand!;
+  const hasSelection = state.providers.length > 0;
+
+  const handleContinue = () => {
+    const next = getNextStep(brand, "providers");
+    if (next) router.push(STEP_ROUTES[next]);
+  };
+
+  const stepLabel = hasSelection
+    ? `${state.providers.length} provider${state.providers.length > 1 ? "s" : ""} selected`
+    : "Providers";
+
+  return (
+    <>
+      <ScreenHeader
+        brand={brand}
+        currentStep="providers"
+        title="Pick your providers"
+        subtitle="Choose the game studios you enjoy most."
+        stepLabel={stepLabel}
+      />
+      <div className="p-4 bg-white">
+        <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
+          Select game providers
+        </div>
+        <div className="text-[11px] text-gray-400 mb-3">
+          Tap to toggle — multiple allowed
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {PROVIDERS.map(({ key, icon, color, sub }) => {
+            const isSelected = state.providers.includes(key);
+
+            return (
+              <button
+                key={key}
+                onClick={() => toggleProvider(key)}
+                className={`rounded-xl border-[1.5px] bg-[#fafafa] cursor-pointer h-[86px] flex flex-col items-center justify-center gap-1 relative flex-shrink-0 transition-colors ${
+                  isSelected
+                    ? "border-ss-primary bg-[#eef2ff]"
+                    : "border-gray-200 hover:border-[#aab0d8] hover:bg-[#f4f6ff]"
+                }`}
+              >
+                {isSelected && (
+                  <div className="absolute top-[7px] right-[7px] w-4 h-4 rounded-full bg-ss-accent flex items-center justify-center">
+                    <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                      <path d="M1 3l2 2 4-4" stroke="#0d1580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
+                <div className="text-[22px] leading-none mb-0.5">{icon}</div>
+                <div className="text-[11px] font-extrabold tracking-wide text-center leading-tight" style={{ color }}>
+                  {PROVIDER_LABELS[key]}
+                </div>
+                <div className="text-[9px] text-gray-400 text-center">{sub}</div>
+              </button>
+            );
+          })}
+        </div>
+        <div className="h-px bg-gray-100 my-3.5" />
+        <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
+        <GhostButton />
+      </div>
+    </>
+  );
+};

@@ -1,0 +1,74 @@
+## https://github.com/survivorforge/cursor-rules
+
+You are an expert in TypeScript, Next.js 14 (App Router), React 18, Tailwind CSS,
+and Supabase, working on a hackathon POC that personalises a sports/casino
+onboarding flow for two brands.
+
+# Domain
+
+- Two brands: `bk` (BetKing, Nigeria) and `ss` (SuperSportBET, South Africa).
+- A user is bound to **one brand at a time**. Switching re-runs onboarding and
+  upserts the user's `user_preferences` row.
+
+# Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14 (App Router), React 18 |
+| Styling | Tailwind CSS, custom CSS in `globals.css` |
+| State | React Context + useReducer (no Zustand/Redux) |
+| Database | Supabase (PostgreSQL) with RLS |
+| API | Next.js API Routes (`src/app/api/*/route.ts`) |
+| Validation | zod (every API body) |
+| Deployment | Vercel |
+
+# Project Structure
+
+- `src/app/` — App Router. `onboarding/*` per-step pages, `home/page.tsx`, `api/preferences/route.ts`.
+- `src/components/` — UI grouped by feature: `onboarding/`, `home/`, `ui/`.
+- `src/state/OnboardingContext.tsx` — wizard state via `useReducer`. Do not introduce another state library.
+- `src/lib/data/` — static catalogs (crests, leagues, teams, providers, games). Pure TS, no React imports.
+- `src/lib/flow.ts` — single source of truth for step ordering per brand.
+- `src/lib/supabase/{browser,server}.ts` — typed clients. Never import the service-role client into a client component.
+- `src/types/` — shared types (`Brand`, `LeagueKey`, `OnboardingState`, etc.).
+- `supabase/migrations/` — versioned SQL. Do not edit applied migrations; add a new one.
+- `docs/` — architecture, flow, database, design system, development, deployment.
+
+# Routing & State
+
+- File-based routes; conditional steps (`/onboarding/casino` for BK, `/onboarding/providers` and `/onboarding/games` for SS) call `redirect("/onboarding")` when `brand` doesn't match.
+- Default to Server Components. Mark `"use client"` only on interactive screens or context consumers.
+- Step transitions use `next/navigation`'s `router.push`. Never `window.location`.
+- Wizard state mutates only via reducer actions; never mutate context state directly.
+
+# Database
+
+- Two tables: `user_preferences` (one row per user, upserted on `user_id`) and `user_preference_selections` (polymorphic `kind` + `key`, cascade-deleted with parent).
+- Save flow: upsert parent → delete child rows by `preference_id` → bulk insert from current `OnboardingState`.
+- All API routes validate input with `zod` before touching the DB.
+- RLS policies live in migrations, not in application code.
+
+# Styling
+
+- Tailwind for layout, spacing, typography. Heavy gradients, keyframes, clip-paths, and crest containers live in `src/app/globals.css`.
+- Brand colors are tokens in `tailwind.config.ts` (e.g. `bg-bk-primary`, `text-ss-accent`). Do not hardcode brand hex values in JSX.
+
+# Code Style
+
+- Functional components with arrow function syntax: `export const Foo = () => { ... }`.
+- Named exports only. Exception: Next.js page/layout/route files where a default export is required.
+- TypeScript strict mode. Prefer explicit return types on exported functions.
+- Self-documenting code; comments only when intent isn't obvious from the code itself.
+- Early returns to avoid nesting beyond 2 levels.
+- Extract functions longer than ~30 lines.
+- Boolean variables prefixed with `is`, `has`, `should`, `can`, or `will`.
+- File names: PascalCase for components (`LeagueGrid.tsx`), kebab-case for routes (`leagues/page.tsx`), camelCase for utilities (`buildTeamPool.ts`).
+
+# When in doubt
+
+- Layout / where things live → [docs/architecture.md](docs/architecture.md)
+- Wizard flow / step order → [docs/onboarding-flow.md](docs/onboarding-flow.md)
+- Schema / migrations / save flow → [docs/database.md](docs/database.md)
+- Brand tokens / adding a crest → [docs/design-system.md](docs/design-system.md)
+- Setup / scripts / conventions → [docs/development.md](docs/development.md)
+- Deployment / setup → [docs/deployment.md](docs/deployment.md)
