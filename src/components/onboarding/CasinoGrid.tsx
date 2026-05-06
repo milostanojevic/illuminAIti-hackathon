@@ -85,7 +85,7 @@ export const CasinoGrid = () => {
           onClick={handleContinue}
           label="Finish setup →"
         />
-        <GhostButton onClick={handleSkip} />
+        <GhostButton brand={brand} onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };

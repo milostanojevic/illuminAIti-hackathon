@@ -109,7 +109,7 @@ export const StyleForm = () => {
           onClick={handleContinue}
           label="Personalise my experience! ✨"
         />
-        <GhostButton onClick={handleContinue} />
+        <GhostButton brand={brand} onClick={handleContinue} />
     </OnboardingStepShell>
   );
 };

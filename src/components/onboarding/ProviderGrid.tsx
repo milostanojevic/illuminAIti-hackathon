@@ -93,7 +93,7 @@ export const ProviderGrid = () => {
         </div>
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
-        <GhostButton onClick={handleSkip} />
+        <GhostButton brand={brand} onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };
