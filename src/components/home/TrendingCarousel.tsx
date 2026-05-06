@@ -66,7 +66,7 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
   };
 
   return (
-    <div className="bg-white rounded-[14px] p-2.5 sm:p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+    <div className="shrink-0 bg-white rounded-[14px] p-2.5 sm:p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
       <div className="flex items-center justify-between mb-2 sm:mb-2.5">
         <div className="text-xs font-extrabold text-[#1a1a2e] flex items-center gap-1.5">
           <span>🔥</span><span>Trending now</span>

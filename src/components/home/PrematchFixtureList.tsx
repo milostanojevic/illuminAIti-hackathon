@@ -61,8 +61,10 @@ function groupFixturesByCalendarDate(
   return keyOrder.map((dateKey) => ({ dateKey, items: byKey.get(dateKey) ?? [] }));
 }
 
-/** Shared with date header rows and fixture `<li>` rows — keeps split + odds cluster aligned */
-const ROW_FLEX = "flex flex-row flex-nowrap items-center gap-x-1.5 px-2 py-2.5";
+/** Date header row — vertically centers single-line label with ghost odds headers */
+const ROW_FLEX_HEADER = "flex flex-row flex-nowrap items-center gap-x-1.5 px-2 py-2.5";
+/** Fixture rows — top-align so multi-line team names are not clipped by vertical centering */
+const ROW_FLEX_FIXTURE = "flex flex-row flex-nowrap items-start gap-x-1.5 px-2 py-2.5";
 const LEFT_COL = "min-w-0 flex-1 pr-1";
 const ODDS_CLUSTER = "flex shrink-0 items-center gap-x-1.5";
 
@@ -201,7 +203,7 @@ export const PrematchFixtureList = ({
   if (sectionKeys.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
+    <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
       <div
         className="px-4 py-3 flex items-center gap-2 border-b border-black/5"
         style={{ background: `linear-gradient(135deg, ${accentBg}, ${isBk ? "#0d1a3a" : "#0d1580"})` }}
@@ -253,7 +255,7 @@ export const PrematchFixtureList = ({
               <div className="divide-y divide-gray-100 border-y border-gray-100/90">
                 {dateGroups.map(({ dateKey, items }) => (
                   <div key={`${block.competitionId}-${dateKey}`}>
-                    <div className={ROW_FLEX} style={{ backgroundColor: dateBarBg }}>
+                    <div className={ROW_FLEX_HEADER} style={{ backgroundColor: dateBarBg }}>
                       <div
                         className={`${LEFT_COL} text-[11px] font-extrabold tracking-tight leading-tight whitespace-normal break-words`}
                         style={{ color: dateBarText }}
@@ -276,7 +278,7 @@ export const PrematchFixtureList = ({
 
                     <ul className="divide-y divide-gray-100 bg-white">
                       {items.map((fx) => (
-                        <li key={`${block.competitionId}-${fx.fixtureKey}`} className={`${ROW_FLEX} bg-white`}>
+                        <li key={`${block.competitionId}-${fx.fixtureKey}`} className={`${ROW_FLEX_FIXTURE} bg-white`}>
                           <div className={LEFT_COL}>
                             <div className="text-[11px] font-bold text-[#1a1a2e] leading-snug break-words">
                               {fx.homeTeam}
