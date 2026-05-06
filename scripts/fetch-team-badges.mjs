@@ -1,5 +1,6 @@
 /**
- * Populates public/teams/*.svg — tries Wikimedia upload URLs, writes initials fallback on failure.
+ * Populates public/teams/<slug>.png from TheSportsDB free API (test key 3).
+ * On failure writes initials fallback SVG to public/teams/<slug>.svg.
  * Run: node scripts/fetch-team-badges.mjs
  */
 import fs from "node:fs";
@@ -11,12 +12,60 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "public", "teams");
 
+const API_KEY = "3";
+const THROTTLE_MS = 1500;
+
 const SLUG_OVERRIDES = {
   "Man City": "man-city",
   "Man Utd": "man-utd",
   "SuperSport Utd": "supersport-utd",
   "Chippa Utd": "chippa-utd",
 };
+
+const SEARCH_OVERRIDES = {
+  "Man City": "Manchester City",
+  "Man Utd": "Manchester United",
+  Newcastle: "Newcastle United",
+  Tottenham: "Tottenham Hotspur",
+  Wolves: "Wolverhampton Wanderers",
+  "West Ham": "West Ham United",
+  "Aston Villa": "Aston Villa",
+  Atletico: "Atletico Madrid",
+  Sociedad: "Real Sociedad",
+  Athletic: "Athletic Bilbao",
+  Bayern: "Bayern Munich",
+  Dortmund: "Borussia Dortmund",
+  Leverkusen: "Bayer Leverkusen",
+  Leipzig: "RB Leipzig",
+  Frankfurt: "Eintracht Frankfurt",
+  Wolfsburg: "VfL Wolfsburg",
+  Gladbach: "Borussia Monchengladbach",
+  Mainz: "Mainz 05",
+  Hoffenheim: "1899 Hoffenheim",
+  Freiburg: "SC Freiburg",
+  PSG: "Paris Saint-Germain",
+  Inter: "Inter Milan",
+  "SuperSport Utd": "SuperSport United",
+  "Chippa Utd": "Chippa United",
+  Sekhukhune: "Sekhukhune United",
+  "Richards Bay": "Richards Bay FC",
+  "Cape Town City": "Cape Town City FC",
+  Stellenbosch: "Stellenbosch FC",
+};
+
+/** Prefer South Africa when multiple soccer clubs match these display names */
+const PSL_DISPLAY_NAMES = new Set([
+  "Mamelodi Sundowns",
+  "Orlando Pirates",
+  "Kaizer Chiefs",
+  "Cape Town City",
+  "Stellenbosch",
+  "SuperSport Utd",
+  "AmaZulu",
+  "Sekhukhune",
+  "Richards Bay",
+  "Chippa Utd",
+]);
 
 function slugify(name) {
   if (SLUG_OVERRIDES[name]) return SLUG_OVERRIDES[name];
@@ -45,62 +94,6 @@ function fallbackSvg(name) {
 }
 
 const OTHER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#dde0ee"/><text x="32" y="42" text-anchor="middle" font-size="28" fill="#64748b" font-family="system-ui,sans-serif">+</text></svg>`;
-
-/** Wikimedia / Wikipedia upload URLs (SVG). Fallback used if not listed or download fails. */
-const URL_BY_SLUG = {
-  arsenal: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
-  liverpool: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
-  chelsea: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
-  "man-utd": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
-  "man-city": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-  tottenham: "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg",
-  newcastle: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg",
-  "aston-villa": "https://upload.wikimedia.org/wikipedia/en/9/9a/Aston_Villa_FC_new_crest_2016.svg",
-  "west-ham": "https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg",
-  wolves: "https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg",
-  "real-madrid": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-  barcelona: "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
-  atletico: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Atl%C3%A9tico_Madrid_logo_2024.svg",
-  sevilla: "https://upload.wikimedia.org/wikipedia/en/3/3b/Sevilla_FC_logo.svg",
-  "real-betis": "https://upload.wikimedia.org/wikipedia/en/1/13/Real_Betis_logo.svg",
-  valencia: "https://upload.wikimedia.org/wikipedia/en/c/ce/Valenciacf.svg",
-  villarreal: "https://upload.wikimedia.org/wikipedia/en/7/70/Villarreal_CF_logo.svg",
-  athletic: "https://upload.wikimedia.org/wikipedia/en/9/98/Athletic_Club_logo.svg",
-  sociedad: "https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg",
-  osasuna: "https://upload.wikimedia.org/wikipedia/en/d/d4/CA_Osasuna_logo.svg",
-  bayern: "https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg",
-  dortmund: "https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg",
-  leverkusen: "https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg",
-  leipzig: "https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg",
-  frankfurt: "https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg",
-  wolfsburg: "https://upload.wikimedia.org/wikipedia/commons/f/f3/VfL_Wolfsburg_Logo.svg",
-  gladbach: "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_M%C3%B6nchengladbach_logo.svg",
-  freiburg: "https://upload.wikimedia.org/wikipedia/de/1/14/SC_Freiburg_Logo.svg",
-  hoffenheim: "https://upload.wikimedia.org/wikipedia/commons/e/e7/TSG_1899_Hoffenheim_logo.svg",
-  mainz: "https://upload.wikimedia.org/wikipedia/commons/9/9e/1._FSV_Mainz_05_Logo.svg",
-  psg: "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
-  inter: "https://upload.wikimedia.org/wikipedia/commons/0/05/Inter_Milan_logo_2021.svg",
-  brazil: "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg",
-  france: "https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg",
-  argentina: "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_Argentina.svg",
-  england: "https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg",
-  germany: "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
-  spain: "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg",
-  portugal: "https://upload.wikimedia.org/wikipedia/en/5/5c/Flag_of_Portugal.svg",
-  netherlands: "https://upload.wikimedia.org/wikipedia/en/a/a3/Flag_of_the_Netherlands.svg",
-  "south-africa": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg",
-  morocco: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg",
-  "mamelodi-sundowns": "https://upload.wikimedia.org/wikipedia/en/1/1b/Mamelodi_Sundowns_FC_logo.svg",
-  "orlando-pirates": "https://upload.wikimedia.org/wikipedia/commons/0/07/Orlando_Pirates_FC_logo.svg",
-  "kaizer-chiefs": "https://upload.wikimedia.org/wikipedia/en/8/8a/Kaizer_Chiefs_FC_logo.svg",
-  "cape-town-city": "https://upload.wikimedia.org/wikipedia/en/2/25/Cape_Town_City_FC_logo.svg",
-  stellenbosch: "https://upload.wikimedia.org/wikipedia/en/5/5c/Stellenbosch_FC_logo.svg",
-  "supersport-utd": "https://upload.wikimedia.org/wikipedia/en/1/19/SuperSport_United_FC_logo.svg",
-  amazulu: "https://upload.wikimedia.org/wikipedia/en/4/4e/AmaZulu_FC_logo.svg",
-  sekhukhune: "https://upload.wikimedia.org/wikipedia/en/3/3e/Sekhukhune_United_FC_logo.svg",
-  "richards-bay": "https://upload.wikimedia.org/wikipedia/en/7/7b/Richards_Bay_FC_logo.svg",
-  "chippa-utd": "https://upload.wikimedia.org/wikipedia/en/7/70/Chippa_United_FC_logo.svg",
-};
 
 const TEAM_NAMES = [
   "Mamelodi Sundowns",
@@ -157,45 +150,93 @@ const TEAM_NAMES = [
   "Morocco",
 ];
 
+function pickTeam(teams, displayName) {
+  if (!Array.isArray(teams) || teams.length === 0) return null;
+  const soccer = teams.filter((t) => !t.strSport || t.strSport === "Soccer");
+  const pool = soccer.length ? soccer : teams;
+
+  if (PSL_DISPLAY_NAMES.has(displayName)) {
+    const sa = pool.filter((t) => t.strCountry === "South Africa");
+    if (sa.length) return sa[0];
+  }
+
+  const exact = pool.find((t) => (t.strTeam || "").toLowerCase() === displayName.toLowerCase());
+  if (exact) return exact;
+
+  return pool[0];
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-function download(url) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(
-      url,
-      {
-        headers: { "User-Agent": "illuminAIti-hackathon/1.0 (team badge fetch)" },
-        timeout: 20000,
-      },
-      (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          const next = res.headers.location.startsWith("http")
-            ? res.headers.location
-            : new URL(res.headers.location, url).href;
-          res.resume();
-          return download(next).then(resolve).catch(reject);
+async function downloadBuffer(url, attempt = 1) {
+  const maxAttempts = 8;
+  try {
+    const buf = await new Promise((resolve, reject) => {
+      const req = https.get(
+        url,
+        {
+          headers: { "User-Agent": "illuminAIti-hackathon/1.0 (team badge fetch)" },
+          timeout: 35000,
+        },
+        (res) => {
+          if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+            const next = res.headers.location.startsWith("http")
+              ? res.headers.location
+              : new URL(res.headers.location, url).href;
+            res.resume();
+            return downloadBuffer(next, 1).then(resolve).catch(reject);
+          }
+          if (res.statusCode === 429 && attempt < maxAttempts) {
+            res.resume();
+            return reject(Object.assign(new Error("HTTP 429"), { retryable: true }));
+          }
+          if (res.statusCode !== 200) {
+            res.resume();
+            return reject(new Error(`HTTP ${res.statusCode}`));
+          }
+          const chunks = [];
+          res.on("data", (c) => chunks.push(c));
+          res.on("end", () => resolve(Buffer.concat(chunks)));
+          res.on("error", reject);
         }
-        if (res.statusCode !== 200) {
-          res.resume();
-          return reject(new Error(`HTTP ${res.statusCode}`));
-        }
-        const chunks = [];
-        res.on("data", (c) => chunks.push(c));
-        res.on("end", () => resolve(Buffer.concat(chunks)));
-        res.on("error", reject);
-      }
-    );
-    req.on("error", reject);
-    req.on("timeout", () => {
-      req.destroy();
-      reject(new Error("timeout"));
+      );
+      req.on("error", reject);
+      req.on("timeout", () => {
+        req.destroy();
+        reject(new Error("timeout"));
+      });
     });
+    return buf;
+  } catch (e) {
+    if (e.retryable && attempt < maxAttempts) {
+      await sleep(3000 * attempt);
+      return downloadBuffer(url, attempt + 1);
+    }
+    throw e;
+  }
+}
+
+function fetchJson(url) {
+  return downloadBuffer(url).then((buf) => {
+    const text = buf.toString("utf8");
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error("invalid JSON");
+    }
   });
+}
+
+function isPng(buf) {
+  return buf.length >= 8 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47;
 }
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, "other.svg"), OTHER_SVG, "utf8");
+
+  /** @type {Set<string>} */
+  const pngWritten = new Set();
 
   const seen = new Set();
   for (const name of TEAM_NAMES) {
@@ -203,28 +244,64 @@ async function main() {
     if (seen.has(slug)) continue;
     seen.add(slug);
 
-    const dest = path.join(OUT, `${slug}.svg`);
-    const url = URL_BY_SLUG[slug];
-    if (!url) {
-      fs.writeFileSync(dest, fallbackSvg(name), "utf8");
-      console.log(`fallback (no URL): ${slug}`);
-      continue;
-    }
+    const query = SEARCH_OVERRIDES[name] ?? name;
+    const apiUrl = `https://www.thesportsdb.com/api/v1/json/${API_KEY}/searchteams.php?t=${encodeURIComponent(query)}`;
+
+    const destPng = path.join(OUT, `${slug}.png`);
+    const destSvg = path.join(OUT, `${slug}.svg`);
+
     try {
-      const buf = await download(url);
-      const text = buf.toString("utf8").trim();
-      if (!text.includes("<svg") && !text.includes("<?xml")) {
-        throw new Error("not svg");
+      const data = await fetchJson(apiUrl);
+      const team = pickTeam(data?.teams, name);
+      const badgeUrl = team?.strTeamBadge || team?.strBadge || "";
+
+      if (!badgeUrl || !/^https?:\/\//i.test(badgeUrl)) {
+        fs.writeFileSync(destSvg, fallbackSvg(name), "utf8");
+        console.log(`no-match: ${slug} (no badge URL)`);
+        await sleep(THROTTLE_MS);
+        continue;
       }
-      fs.writeFileSync(dest, text, "utf8");
+
+      const buf = await downloadBuffer(badgeUrl);
+      if (!isPng(buf)) {
+        fs.writeFileSync(destSvg, fallbackSvg(name), "utf8");
+        console.log(`fallback (not PNG): ${slug}`);
+        await sleep(THROTTLE_MS);
+        continue;
+      }
+
+      fs.writeFileSync(destPng, buf);
+      pngWritten.add(slug);
       console.log(`ok: ${slug}`);
     } catch (e) {
-      fs.writeFileSync(dest, fallbackSvg(name), "utf8");
+      fs.writeFileSync(destSvg, fallbackSvg(name), "utf8");
       console.log(`fallback (${e.message}): ${slug}`);
     }
-    await sleep(750);
+
+    await sleep(THROTTLE_MS);
   }
-  console.log("done:", OUT);
+
+  for (const slug of pngWritten) {
+    const svgPath = path.join(OUT, `${slug}.svg`);
+    if (fs.existsSync(svgPath)) {
+      fs.unlinkSync(svgPath);
+      console.log(`removed stale: ${slug}.svg`);
+    }
+  }
+
+  /** Remove any *.svg that still sits beside a successful *.png (e.g. partial run). */
+  for (const f of fs.readdirSync(OUT).filter((x) => x.endsWith(".png"))) {
+    const slug = f.replace(/\.png$/i, "");
+    if (!slug) continue;
+    const svgPath = path.join(OUT, `${slug}.svg`);
+    if (fs.existsSync(svgPath)) {
+      fs.unlinkSync(svgPath);
+      console.log(`removed stale: ${slug}.svg`);
+    }
+  }
+
+  const pngCount = fs.readdirSync(OUT).filter((x) => x.endsWith(".png")).length;
+  console.log("done:", OUT, `(${pngCount} PNG)`);
 }
 
 main().catch((e) => {

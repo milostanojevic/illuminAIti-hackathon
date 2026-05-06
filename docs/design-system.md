@@ -53,9 +53,9 @@ colors: {
 
 ## Adding a New Team Crest
 
-1. Create a square SVG (transparent background). Filename must match `slugifyTeamName(displayName)` from [src/lib/data/teamBadges.ts](src/lib/data/teamBadges.ts) — e.g. `new-club-name.svg`.
-2. Place it under `public/teams/` (e.g. `public/teams/new-club-name.svg`). Add a `SLUG_OVERRIDES` entry in `teamBadges.ts` if the display name does not slug cleanly.
-3. Use via the Crest component (falls back to `public/teams/other.svg` on missing file):
+1. Prefer a square PNG badge. Filename must match `slugifyTeamName(displayName)` from [src/lib/data/teamBadges.ts](src/lib/data/teamBadges.ts) — e.g. `new-club-name.png`. Optional initials fallback: `new-club-name.svg`.
+2. Place it under `public/teams/`. Regenerate assets with `node scripts/fetch-team-badges.mjs` (TheSportsDB), or add files manually. Add a `SLUG_OVERRIDES` entry in `teamBadges.ts` if the display name does not slug cleanly.
+3. Use via the Crest component (tries `.png`, then `.svg`, then `public/teams/other.svg`):
    ```tsx
    <Crest name="New Club Name" size={32} />
    ```

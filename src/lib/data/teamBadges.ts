@@ -1,4 +1,4 @@
-/** Slug → `/teams/<slug>.svg` for static crest assets in `public/teams/`. */
+/** Slug → `/teams/<slug>.png` for static crest assets in `public/teams/` (see scripts/fetch-team-badges.mjs). */
 
 const SLUG_OVERRIDES: Record<string, string> = {
   "Man City": "man-city",
@@ -18,4 +18,4 @@ export const slugifyTeamName = (name: string): string => {
     .replace(/^-|-$/g, "");
 };
 
-export const getTeamBadgeUrl = (name: string): string => `/teams/${slugifyTeamName(name)}.svg`;
+export const getTeamBadgeUrl = (name: string): string => `/teams/${slugifyTeamName(name)}.png`;

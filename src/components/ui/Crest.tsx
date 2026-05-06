@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getTeamBadgeUrl } from "@/lib/data/teamBadges";
+import { getTeamBadgeUrl, slugifyTeamName } from "@/lib/data/teamBadges";
 
 type CrestProps = {
   name: string;
@@ -18,6 +18,9 @@ export const Crest = ({ name, size = 32 }: CrestProps) => {
     setSrc(name === "Other" ? FALLBACK : getTeamBadgeUrl(name));
   }, [name]);
 
+  const svgFallback =
+    name === "Other" ? FALLBACK : `/teams/${slugifyTeamName(name)}.svg`;
+
   return (
     <img
       src={src}
@@ -28,7 +31,12 @@ export const Crest = ({ name, size = 32 }: CrestProps) => {
       loading="lazy"
       decoding="async"
       onError={() => {
-        setSrc((s) => (s !== FALLBACK ? FALLBACK : s));
+        setSrc((current) => {
+          const png = getTeamBadgeUrl(name);
+          if (current === png && svgFallback !== FALLBACK) return svgFallback;
+          if (current === svgFallback) return FALLBACK;
+          return FALLBACK;
+        });
       }}
     />
   );
