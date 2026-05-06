@@ -1,11 +1,12 @@
 "use client";
 
+import { AppPhoneFrame } from "@/components/layout/AppPhoneFrame";
 import { OnboardingProvider } from "@/state/OnboardingContext";
 
 const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <OnboardingProvider>
-      <div className="modal">{children}</div>
+      <AppPhoneFrame>{children}</AppPhoneFrame>
     </OnboardingProvider>
   );
 };

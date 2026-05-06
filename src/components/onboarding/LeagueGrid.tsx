@@ -57,7 +57,7 @@ export const LeagueGrid = () => {
         <div className="text-[11px] text-gray-400 mb-3">
           Tap to toggle — select as many as you like
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-2.5">
           {LEAGUE_KEYS.map((key) => {
             const isSelected = state.leagues.includes(key);
             const onClass = isBk ? "border-bk-primary bg-[#eef1fb]" : "border-ss-primary bg-[#eef2ff]";
@@ -67,7 +67,7 @@ export const LeagueGrid = () => {
               <button
                 key={key}
                 onClick={() => toggleLeague(key)}
-                className={`rounded-xl border-[1.5px] bg-[#fafafa] cursor-pointer text-center w-full h-24 flex flex-col items-center justify-center relative flex-shrink-0 ${
+                className={`rounded-xl border-[1.5px] bg-[#fafafa] cursor-pointer text-left sm:text-center w-full h-[66px] sm:h-24 px-3 sm:px-0 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 sm:gap-0 relative flex-shrink-0 ${
                   isSelected ? onClass : "border-gray-200"
                 }`}
               >
@@ -88,14 +88,16 @@ export const LeagueGrid = () => {
                   </div>
                 )}
                 <div
-                  className="w-9 h-6 rounded-sm flex-shrink-0"
+                  className="w-8 sm:w-9 h-5 sm:h-6 rounded-sm flex-shrink-0"
                   style={{ background: LEAGUE_FLAGS[key] }}
                 />
-                <div className={`text-[11px] font-semibold mt-[7px] leading-none ${isSelected ? textClass : "text-[#1a1a2e]"}`}>
-                  {LEAGUE_NAMES[key]}
-                </div>
-                <div className="text-[10px] text-gray-400 mt-[3px] leading-none">
-                  {LEAGUE_REGIONS[key]}
+                <div>
+                  <div className={`text-[11px] font-semibold sm:mt-[7px] leading-none ${isSelected ? textClass : "text-[#1a1a2e]"}`}>
+                    {LEAGUE_NAMES[key]}
+                  </div>
+                  <div className="text-[10px] text-gray-400 mt-[3px] leading-none">
+                    {LEAGUE_REGIONS[key]}
+                  </div>
                 </div>
               </button>
             );

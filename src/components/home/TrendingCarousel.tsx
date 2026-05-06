@@ -18,7 +18,7 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
     const el = carouselRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>(".trending-card-item");
-    const amount = card ? card.offsetWidth + 8 : 218;
+    const amount = card ? card.offsetWidth + 8 : 184;
     setActiveIdx(Math.round(el.scrollLeft / amount));
   }, []);
 
@@ -38,7 +38,7 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
     const el = carouselRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>(".trending-card-item");
-    const amount = card ? card.offsetWidth + 8 : 218;
+    const amount = card ? card.offsetWidth + 8 : 184;
     el.scrollBy({ left: direction * amount, behavior: "smooth" });
     setTimeout(updateDots, 260);
   };
@@ -66,8 +66,8 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
   };
 
   return (
-    <div className="bg-white rounded-[14px] p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
-      <div className="flex items-center justify-between mb-2.5">
+    <div className="bg-white rounded-[14px] p-2.5 sm:p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+      <div className="flex items-center justify-between mb-2 sm:mb-2.5">
         <div className="text-xs font-extrabold text-[#1a1a2e] flex items-center gap-1.5">
           <span>🔥</span><span>Trending now</span>
         </div>
@@ -107,21 +107,21 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
         {cards.map((card, i) => (
           <div
             key={i}
-            className="trending-card-item flex-none w-[210px] rounded-xl p-3 scroll-snap-start relative overflow-hidden text-white flex flex-col gap-2.5"
+            className="trending-card-item flex-none w-[176px] sm:w-[210px] md:w-[230px] rounded-xl p-2.5 sm:p-3 scroll-snap-start relative overflow-hidden text-white flex flex-col gap-2 sm:gap-2.5"
             style={{ background: card.bg }}
           >
             <div className="self-start text-[8.5px] font-extrabold tracking-wide uppercase rounded-full px-[7px] py-1 bg-white/[0.16] relative">
               {card.chip}
             </div>
-            <div className="flex items-center gap-2.5 relative">
-              <div className="w-[38px] h-[38px] rounded-[11px] bg-white/15 flex items-center justify-center text-[19px] flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 relative">
+              <div className="w-9 h-9 sm:w-[38px] sm:h-[38px] rounded-[11px] bg-white/15 flex items-center justify-center text-lg sm:text-[19px] flex-shrink-0">
                 {card.icon}
               </div>
               <div className="flex-1">
-                <div className="text-[13px] font-extrabold leading-tight mb-[3px]">
+                <div className="text-xs sm:text-[13px] font-extrabold leading-tight mb-[3px]">
                   {card.name}
                 </div>
-                <div className="text-[10px] text-white/70 leading-snug">
+                <div className="text-[9.5px] sm:text-[10px] text-white/70 leading-snug">
                   {card.desc}
                 </div>
               </div>
