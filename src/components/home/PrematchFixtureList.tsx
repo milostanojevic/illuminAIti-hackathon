@@ -5,6 +5,10 @@ import type { Brand, LeagueKey } from "@/types/brand";
 import { LEAGUE_NAMES } from "@/lib/data/leagues";
 import { competitionIdsFromLeagues, COMPETITION_ID_BY_LEAGUE } from "@/lib/competitionIds";
 import type { PrematchFixtureUi } from "@/lib/offerPrematch";
+import {
+  fetchPrematchByCompetitionIds,
+  PrematchClientError,
+} from "@/lib/offerPrematchClient";
 
 type CompetitionBlock = {
   competitionId: number;
@@ -174,49 +178,20 @@ export const PrematchFixtureList = ({
       }
 
       try {
-        const qs = encodeURIComponent(competitionIds.join(","));
-        const res = await fetch(`/api/offer/prematch?competitionIds=${qs}`, {
-          method: "GET",
-          headers: { Accept: "application/json" },
-        });
-        const payload: unknown = await res.json().catch(() => null);
-
-        if (!res.ok) {
-          const errMsg =
-            typeof payload === "object" && payload !== null && "error" in payload
-              ? String((payload as { error: unknown }).error)
-              : res.statusText;
-          if (!cancelled) setLoadError(errMsg || `Request failed (${res.status})`);
-          return;
-        }
-
-        if (!payload || typeof payload !== "object" || !("results" in payload)) {
-          if (!cancelled) setLoadError("Unexpected response");
-          return;
-        }
-
-        const rawResults = (payload as { results: unknown }).results;
-        if (!Array.isArray(rawResults)) {
-          if (!cancelled) setLoadError("Unexpected response shape");
-          return;
-        }
+        const results = await fetchPrematchByCompetitionIds(competitionIds);
+        if (cancelled) return;
 
         const byCompetition = new Map<
           number,
           { ok: boolean; status: number; fixtures: PrematchFixtureUi[]; error?: string }
         >();
 
-        for (const row of rawResults) {
-          if (typeof row !== "object" || row === null) continue;
-          const r = row as Record<string, unknown>;
-          const cid = Number(r.competitionId);
-          if (!Number.isFinite(cid)) continue;
-          const fixtures = Array.isArray(r.fixtures) ? (r.fixtures as PrematchFixtureUi[]) : [];
-          byCompetition.set(cid, {
-            ok: Boolean(r.ok),
-            status: typeof r.status === "number" ? r.status : 0,
-            fixtures,
-            error: typeof r.error === "string" ? r.error : undefined,
+        for (const r of results) {
+          byCompetition.set(r.competitionId, {
+            ok: r.ok,
+            status: r.status,
+            fixtures: r.fixtures,
+            error: r.error,
           });
         }
 
@@ -237,7 +212,14 @@ export const PrematchFixtureList = ({
 
         if (!cancelled) setBlocks(next);
       } catch (e) {
-        if (!cancelled) setLoadError(e instanceof Error ? e.message : "Network error");
+        if (cancelled) return;
+        setLoadError(
+          e instanceof PrematchClientError
+            ? e.message
+            : e instanceof Error
+              ? e.message
+              : "Network error"
+        );
       }
     };
 
