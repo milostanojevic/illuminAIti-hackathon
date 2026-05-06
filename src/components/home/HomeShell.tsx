@@ -88,7 +88,7 @@ export const HomeShell = () => {
         />
 
         {state.leagues.length > 0 && (
-          <PrematchFixtureList leagueKeys={state.leagues} brand={brand} />
+          <PrematchFixtureList leagueKeys={state.leagues} brand={brand} favouriteTeams={state.teams} />
         )}
 
         <TrendingCarousel cards={trendingCards} />
