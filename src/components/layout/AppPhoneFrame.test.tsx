@@ -12,12 +12,12 @@ describe("AppPhoneFrame", () => {
     expect(frame).toHaveTextContent("Frame Content");
     expect(frame).toHaveClass(
       "modal",
+      "scroll-touch",
       "w-full",
       "max-w-[360px]",
       "sm:max-w-[390px]",
       "md:max-w-[420px]",
       "lg:max-w-[460px]",
-      "overflow-hidden",
     );
   });
 });

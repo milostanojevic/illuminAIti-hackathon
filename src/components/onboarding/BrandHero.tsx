@@ -42,7 +42,7 @@ export const BrandHero = () => {
 
   if (isBk) {
     return (
-      <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-[#0d0d0d]">
+      <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-y-auto overflow-x-hidden scroll-touch bg-[#0d0d0d]">
         <div className="stadium-bg" />
         <div className="red-shape" />
         <div className="red-noise" />
@@ -91,7 +91,7 @@ export const BrandHero = () => {
   }
 
   return (
-    <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-[#1a2db8]">
+    <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-y-auto overflow-x-hidden scroll-touch bg-[#1a2db8]">
       <div
         className="absolute inset-0"
         style={{
