@@ -26,9 +26,11 @@ export const STEP_ROUTES: Record<StepKey, string> = {
   magic: "/onboarding/magic",
 };
 
-const NON_WIZARD_STEPS: readonly StepKey[] = ["hero"];
+/** Loader / transition after preferences — not shown in “Step X of Y” or progress pips. */
+const NON_NUMBERED_WIZARD_STEPS: readonly StepKey[] = ["hero", "magic"];
 
-const isWizardStep = (step: StepKey): boolean => !NON_WIZARD_STEPS.includes(step);
+const isNumberedWizardStep = (step: StepKey): boolean =>
+  !NON_NUMBERED_WIZARD_STEPS.includes(step);
 
 export const getStepIndex = (brand: Brand, step: StepKey): number => {
   return FLOWS[brand].indexOf(step);
@@ -39,11 +41,11 @@ export const getStepCount = (brand: Brand): number => {
 };
 
 export const getWizardStepIndex = (brand: Brand, step: StepKey): number => {
-  return FLOWS[brand].filter(isWizardStep).indexOf(step) + 1;
+  return FLOWS[brand].filter(isNumberedWizardStep).indexOf(step) + 1;
 };
 
 export const getWizardStepCount = (brand: Brand): number => {
-  return FLOWS[brand].filter(isWizardStep).length;
+  return FLOWS[brand].filter(isNumberedWizardStep).length;
 };
 
 export const getNextStep = (brand: Brand, currentStep: StepKey): StepKey | null => {
