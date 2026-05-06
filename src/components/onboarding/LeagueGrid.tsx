@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
-import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
+import { LEAGUE_NAMES } from "@/lib/data/leagues";
+import { CompetitionBadge } from "@/components/ui/CompetitionBadge";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
 import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
@@ -87,9 +88,9 @@ export const LeagueGrid = () => {
                     </svg>
                   </div>
                 )}
-                <div
-                  className="w-8 sm:w-9 h-5 sm:h-6 rounded-sm flex-shrink-0"
-                  style={{ background: LEAGUE_FLAGS[key] }}
+                <CompetitionBadge
+                  league={key}
+                  className="w-8 sm:w-9 h-5 sm:h-6 object-contain flex-shrink-0"
                 />
                 <div>
                   <div className={`text-[11px] font-semibold sm:mt-[7px] leading-none ${isSelected ? textClass : "text-[#1a1a2e]"}`}>

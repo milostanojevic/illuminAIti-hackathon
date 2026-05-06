@@ -1,6 +1,7 @@
 "use client";
 
-import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
+import { LEAGUE_NAMES } from "@/lib/data/leagues";
+import { CompetitionBadge } from "@/components/ui/CompetitionBadge";
 import type { LeagueKey } from "@/types/brand";
 
 type LeagueChipsProps = {
@@ -17,9 +18,9 @@ export const LeagueChips = ({ leagues }: LeagueChipsProps) => {
           key={key}
           className="inline-flex items-center gap-1 bg-white/[0.12] rounded-full px-2 py-[3px] flex-shrink-0"
         >
-          <div
-            className="w-3 h-2 rounded-sm flex-shrink-0"
-            style={{ background: LEAGUE_FLAGS[key] }}
+          <CompetitionBadge
+            league={key}
+            className="w-3 h-3 object-contain flex-shrink-0"
           />
           <span className="text-[9px] font-semibold text-white/90 whitespace-nowrap">
             {LEAGUE_NAMES[key]}
