@@ -21,7 +21,7 @@ const PROVIDERS: ProviderInfo[] = [
   { key: "habanero", icon: "🌶️", color: "#E8521A", sub: "177 Slots" },
   { key: "spribe", icon: "🚀", color: "#1a2db8", sub: "Crash Games" },
   { key: "pragmatic", icon: "⚡", color: "#d40000", sub: "119 Slots" },
-  { key: "lw", icon: "🎰", color: "#1a6a2a", sub: "Table Games" },
+  { key: "netent", icon: "🎰", color: "#00B0F0", sub: "Slots" },
   { key: "betgames", icon: "🎲", color: "#8b1a8b", sub: "Live Dealer" },
   { key: "evolution", icon: "♠️", color: "#6d0a0a", sub: "961 Games" },
 ];

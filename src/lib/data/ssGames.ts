@@ -36,7 +36,7 @@ export const SS_GAMES: Record<ProviderKey, SSGame[]> = {
     { name: "Fire Strike", bg: "linear-gradient(135deg,#3a0200,#cc0800)", tag: "HOT", icon: "🔥" },
     { name: "Chests of Cai Shen", bg: "linear-gradient(135deg,#001a10,#006a30)", tag: "", icon: "🀄" },
   ],
-  lw: [
+  netent: [
     { name: "777 Strike", bg: "linear-gradient(135deg,#002200,#006600)", tag: "HOT", icon: "7️⃣" },
     { name: "Fortune House", bg: "linear-gradient(135deg,#3a1000,#cc4400)", tag: "", icon: "🏠" },
     { name: "Mega Jade", bg: "linear-gradient(135deg,#003010,#007a30)", tag: "", icon: "💚" },

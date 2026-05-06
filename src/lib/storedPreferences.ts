@@ -6,7 +6,7 @@ export const STORAGE_KEY = "kingmakers_user_preferences";
 const LEAGUES: LeagueKey[] = ["psl", "epl", "ll", "bl", "ucl", "wc"];
 const LEAGUES_SET = new Set<string>(LEAGUES);
 
-const PROVIDERS: ProviderKey[] = ["habanero", "spribe", "pragmatic", "lw", "betgames", "evolution"];
+const PROVIDERS: ProviderKey[] = ["habanero", "spribe", "pragmatic", "netent", "betgames", "evolution"];
 const PROVIDERS_SET = new Set<string>(PROVIDERS);
 
 const PROMOS_SET = new Set<string>(["freebets", "freespins", "cashback", "odds"]);
@@ -18,6 +18,7 @@ export const createDefaultOnboardingState = (): OnboardingState => ({
   casinoGames: [],
   providers: [],
   ssGames: [],
+  ssGameThumbs: {},
   style: {
     risk: null,
     session: null,
@@ -31,6 +32,7 @@ export const isEffectivelyDefault = (state: OnboardingState): boolean =>
   state.casinoGames.length === 0 &&
   state.providers.length === 0 &&
   state.ssGames.length === 0 &&
+  Object.keys(state.ssGameThumbs ?? {}).length === 0 &&
   state.style.promos.length === 0 &&
   state.style.risk === null &&
   state.style.session === null;
@@ -46,7 +48,19 @@ export const sanitizeOnboardingState = (raw: unknown): OnboardingState | null =>
 
   const leagues = parseStringArray(obj.leagues).filter((k): k is LeagueKey => LEAGUES_SET.has(k));
 
-  const providers = parseStringArray(obj.providers).filter((k): k is ProviderKey => PROVIDERS_SET.has(k));
+  const rawProviders = parseStringArray(obj.providers).map((k) => (k === "lw" ? "netent" : k));
+  const providers = rawProviders.filter((k): k is ProviderKey => PROVIDERS_SET.has(k));
+
+  const ssGames = parseStringArray(obj.ssGames);
+
+  let ssGameThumbs: Record<string, string> = {};
+  const thumbsRaw = obj.ssGameThumbs;
+  if (thumbsRaw && typeof thumbsRaw === "object" && !Array.isArray(thumbsRaw)) {
+    for (const name of ssGames) {
+      const v = (thumbsRaw as Record<string, unknown>)[name];
+      if (typeof v === "string") ssGameThumbs[name] = v;
+    }
+  }
 
   const base = createDefaultOnboardingState();
   const styleObj =
@@ -76,7 +90,8 @@ export const sanitizeOnboardingState = (raw: unknown): OnboardingState | null =>
     teams: parseStringArray(obj.teams),
     casinoGames: parseStringArray(obj.casinoGames),
     providers,
-    ssGames: parseStringArray(obj.ssGames),
+    ssGames,
+    ssGameThumbs,
     style: {
       risk,
       session,

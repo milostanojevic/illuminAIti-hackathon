@@ -1,55 +1,105 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
-import { SS_GAMES } from "@/lib/data/ssGames";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
 import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
-import type { ProviderKey } from "@/types/brand";
+import type { CasinoGame, CasinoGamesProviderResult } from "@/app/api/casino/games/route";
+import { fetchCasinoGamesByProviders, CasinoGamesClientError } from "@/lib/casinoGamesClient";
 
-type GameCardData = {
-  name: string;
-  bg: string;
-  tag: string;
-  icon: string;
-};
+const PAGE_SIZE = 10;
 
-const buildGamePool = (providers: ProviderKey[]): { popular: GameCardData[]; more: GameCardData[] } => {
-  const pool: GameCardData[] = [];
+function mergeGames(results: CasinoGamesProviderResult[]): CasinoGame[] {
   const seen = new Set<string>();
+  const out: CasinoGame[] = [];
+  for (const block of results) {
+    if (!block.ok) continue;
+    for (const g of block.games) {
+      const k = g.name.toLowerCase();
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(g);
+    }
+  }
+  return out;
+}
 
-  providers.forEach((key) => {
-    (SS_GAMES[key] ?? []).forEach((g) => {
-      if (g.tag === "HOT" && !seen.has(g.name)) {
-        seen.add(g.name);
-        pool.push(g);
-      }
-    });
-  });
-
-  providers.forEach((key) => {
-    (SS_GAMES[key] ?? []).forEach((g) => {
-      if (!seen.has(g.name)) {
-        seen.add(g.name);
-        pool.push(g);
-      }
-    });
-  });
-
-  const capped = pool.slice(0, 10);
-  return { popular: capped.slice(0, 4), more: capped.slice(4) };
-};
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
 
 export const GameGrid = () => {
   const router = useRouter();
-  const { state, toggleSSGame } = useOnboarding();
+  const { state, toggleSSGameDetail } = useOnboarding();
   const brand = state.brand!;
   const hasSelection = state.ssGames.length > 0;
-  const { popular, more } = buildGamePool(state.providers);
+
+  const providersKey = useMemo(() => state.providers.join("|"), [state.providers]);
+
+  const [games, setGames] = useState<CasinoGame[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [partialErrors, setPartialErrors] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoadError(null);
+    setPartialErrors([]);
+    setGames(null);
+    setPage(1);
+
+    if (state.providers.length === 0) {
+      setGames([]);
+      return;
+    }
+
+    const run = async () => {
+      try {
+        const results = await fetchCasinoGamesByProviders(state.providers);
+        if (cancelled) return;
+
+        const errs = results
+          .filter((r) => !r.ok && r.error)
+          .map((r) => `${PROVIDER_LABELS[r.providerKey]}: ${r.error}`);
+        setPartialErrors(errs);
+
+        setGames(mergeGames(results));
+      } catch (e) {
+        if (cancelled) return;
+        setLoadError(
+          e instanceof CasinoGamesClientError
+            ? e.message
+            : e instanceof Error
+              ? e.message
+              : "Network error"
+        );
+      }
+    };
+
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [providersKey, state.providers]);
+
+  const totalPages = Math.max(1, Math.ceil((games?.length ?? 0) / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const pageSlice = useMemo(() => {
+    if (!games) return [];
+    return games.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  }, [games, safePage]);
+
+  useEffect(() => {
+    if (page !== safePage) setPage(safePage);
+  }, [page, safePage]);
 
   const handleContinue = () => {
     const next = getNextStep(brand, "games");
@@ -59,6 +109,8 @@ export const GameGrid = () => {
   const handleSkip = () => goToNextPreferenceStep(router, brand, "games");
 
   const providerNames = state.providers.map((k) => PROVIDER_LABELS[k]).join(", ");
+
+  const onClass = "border-ss-accent shadow-[0_0_0_1px_rgba(255,205,0,0.35)]";
 
   return (
     <OnboardingStepShell
@@ -72,85 +124,128 @@ export const GameGrid = () => {
         />
       }
     >
-        <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">
-          Pin your favourite games
+      <div className="text-[13px] font-semibold text-[#1a1a2e] mb-1">Pin your favourite games</div>
+      <div className="flex flex-wrap gap-[5px] mb-2">
+        {state.providers.map((key) => (
+          <div
+            key={key}
+            className="inline-flex items-center gap-1 border rounded-full px-2 py-[3px] text-[10px] bg-[#eef2ff] border-[#a0b0e8] text-ss-primary"
+          >
+            {PROVIDER_LABELS[key]}
+          </div>
+        ))}
+      </div>
+      <div className="text-[10px] text-ss-primary mb-2.5">
+        <span className="font-semibold">{state.ssGames.length}</span> game{state.ssGames.length !== 1 ? "s" : ""}{" "}
+        selected
+      </div>
+
+      {loadError && (
+        <div className="text-[11px] text-red-700 bg-red-50 rounded-lg px-3 py-2 border border-red-100 mb-2">
+          Could not load games: {loadError}
         </div>
-        <div className="flex flex-wrap gap-[5px] mb-2">
-          {state.providers.map((key) => (
-            <div key={key} className="inline-flex items-center gap-1 border rounded-full px-2 py-[3px] text-[10px] bg-[#eef2ff] border-[#a0b0e8] text-ss-primary">
-              {PROVIDER_LABELS[key]}
+      )}
+
+      {partialErrors.length > 0 && !loadError && (
+        <div className="text-[10px] text-amber-900 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-2">
+          {partialErrors.map((e) => (
+            <div key={e} className="leading-snug">
+              {e}
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-ss-primary mb-2.5">
-          <span className="font-semibold">{state.ssGames.length}</span> game{state.ssGames.length !== 1 ? "s" : ""} selected
-        </div>
+      )}
 
-        <div className="text-[10px] font-bold text-ss-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          🔥 Popular games
-          <span className="flex-1 h-px bg-[#e8e8f0]" />
-        </div>
-        <GameSection games={popular} selectedGames={state.ssGames} onToggle={toggleSSGame} />
+      {!loadError && games === null && (
+        <div className="text-[11px] text-gray-500 py-4 animate-pulse">Loading games…</div>
+      )}
 
-        {more.length > 0 && (
-          <>
-            <div className="text-[10px] font-bold text-ss-primary uppercase tracking-wider mt-3 mb-2 flex items-center gap-1.5">
-              More games
-              <span className="flex-1 h-px bg-[#e8e8f0]" />
+      {!loadError && games !== null && games.length === 0 && state.providers.length > 0 && (
+        <div className="text-[11px] text-gray-500 py-2">No games returned for these providers.</div>
+      )}
+
+      {!loadError && games !== null && games.length > 0 && (
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {pageSlice.map((g) => {
+              const isSelected = state.ssGames.includes(g.name);
+              const rowKey = `${g.providerKey}-${g.slug}`;
+              return (
+                <button
+                  key={rowKey}
+                  type="button"
+                  onClick={() => toggleSSGameDetail({ name: g.name, thumbnailUrl: g.thumbnailUrl })}
+                  className={`relative rounded-lg border-[1.5px] overflow-hidden h-[88px] cursor-pointer ${
+                    isSelected ? onClass : "border-gray-200 bg-white"
+                  }`}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-600 to-slate-800 pointer-events-none">
+                    <span className="text-lg font-black text-white/90 tracking-tight">{initials(g.name)}</span>
+                  </div>
+                  {g.thumbnailUrl ? (
+                    <img
+                      src={g.thumbnailUrl}
+                      alt=""
+                      className="absolute inset-0 z-[1] w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.opacity = "0";
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-x-0 bottom-0 z-[2] bg-black/55 text-white text-[10px] font-semibold px-2 py-1 truncate text-left">
+                    {g.name}
+                  </div>
+                  {isSelected && (
+                    <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-ss-accent flex items-center justify-center z-10">
+                      <svg width="8" height="6" viewBox="0 0 8 6" fill="none" aria-hidden>
+                        <path
+                          d="M1 3l2 2 4-4"
+                          stroke="#0d1580"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between gap-2 pt-3 mt-1">
+              <button
+                type="button"
+                aria-label="Previous page"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                className="text-[11px] font-bold px-2.5 py-1 rounded-full border border-gray-200 bg-white disabled:opacity-40"
+              >
+                Prev
+              </button>
+              <span className="text-[10px] font-semibold text-slate-600 tabular-nums">
+                Page {safePage} of {totalPages}
+              </span>
+              <button
+                type="button"
+                aria-label="Next page"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                className="text-[11px] font-bold px-2.5 py-1 rounded-full border border-gray-200 bg-white disabled:opacity-40"
+              >
+                Next
+              </button>
             </div>
-            <GameSection games={more} selectedGames={state.ssGames} onToggle={toggleSSGame} />
-          </>
-        )}
+          )}
+        </>
+      )}
 
-        <div className="h-px bg-gray-100 my-3.5" />
-        <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
-        <GhostButton brand={brand} onClick={handleSkip} />
+      <div className="h-px bg-gray-100 my-3.5" />
+      <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
+      <GhostButton brand={brand} onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };
-
-type GameSectionProps = {
-  games: GameCardData[];
-  selectedGames: string[];
-  onToggle: (name: string) => void;
-};
-
-const GameSection = ({ games, selectedGames, onToggle }: GameSectionProps) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-[7px]">
-    {games.map((game) => {
-      const isSelected = selectedGames.includes(game.name);
-
-      return (
-        <button
-          key={game.name}
-          onClick={() => onToggle(game.name)}
-          className={`rounded-[10px] border-2 overflow-hidden cursor-pointer relative h-16 sm:h-[72px] ${
-            isSelected ? "border-ss-accent" : "border-transparent"
-          }`}
-        >
-          <div className="absolute inset-0 rounded-[9px]" style={{ background: game.bg }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[22px] leading-none">
-            {game.icon}
-          </div>
-          {isSelected && (
-            <div className="absolute top-[5px] right-[5px] w-4 h-4 rounded-full bg-ss-accent flex items-center justify-center">
-              <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
-                <path d="M1 3l2 2 4-4" stroke="#0d1580" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          )}
-          <div className="game-card-overlay">
-            <span className="text-[10px] font-semibold text-white">{game.name}</span>
-            {game.tag && (
-              <span className={`text-[8px] px-[5px] py-[2px] rounded font-semibold text-white ${
-                game.tag === "HOT" ? "bg-[#e24b4a]" : "bg-[#1a8c5b]"
-              }`}>
-                {game.tag}
-              </span>
-            )}
-          </div>
-        </button>
-      );
-    })}
-  </div>
-);

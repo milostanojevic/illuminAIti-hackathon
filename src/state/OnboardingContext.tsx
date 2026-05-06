@@ -21,6 +21,7 @@ type Action =
   | { type: "TOGGLE_CASINO_GAME"; payload: string }
   | { type: "TOGGLE_PROVIDER"; payload: ProviderKey }
   | { type: "TOGGLE_SS_GAME"; payload: string }
+  | { type: "TOGGLE_SS_GAME_DETAIL"; payload: { name: string; thumbnailUrl: string } }
   | { type: "SET_RISK"; payload: RiskLevel }
   | { type: "SET_SESSION"; payload: SessionStyle }
   | { type: "TOGGLE_PROMO"; payload: PromoKey }
@@ -36,6 +37,7 @@ type OnboardingContextValue = {
   toggleCasinoGame: (game: string) => void;
   toggleProvider: (provider: ProviderKey) => void;
   toggleSSGame: (game: string) => void;
+  toggleSSGameDetail: (payload: { name: string; thumbnailUrl: string }) => void;
   setRisk: (risk: RiskLevel) => void;
   setSession: (session: SessionStyle) => void;
   togglePromo: (promo: PromoKey) => void;
@@ -65,8 +67,34 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
       return { ...state, casinoGames: toggleWithMax(state.casinoGames, action.payload, 4) };
     case "TOGGLE_PROVIDER":
       return { ...state, providers: toggle(state.providers, action.payload) };
-    case "TOGGLE_SS_GAME":
-      return { ...state, ssGames: toggleWithMax(state.ssGames, action.payload, 6) };
+    case "TOGGLE_SS_GAME": {
+      const name = action.payload;
+      const thumbs = { ...state.ssGameThumbs };
+      if (state.ssGames.includes(name)) {
+        const ssGames = state.ssGames.filter((n) => n !== name);
+        delete thumbs[name];
+        return { ...state, ssGames, ssGameThumbs: thumbs };
+      }
+      return {
+        ...state,
+        ssGames: [...state.ssGames, name],
+        ssGameThumbs: { ...thumbs, [name]: thumbs[name] ?? "" },
+      };
+    }
+    case "TOGGLE_SS_GAME_DETAIL": {
+      const { name, thumbnailUrl } = action.payload;
+      const thumbs = { ...state.ssGameThumbs };
+      if (state.ssGames.includes(name)) {
+        const ssGames = state.ssGames.filter((n) => n !== name);
+        delete thumbs[name];
+        return { ...state, ssGames, ssGameThumbs: thumbs };
+      }
+      return {
+        ...state,
+        ssGames: [...state.ssGames, name],
+        ssGameThumbs: { ...thumbs, [name]: thumbnailUrl },
+      };
+    }
     case "SET_RISK":
       return { ...state, style: { ...state.style, risk: action.payload } };
     case "SET_SESSION":
@@ -111,6 +139,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     toggleCasinoGame: (game) => dispatch({ type: "TOGGLE_CASINO_GAME", payload: game }),
     toggleProvider: (provider) => dispatch({ type: "TOGGLE_PROVIDER", payload: provider }),
     toggleSSGame: (game) => dispatch({ type: "TOGGLE_SS_GAME", payload: game }),
+    toggleSSGameDetail: (payload) => dispatch({ type: "TOGGLE_SS_GAME_DETAIL", payload }),
     setRisk: (risk) => dispatch({ type: "SET_RISK", payload: risk }),
     setSession: (session) => dispatch({ type: "SET_SESSION", payload: session }),
     togglePromo: (promo) => dispatch({ type: "TOGGLE_PROMO", payload: promo }),

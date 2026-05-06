@@ -8,6 +8,7 @@ import { LeagueChips } from "./LeagueChips";
 import { HomeCTA } from "./HomeCTA";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
+import { HomeCasinoWidget } from "./HomeCasinoWidget";
 
 export const HomeShell = () => {
   const { state } = useOnboarding();
@@ -59,13 +60,7 @@ export const HomeShell = () => {
           buttonColor="#fff"
         />
 
-        <HomeCTA
-          icon="🎰"
-          title="Casino"
-          subtitle="Slots, live games & more"
-          buttonLabel="Play"
-          bg={isBk ? "#1a2b6b" : "#1a2db8"}
-        />
+        <HomeCasinoWidget brand={brand} />
 
         <HomeCTA
           icon="⚽"
