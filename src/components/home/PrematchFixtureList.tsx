@@ -61,8 +61,17 @@ function groupFixturesByCalendarDate(
   return keyOrder.map((dateKey) => ({ dateKey, items: byKey.get(dateKey) ?? [] }));
 }
 
-/** Teams column takes remaining width; odds columns size to pill content */
-const GRID_COLS = "grid-cols-[minmax(0,1fr)_repeat(3,auto)]";
+/** Shared with date header rows and fixture `<li>` rows — keeps split + odds cluster aligned */
+const ROW_FLEX = "flex flex-row flex-nowrap items-center gap-x-1.5 px-2 py-2.5";
+const LEFT_COL = "min-w-0 flex-1 pr-1";
+const ODDS_CLUSTER = "flex shrink-0 items-center gap-x-1.5";
+
+/** Fixed columns so header + rows share one odds block width (flex-1 left col stays consistent) */
+const ODDS_SLOT = "flex w-[3.5rem] shrink-0 items-center justify-center min-w-0";
+
+/** Mirrors real odds pill box model (no shadow — avoids optical drift vs ghost headers) */
+const GHOST_ODDS_SHELL =
+  "rounded-full shrink-0 px-1.5 py-1 flex items-center justify-center border border-transparent min-w-0";
 
 const BoostBolt = ({ className }: { className?: string }) => (
   <svg
@@ -244,31 +253,31 @@ export const PrematchFixtureList = ({
               <div className="divide-y divide-gray-100 border-y border-gray-100/90">
                 {dateGroups.map(({ dateKey, items }) => (
                   <div key={`${block.competitionId}-${dateKey}`}>
-                    <div
-                      className={`grid ${GRID_COLS} gap-x-1.5 items-center px-2 py-2`}
-                      style={{ backgroundColor: dateBarBg }}
-                    >
+                    <div className={ROW_FLEX} style={{ backgroundColor: dateBarBg }}>
                       <div
-                        className="min-w-0 text-[11px] font-extrabold tracking-tight leading-tight whitespace-normal break-words"
+                        className={`${LEFT_COL} text-[11px] font-extrabold tracking-tight leading-tight whitespace-normal break-words`}
                         style={{ color: dateBarText }}
                       >
                         {dateHeaderLabel(dateKey)}
                       </div>
-                      {(["1", "X", "2"] as const).map((h) => (
-                        <div
-                          key={h}
-                          className="text-center text-[10px] font-extrabold tabular-nums shrink-0"
-                          style={{ color: dateBarText }}
-                        >
-                          {h}
-                        </div>
-                      ))}
+                      <div className={ODDS_CLUSTER}>
+                        {(["1", "X", "2"] as const).map((h) => (
+                          <div key={h} className={ODDS_SLOT}>
+                            <div
+                              className={`${GHOST_ODDS_SHELL} text-[10px] font-extrabold tabular-nums`}
+                              style={{ color: dateBarText }}
+                            >
+                              {h}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     <ul className="divide-y divide-gray-100 bg-white">
                       {items.map((fx) => (
-                        <li className="flex flex-row flex-nowrap items-center gap-x-1.5 px-2 py-2.5 bg-white">
-                          <div className="min-w-0 flex-1 pr-1">
+                        <li className={`${ROW_FLEX} bg-white`}>
+                          <div className={LEFT_COL}>
                             <div className="text-[11px] font-bold text-[#1a1a2e] leading-snug break-words">
                               {fx.homeTeam}
                             </div>
@@ -278,7 +287,7 @@ export const PrematchFixtureList = ({
                           </div>
 
                           {fx.oneXtwo ? (
-                            <div className="flex shrink-0 items-center gap-x-1.5">
+                            <div className={ODDS_CLUSTER}>
                               {(
                                 [
                                   {
@@ -295,19 +304,20 @@ export const PrematchFixtureList = ({
                                   },
                                 ] as const
                               ).map((col, idx) => (
-                                <div
-                                  key={idx}
-                                  title={col.boosted ? "Boosted odds" : undefined}
-                                  className="rounded-full shrink-0 px-1.5 py-1 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
-                                  style={{ backgroundColor: pillBg }}
-                                >
-                                  {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
-                                  <span
-                                    className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
-                                    style={{ color: textDeep }}
+                                <div key={idx} className={ODDS_SLOT}>
+                                  <div
+                                    title={col.boosted ? "Boosted odds" : undefined}
+                                    className="rounded-full max-w-full shrink-0 px-1.5 py-1 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
+                                    style={{ backgroundColor: pillBg }}
                                   >
-                                    {col.price}
-                                  </span>
+                                    {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
+                                    <span
+                                      className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
+                                      style={{ color: textDeep }}
+                                    >
+                                      {col.price}
+                                    </span>
+                                  </div>
                                 </div>
                               ))}
                             </div>
