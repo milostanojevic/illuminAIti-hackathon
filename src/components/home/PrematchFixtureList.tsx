@@ -276,7 +276,7 @@ export const PrematchFixtureList = ({
 
                     <ul className="divide-y divide-gray-100 bg-white">
                       {items.map((fx) => (
-                        <li className={`${ROW_FLEX} bg-white`}>
+                        <li key={`${block.competitionId}-${fx.fixtureKey}`} className={`${ROW_FLEX} bg-white`}>
                           <div className={LEFT_COL}>
                             <div className="text-[11px] font-bold text-[#1a1a2e] leading-snug break-words">
                               {fx.homeTeam}
