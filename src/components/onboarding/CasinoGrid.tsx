@@ -40,7 +40,7 @@ export const CasinoGrid = () => {
         <div className="text-[11px] text-gray-400 mb-3">
           These will be pinned to your home
         </div>
-        <div className="grid grid-cols-2 gap-[7px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-[7px]">
           {BK_GAMES.map((game) => {
             const isSelected = state.casinoGames.includes(game.name);
 
@@ -48,7 +48,7 @@ export const CasinoGrid = () => {
               <button
                 key={game.name}
                 onClick={() => toggleCasinoGame(game.name)}
-                className={`rounded-[10px] border-2 overflow-hidden cursor-pointer relative h-[72px] ${
+                className={`rounded-[10px] border-2 overflow-hidden cursor-pointer relative h-16 sm:h-[72px] ${
                   isSelected ? "border-bk-accent" : "border-transparent"
                 }`}
               >

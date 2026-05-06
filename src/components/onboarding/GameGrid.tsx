@@ -116,7 +116,7 @@ type GameSectionProps = {
 };
 
 const GameSection = ({ games, selectedGames, onToggle }: GameSectionProps) => (
-  <div className="grid grid-cols-2 gap-[7px]">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-[7px]">
     {games.map((game) => {
       const isSelected = selectedGames.includes(game.name);
 
@@ -124,7 +124,7 @@ const GameSection = ({ games, selectedGames, onToggle }: GameSectionProps) => (
         <button
           key={game.name}
           onClick={() => onToggle(game.name)}
-          className={`rounded-[10px] border-2 overflow-hidden cursor-pointer relative h-[72px] ${
+          className={`rounded-[10px] border-2 overflow-hidden cursor-pointer relative h-16 sm:h-[72px] ${
             isSelected ? "border-ss-accent" : "border-transparent"
           }`}
         >

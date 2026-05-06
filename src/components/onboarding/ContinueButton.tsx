@@ -21,7 +21,7 @@ export const ContinueButton = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className="w-full py-3.5 rounded-[30px] border-none text-[13px] font-semibold cursor-pointer mb-2 block disabled:opacity-40 disabled:cursor-default"
+      className="w-full py-3 sm:py-3.5 rounded-2xl sm:rounded-[30px] border-none text-xs sm:text-[13px] font-semibold cursor-pointer mb-1.5 sm:mb-2 block disabled:opacity-40 disabled:cursor-default"
       style={{
         background: isBk ? "#00d8c8" : "#FFCD00",
         color: isBk ? "#003030" : "#0d1580",

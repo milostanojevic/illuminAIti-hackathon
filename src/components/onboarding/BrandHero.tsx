@@ -55,19 +55,19 @@ export const BrandHero = () => {
           }}
         />
 
-        <div className="relative z-10 mt-auto px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm">👑</span>
-              <span className="text-[13px] font-extrabold text-white">betking</span>
+        <div className="relative z-10 mt-auto px-4 sm:px-5 md:px-6 pt-4 sm:pt-5 md:pt-6 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <span className="text-[13px] sm:text-sm">👑</span>
+              <span className="text-xs sm:text-[13px] font-extrabold text-white">betking</span>
             </div>
-            <div className="w-px h-[18px] bg-white/25" />
-            <span className="text-[10px] font-semibold text-white/50 uppercase tracking-wider">
+            <div className="w-px h-4 sm:h-[18px] bg-white/25" />
+            <span className="text-[9px] sm:text-[10px] font-semibold text-white/50 uppercase tracking-wider">
               Official Betting Partner
             </span>
           </div>
 
-          <div className="text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
+          <div className="text-[1.35rem] sm:text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] md:text-[1.85rem] font-black text-white leading-[1.03] sm:leading-[1.05] uppercase mb-4 sm:mb-[22px] md:mb-6 tracking-tight">
             Personalise<br />
             your favourite<br />
             <span className="text-bk-red">teams</span> &amp; games
@@ -75,13 +75,13 @@ export const BrandHero = () => {
 
           <button
             onClick={handleStart}
-            className="w-full py-[15px] rounded-xl bg-bk-red border-none text-sm font-bold text-white cursor-pointer uppercase tracking-wider"
+            className="w-full py-3.5 sm:py-[15px] md:py-4 rounded-xl bg-bk-red border-none text-[13px] sm:text-sm font-bold text-white cursor-pointer uppercase tracking-wider"
           >
             Get Started
           </button>
           <button
             onClick={handleSkip}
-            className="w-full py-3 rounded-xl bg-white/10 border border-white/20 text-[13px] font-medium text-white/75 cursor-pointer mt-2.5 hover:bg-white/15"
+            className="w-full py-2.5 sm:py-3 md:py-3.5 rounded-xl bg-white/10 border border-white/20 text-xs sm:text-[13px] font-medium text-white/75 cursor-pointer mt-2 sm:mt-2.5 hover:bg-white/15"
           >
             Skip personalisation
           </button>
@@ -169,8 +169,8 @@ export const BrandHero = () => {
         }}
       />
 
-      <div className="relative z-10 mt-auto px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="relative z-10 mt-auto px-4 sm:px-5 md:px-6 pt-4 sm:pt-5 md:pt-6 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
+        <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
               d="M2 7 C2 4 4 2 7 2 C10 2 12 4 12 7"
@@ -185,16 +185,16 @@ export const BrandHero = () => {
               strokeLinecap="round"
             />
           </svg>
-          <span className="text-[13px] font-black text-white">
+          <span className="text-xs sm:text-[13px] font-black text-white">
             SuperSport<span className="text-ss-accent">BET</span>
           </span>
-          <div className="w-px h-[18px] bg-white/25" />
-          <span className="text-[10px] font-semibold text-white/50 uppercase tracking-wider">
+          <div className="w-px h-4 sm:h-[18px] bg-white/25" />
+          <span className="text-[9px] sm:text-[10px] font-semibold text-white/50 uppercase tracking-wider">
             Official Betting Partner
           </span>
         </div>
 
-        <div className="text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] font-black text-white leading-[1.05] uppercase mb-[22px] tracking-tight">
+        <div className="text-[1.35rem] sm:text-[clamp(1.25rem,5vw+0.65rem,1.75rem)] md:text-[1.85rem] font-black text-white leading-[1.03] sm:leading-[1.05] uppercase mb-4 sm:mb-[22px] md:mb-6 tracking-tight">
           Personalise<br />
           your favourite<br />
           <span className="text-ss-accent">games</span> &amp; teams
@@ -202,13 +202,13 @@ export const BrandHero = () => {
 
         <button
           onClick={handleStart}
-          className="w-full py-[15px] rounded-xl bg-ss-accent border-none text-sm font-extrabold text-ss-deep cursor-pointer uppercase tracking-wider"
+          className="w-full py-3.5 sm:py-[15px] md:py-4 rounded-xl bg-ss-accent border-none text-[13px] sm:text-sm font-extrabold text-ss-deep cursor-pointer uppercase tracking-wider"
         >
           Get Started
         </button>
         <button
           onClick={handleSkip}
-          className="w-full py-3 rounded-xl bg-white/10 border border-white/20 text-[13px] font-medium text-white/75 cursor-pointer mt-2.5 hover:bg-white/15"
+          className="w-full py-2.5 sm:py-3 md:py-3.5 rounded-xl bg-white/10 border border-white/20 text-xs sm:text-[13px] font-medium text-white/75 cursor-pointer mt-2 sm:mt-2.5 hover:bg-white/15"
         >
           Skip personalisation
         </button>

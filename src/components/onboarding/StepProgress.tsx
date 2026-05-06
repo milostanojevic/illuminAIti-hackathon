@@ -16,7 +16,7 @@ export const StepProgress = ({ brand, currentStep }: StepProgressProps) => {
   const stepsWithoutMeta = flow.filter((s) => s !== "hero");
 
   return (
-    <div className="flex gap-1 mb-3.5">
+    <div className="flex gap-0.5 mb-3 sm:gap-1 sm:mb-3.5">
       {stepsWithoutMeta.map((step) => {
         const actualIdx = flow.indexOf(step);
         let state: "done" | "current" | "future" = "future";

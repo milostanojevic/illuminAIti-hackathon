@@ -67,7 +67,7 @@ export const TeamGrid = () => {
         <div className={`text-[10px] mb-2.5 ${isBk ? "text-bk-primary" : "text-ss-primary"}`}>
           <span className="font-semibold">{state.teams.length}</span> team{state.teams.length !== 1 ? "s" : ""} selected
         </div>
-        <div className="grid grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-1.5">
           {pool.map((name) => {
             const isSelected = state.teams.includes(name);
             const onClass = isBk ? "bg-[#eef1fb] border-bk-primary" : "bg-[#eef2ff] border-ss-primary";
@@ -77,7 +77,7 @@ export const TeamGrid = () => {
               <button
                 key={name}
                 onClick={() => toggleTeam(name)}
-                className={`rounded-[10px] border-[1.5px] p-1.5 text-center cursor-pointer h-[68px] flex flex-col items-center justify-center relative ${
+                className={`rounded-[10px] border-[1.5px] p-2 sm:p-1.5 text-center cursor-pointer h-[72px] sm:h-[68px] flex flex-col items-center justify-center relative ${
                   isSelected ? onClass : "border-gray-200 bg-[#f5f6fa]"
                 }`}
               >
@@ -100,7 +100,7 @@ export const TeamGrid = () => {
                 <div className="w-8 h-8 mb-1 flex-shrink-0">
                   <Crest name={name} size={32} />
                 </div>
-                <div className={`text-[8px] leading-tight break-words ${isSelected ? textClass : "text-gray-500 font-medium"}`}>
+                <div className={`text-[9px] sm:text-[8px] leading-tight break-words ${isSelected ? textClass : "text-gray-500 font-medium"}`}>
                   {name}
                 </div>
               </button>
@@ -108,7 +108,7 @@ export const TeamGrid = () => {
           })}
           <button
             onClick={() => toggleTeam("Other")}
-            className={`rounded-[10px] border-[1.5px] border-dashed p-1.5 text-center cursor-pointer h-[68px] flex flex-col items-center justify-center ${
+            className={`rounded-[10px] border-[1.5px] border-dashed p-2 sm:p-1.5 text-center cursor-pointer h-[72px] sm:h-[68px] flex flex-col items-center justify-center ${
               state.teams.includes("Other")
                 ? isBk ? "bg-[#eef1fb] border-bk-primary" : "bg-[#eef2ff] border-ss-primary"
                 : "border-gray-300 bg-[#f5f6fa]"

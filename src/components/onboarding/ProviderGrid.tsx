@@ -61,7 +61,7 @@ export const ProviderGrid = () => {
         <div className="text-[11px] text-gray-400 mb-3">
           Tap to toggle — multiple allowed
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {PROVIDERS.map(({ key, icon, color, sub }) => {
             const isSelected = state.providers.includes(key);
 
@@ -69,7 +69,7 @@ export const ProviderGrid = () => {
               <button
                 key={key}
                 onClick={() => toggleProvider(key)}
-                className={`rounded-xl border-[1.5px] bg-[#fafafa] cursor-pointer h-[86px] flex flex-col items-center justify-center gap-1 relative flex-shrink-0 transition-colors ${
+                className={`rounded-xl border-[1.5px] bg-[#fafafa] cursor-pointer h-16 sm:h-[86px] px-3 sm:px-0 flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-3 sm:gap-1 relative flex-shrink-0 transition-colors ${
                   isSelected
                     ? "border-ss-primary bg-[#eef2ff]"
                     : "border-gray-200 hover:border-[#aab0d8] hover:bg-[#f4f6ff]"
@@ -82,11 +82,13 @@ export const ProviderGrid = () => {
                     </svg>
                   </div>
                 )}
-                <div className="text-[22px] leading-none mb-0.5">{icon}</div>
-                <div className="text-[11px] font-extrabold tracking-wide text-center leading-tight" style={{ color }}>
-                  {PROVIDER_LABELS[key]}
+                <div className="text-xl sm:text-[22px] leading-none sm:mb-0.5">{icon}</div>
+                <div className="text-left sm:text-center">
+                  <div className="text-[11px] font-extrabold tracking-wide leading-tight" style={{ color }}>
+                    {PROVIDER_LABELS[key]}
+                  </div>
+                  <div className="text-[9px] text-gray-400">{sub}</div>
                 </div>
-                <div className="text-[9px] text-gray-400 text-center">{sub}</div>
               </button>
             );
           })}
