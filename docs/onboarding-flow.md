@@ -62,8 +62,8 @@ Each step page checks **step is in flow** — the page calls `isStepInFlow(brand
 - `getPreviousStep(brand, currentStep)` returns the previous step key or `null` at the start.
 - `getStepIndex(brand, step)` returns the zero-based position in the full flow (used for internal comparisons).
 - `getStepCount(brand)` returns the total number of steps in the full flow.
-- `getWizardStepIndex(brand, step)` returns the 1-based pip position, excluding `brand` and `hero` meta steps.
-- `getWizardStepCount(brand)` returns the pip denominator (5 for BK, 6 for SS).
+- `getWizardStepIndex(brand, step)` returns the 1-based position for the header label, excluding `hero` and `magic` (brand hero + post-preferences loader).
+- `getWizardStepCount(brand)` returns that denominator (4 for BK, 5 for SS — interactive preference steps only).
 - `goToNextPreferenceStep(router, brand, step)` (`src/lib/onboardingNav.ts`) implements **Skip for now** via `getGhostSkipDestination` and `STEP_ROUTES`.
 
 ---
