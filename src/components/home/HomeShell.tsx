@@ -2,7 +2,8 @@
 
 import { useOnboarding } from "@/state/OnboardingContext";
 import { LEAGUE_NAMES } from "@/lib/data/leagues";
-import { buildTrendingCards } from "@/lib/trending";
+import { buildPopularDefaultCards, buildTrendingCards } from "@/lib/trending";
+import { isEffectivelyDefault } from "@/lib/storedPreferences";
 import { LeagueChips } from "./LeagueChips";
 import { HomeCTA } from "./HomeCTA";
 import { TrendingCarousel } from "./TrendingCarousel";
@@ -12,13 +13,17 @@ export const HomeShell = () => {
   const brand = state.brand;
   const isBk = brand === "bk";
 
+  const usePopularFallback = isEffectivelyDefault(state);
+
   const preferredTeam = state.teams.length > 0 ? state.teams[0] : "your team";
   const preferredLeague = state.leagues.length > 0 ? LEAGUE_NAMES[state.leagues[0]] : "top football";
   const preferredGame = isBk
     ? (state.casinoGames.length > 0 ? state.casinoGames[0] : "Aviator")
     : (state.ssGames.length > 0 ? state.ssGames[0] : "Aviator");
 
-  const trendingCards = buildTrendingCards(brand, preferredTeam, preferredLeague, preferredGame);
+  const trendingCards = usePopularFallback
+    ? buildPopularDefaultCards(brand)
+    : buildTrendingCards(brand, preferredTeam, preferredLeague, preferredGame);
 
   return (
     <div className="flex flex-1 flex-col min-h-0 w-full min-w-0 bg-[#f5f6fa]">

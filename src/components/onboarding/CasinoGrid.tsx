@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { BK_GAMES } from "@/lib/data/bkGames";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
@@ -18,6 +19,8 @@ export const CasinoGrid = () => {
     const next = getNextStep(brand, "casino");
     if (next) router.push(STEP_ROUTES[next]);
   };
+
+  const handleSkip = () => goToNextPreferenceStep(router, brand, "casino");
 
   return (
     <OnboardingStepShell
@@ -82,7 +85,7 @@ export const CasinoGrid = () => {
           onClick={handleContinue}
           label="Finish setup →"
         />
-        <GhostButton />
+        <GhostButton onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };

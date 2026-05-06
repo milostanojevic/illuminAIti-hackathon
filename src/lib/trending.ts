@@ -9,6 +9,55 @@ export type TrendingCard = {
   bg: string;
 };
 
+/** Curated “most popular” row when onboarding did not capture meaningful prefs (local POC). */
+export const buildPopularDefaultCards = (brand: Brand): TrendingCard[] => {
+  const isBk = brand === "bk";
+  const casinoBg = isBk
+    ? "linear-gradient(135deg, #1a2b6b, #0d1a3a)"
+    : "linear-gradient(135deg, #1a2db8, #0d1580)";
+  const sportsBg = isBk
+    ? "linear-gradient(135deg, #c8102e, #740015)"
+    : "linear-gradient(135deg, #1a3dc8, #0d1580)";
+  const promoBg = isBk
+    ? "linear-gradient(135deg, #003030, #00a89c)"
+    : "linear-gradient(135deg, #0d1580, #00a89c)";
+
+  return [
+    {
+      chip: "Hot right now",
+      icon: "🎰",
+      name: "Aviator",
+      desc: "Most-played crash game across the lobby this hour.",
+      cta: "Play now",
+      bg: casinoBg,
+    },
+    {
+      chip: "Top event",
+      icon: "⚽",
+      name: "EPL derby night",
+      desc: "The busiest football market tonight — odds moving fast.",
+      cta: "View markets",
+      bg: sportsBg,
+    },
+    {
+      chip: "Player favourite",
+      icon: "🎲",
+      name: "Mega wheel live",
+      desc: "Huge spin volume — join the busiest live table.",
+      cta: "Take a seat",
+      bg: "linear-gradient(135deg, #2a1438, #5c1f4a)",
+    },
+    {
+      chip: "Trending promo",
+      icon: "🎁",
+      name: "Weekend boost bundle",
+      desc: "The offer everyone is activating before kickoff.",
+      cta: "Claim offer",
+      bg: promoBg,
+    },
+  ];
+};
+
 export const buildTrendingCards = (
   brand: Brand,
   preferredTeam: string,

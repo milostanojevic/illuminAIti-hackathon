@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
@@ -35,6 +36,8 @@ export const ProviderGrid = () => {
     const next = getNextStep(brand, "providers");
     if (next) router.push(STEP_ROUTES[next]);
   };
+
+  const handleSkip = () => goToNextPreferenceStep(router, brand, "providers");
 
   const stepLabel = hasSelection
     ? `${state.providers.length} provider${state.providers.length > 1 ? "s" : ""} selected`
@@ -90,7 +93,7 @@ export const ProviderGrid = () => {
         </div>
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
-        <GhostButton />
+        <GhostButton onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };

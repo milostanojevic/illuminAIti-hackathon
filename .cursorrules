@@ -7,8 +7,9 @@ onboarding flow for two brands.
 # Domain
 
 - Two brands: `bk` (BetKing, Nigeria) and `ss` (SuperSportBET, South Africa).
-- A user is bound to **one brand at a time**. Switching re-runs onboarding and
-  upserts the user's `user_preferences` row.
+- A user is bound to **one brand at a time** in the wizard. In the current POC,
+  completed preferences are stored in **localStorage** (`src/lib/storedPreferences.ts`)
+  for `/home`; the Supabase `user_preferences` API remains available for future use.
 
 # Tech Stack
 
@@ -29,6 +30,7 @@ onboarding flow for two brands.
 - `src/state/OnboardingContext.tsx` — wizard state via `useReducer`. Do not introduce another state library.
 - `src/lib/data/` — static catalogs (crests, leagues, teams, providers, games). Pure TS, no React imports.
 - `src/lib/flow.ts` — single source of truth for step ordering per brand.
+- `src/lib/storedPreferences.ts` — localStorage persistence + “default home” detection.
 - `src/lib/supabase/{browser,server}.ts` — typed clients. Never import the service-role client into a client component.
 - `src/types/` — shared types (`Brand`, `LeagueKey`, `OnboardingState`, etc.).
 - `supabase/migrations/` — versioned SQL. Do not edit applied migrations; add a new one.

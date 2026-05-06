@@ -1,8 +1,18 @@
 "use client";
 
-import { createContext, useContext, useReducer, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
+import { usePathname } from "next/navigation";
 import type { OnboardingState } from "@/types/preferences";
 import type { Brand, LeagueKey, ProviderKey, PromoKey, RiskLevel, SessionStyle } from "@/types/brand";
+import { writeStoredPreferences, createDefaultOnboardingState } from "@/lib/storedPreferences";
 
 type Action =
   | { type: "SET_BRAND"; payload: Brand }
@@ -14,10 +24,12 @@ type Action =
   | { type: "SET_RISK"; payload: RiskLevel }
   | { type: "SET_SESSION"; payload: SessionStyle }
   | { type: "TOGGLE_PROMO"; payload: PromoKey }
+  | { type: "HYDRATE"; payload: OnboardingState }
   | { type: "RESET" };
 
 type OnboardingContextValue = {
   state: OnboardingState;
+  hydrate: (payload: OnboardingState) => void;
   setBrand: (brand: Brand) => void;
   toggleLeague: (league: LeagueKey) => void;
   toggleTeam: (team: string) => void;
@@ -30,19 +42,7 @@ type OnboardingContextValue = {
   reset: () => void;
 };
 
-const initialState: OnboardingState = {
-  brand: "ss",
-  leagues: [],
-  teams: [],
-  casinoGames: [],
-  providers: [],
-  ssGames: [],
-  style: {
-    risk: null,
-    session: null,
-    promos: [],
-  },
-};
+const defaultState = (): OnboardingState => createDefaultOnboardingState();
 
 const toggle = <T,>(arr: T[], item: T): T[] =>
   arr.includes(item) ? arr.filter((i) => i !== item) : [...arr, item];
@@ -56,7 +56,7 @@ const toggleWithMax = <T,>(arr: T[], item: T, max: number): T[] => {
 const reducer = (state: OnboardingState, action: Action): OnboardingState => {
   switch (action.type) {
     case "SET_BRAND":
-      return { ...initialState, brand: action.payload };
+      return { ...defaultState(), brand: action.payload };
     case "TOGGLE_LEAGUE":
       return { ...state, leagues: toggle(state.leagues, action.payload) };
     case "TOGGLE_TEAM":
@@ -73,18 +73,38 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
       return { ...state, style: { ...state.style, session: action.payload } };
     case "TOGGLE_PROMO":
       return { ...state, style: { ...state.style, promos: toggle(state.style.promos, action.payload) } };
+    case "HYDRATE":
+      return action.payload;
     case "RESET":
-      return initialState;
+      return defaultState();
   }
 };
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, undefined, () => defaultState());
+  const pathname = usePathname();
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
+  const skipPersistRef = useRef(true);
+
+  const hydrate = useCallback((payload: OnboardingState) => {
+    dispatch({ type: "HYDRATE", payload });
+  }, []);
+
+  useEffect(() => {
+    if (skipPersistRef.current) {
+      skipPersistRef.current = false;
+      return;
+    }
+    if (!pathnameRef.current?.startsWith("/onboarding")) return;
+    writeStoredPreferences(state);
+  }, [state]);
 
   const value: OnboardingContextValue = {
     state,
+    hydrate,
     setBrand: (brand) => dispatch({ type: "SET_BRAND", payload: brand }),
     toggleLeague: (league) => dispatch({ type: "TOGGLE_LEAGUE", payload: league }),
     toggleTeam: (team) => dispatch({ type: "TOGGLE_TEAM", payload: team }),

@@ -1,13 +1,16 @@
 "use client";
 
 import { OnboardingProvider } from "@/state/OnboardingContext";
+import { HomePreferencesHydrate } from "@/components/home/HomePreferencesHydrate";
 import { HomeShell } from "@/components/home/HomeShell";
 
 const HomePage = () => {
   return (
     <div className="modal">
       <OnboardingProvider>
-        <HomeShell />
+        <HomePreferencesHydrate>
+          <HomeShell />
+        </HomePreferencesHydrate>
       </OnboardingProvider>
     </div>
   );

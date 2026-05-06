@@ -5,6 +5,7 @@ import { useOnboarding } from "@/state/OnboardingContext";
 import { buildTeamPool } from "@/lib/data/teams";
 import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
@@ -23,6 +24,8 @@ export const TeamGrid = () => {
     const next = getNextStep(brand, "teams");
     if (next) router.push(STEP_ROUTES[next]);
   };
+
+  const handleSkip = () => goToNextPreferenceStep(router, brand, "teams");
 
   const subtitle = state.leagues.length === 1
     ? `Top 10 clubs from ${LEAGUE_NAMES[state.leagues[0]]}.`
@@ -119,7 +122,7 @@ export const TeamGrid = () => {
         </div>
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
-        <GhostButton />
+        <GhostButton onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };

@@ -7,63 +7,44 @@ Where things live and how they connect.
 ```
 src/
   app/
-    layout.tsx            Root layout, wraps OnboardingProvider
-    page.tsx              Landing / redirect
+    layout.tsx               Root layout (no OnboardingProvider)
+    page.tsx                 Landing / redirect → /onboarding/hero
     onboarding/
-      page.tsx            Brand select (step 1)
-      providers/page.tsx  SS: game studio picker
-      games/page.tsx      SS: pin favourite games
-      leagues/page.tsx    Both: league selector
-      teams/page.tsx      Both: club picker
-      casino/page.tsx     BK: casino game picker
-      style/page.tsx      Both: risk, session, promos
-      magic/page.tsx      Loading animation + save
+      layout.tsx             Wraps OnboardingProvider around wizard
+      ...
+      magic/page.tsx         MagicLoader — write localStorage → /home
     home/
-      page.tsx            Personalised home screen
+      page.tsx               OnboardingProvider + HomePreferencesHydrate + HomeShell
     api/
       preferences/
-        route.ts          POST/GET preference persistence
-  components/             Shared UI components
+        route.ts             Legacy POST/GET (optional / future backend; not used by wizard → home POC)
+  components/
+    home/HomePreferencesHydrate.tsx   One-shot hydrate from localStorage on /home
   state/
-    OnboardingContext.tsx  Global onboarding state (useReducer)
+    OnboardingContext.tsx    Wizard state useReducer + HYDRATE + optional LS sync on /onboarding
   lib/
-    flow.ts               FLOWS constant + step helpers
-    supabase/
-      browser.ts          Client-side Supabase instance
-      server.ts           Server-side Supabase instance
-    data/
-      leagues.ts          League catalogue
-      teams.ts            Team catalogue
-      providers.ts        Provider catalogue
-      bkGames.ts          BetKing casino game catalogue
-  types/
-    brand.ts              Brand, LeagueKey, ProviderKey, etc.
-    preferences.ts        OnboardingState type
-supabase/
-  migrations/
-    0001_user_preferences.sql
-docs/
-  architecture.md
-  onboarding-flow.md
-  database.md
-  design-system.md
-  development.md
-  deployment.md
+    flow.ts                  FLOWS + getNextStep / getGhostSkipDestination (linked skips)
+    onboardingNav.ts         goToNextPreferenceStep (ghost / skip)
+    storedPreferences.ts      localStorage read/write + sanitize + isEffectivelyDefault
+    trending.ts               buildTrendingCards + buildPopularDefaultCards for home carousel
+    supabase/browser.ts ...
+    data/                    Static catalogues
+  types/preferences.ts       OnboardingState
 ```
 
 ## OnboardingContext Shape
 
 ```typescript
 type OnboardingState = {
-  brand: Brand | null;       // "bk" | "ss"
+  brand: Brand;
   leagues: LeagueKey[];
   teams: string[];
   casinoGames: string[];
   providers: ProviderKey[];
   ssGames: string[];
   style: {
-    risk: RiskLevel | null;  // "low" | "high"
-    session: SessionStyle | null; // "quick" | "long"
+    risk: RiskLevel | null;
+    session: SessionStyle | null;
     promos: PromoKey[];
   };
 };
@@ -73,21 +54,24 @@ type OnboardingState = {
 
 ```typescript
 const FLOWS: Record<Brand, readonly StepKey[]> = {
-  bk: ["brand", "leagues", "teams", "casino", "style", "magic"],
-  ss: ["brand", "providers", "games", "leagues", "teams", "style", "magic"],
+  bk: ["hero", "leagues", "teams", "casino", "style", "magic"],
+  ss: ["hero", "providers", "games", "leagues", "teams", "style", "magic"],
 };
 ```
 
-Each brand follows a different step sequence. Helper functions (`getNextStep`, `getPreviousStep`, `isStepInFlow`) live in `src/lib/flow.ts`.
+Helper functions (`getNextStep`, `getGhostSkipDestination`, `getPreviousStep`, `isStepInFlow`) live in `src/lib/flow.ts`.
 
-## Request Lifecycle
+## Wizard and home lifecycle (localStorage POC)
 
-1. Step page reads state from `OnboardingContext`.
-2. User interacts (toggles, selects).
-3. Component dispatches an action to the reducer.
-4. On "Next", the page calls `router.push()` to the next step route.
-5. At the final step (`/onboarding/magic`), the MagicLoader component POSTs the full state to `/api/preferences`.
-6. On success the router redirects to `/home`.
+1. Under `/onboarding`, step components read/write `OnboardingContext`.
+2. **Continue** respects per-step enabling rules (see [onboarding-flow.md](onboarding-flow.md)).
+3. **Ghost “Skip for now”** uses `goToNextPreferenceStep` → `getGhostSkipDestination` (SS providers skip includes games; leagues skip includes teams per brand).
+4. When `OnboardingState` updates on `/onboarding/*`, context sync persists to **`localStorage`** key `kingmakers_user_preferences`.
+5. **MagicLoader** serialises full state to the same key, then redirects to `/home`.
+6. `/home` mounts a **new** `OnboardingProvider`; **`HomePreferencesHydrate`** reads localStorage once and dispatches **`HYDRATE`**.
+7. **`HomeShell`** uses `isEffectivelyDefault(state)` (`src/lib/storedPreferences.ts`). If **true**, the trending rail uses **`buildPopularDefaultCards(brand)`**; otherwise **`buildTrendingCards`** uses saved leagues / teams / games labels.
+
+Supabase **`user_preferences`** tables remain available for future server persistence; they are not required for the current client-only journey.
 
 ---
 

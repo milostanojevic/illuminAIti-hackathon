@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { LEAGUE_NAMES } from "@/lib/data/leagues";
+import { writeStoredPreferences } from "@/lib/storedPreferences";
 
 type MagicStep = {
   icon: string;
@@ -15,6 +16,8 @@ type MagicStep = {
 export const MagicLoader = () => {
   const router = useRouter();
   const { state } = useOnboarding();
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const isBk = state.brand === "bk";
   const accentColor = isBk ? "#4dd9ac" : "#FFCD00";
   const checkStroke = isBk ? "#003030" : "#0d1580";
@@ -66,25 +69,7 @@ export const MagicLoader = () => {
         setProgress(steps[i].pct);
       }
 
-      try {
-        await fetch("/api/preferences", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            brand: state.brand,
-            leagues: state.leagues,
-            teams: state.teams,
-            casinoGames: state.casinoGames,
-            providers: state.providers,
-            ssGames: state.ssGames,
-            risk: state.style.risk,
-            session: state.style.session,
-            promos: state.style.promos,
-          }),
-        });
-      } catch {
-        // POC: silently continue if persistence fails
-      }
+      writeStoredPreferences(stateRef.current);
 
       setTimeout(() => {
         router.push("/home");

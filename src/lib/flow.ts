@@ -53,6 +53,13 @@ export const getNextStep = (brand: Brand, currentStep: StepKey): StepKey | null 
   return flow[idx + 1];
 };
 
+/** Destination for Ghost / “Skip for now” — skips linked dependency steps where applicable. */
+export const getGhostSkipDestination = (brand: Brand, currentStep: StepKey): StepKey | null => {
+  if (brand === "ss" && currentStep === "providers") return "leagues";
+  if (currentStep === "leagues") return brand === "bk" ? "casino" : "style";
+  return getNextStep(brand, currentStep);
+};
+
 export const getPreviousStep = (brand: Brand, currentStep: StepKey): StepKey | null => {
   const flow = FLOWS[brand];
   const idx = flow.indexOf(currentStep);

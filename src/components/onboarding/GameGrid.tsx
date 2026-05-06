@@ -5,6 +5,7 @@ import { useOnboarding } from "@/state/OnboardingContext";
 import { SS_GAMES } from "@/lib/data/ssGames";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
 import { ScreenHeader } from "./ScreenHeader";
 import { ContinueButton, GhostButton } from "./ContinueButton";
@@ -55,6 +56,8 @@ export const GameGrid = () => {
     if (next) router.push(STEP_ROUTES[next]);
   };
 
+  const handleSkip = () => goToNextPreferenceStep(router, brand, "games");
+
   const providerNames = state.providers.map((k) => PROVIDER_LABELS[k]).join(", ");
 
   return (
@@ -101,7 +104,7 @@ export const GameGrid = () => {
 
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
-        <GhostButton />
+        <GhostButton onClick={handleSkip} />
     </OnboardingStepShell>
   );
 };
