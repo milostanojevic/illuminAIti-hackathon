@@ -53,18 +53,11 @@ colors: {
 
 ## Adding a New Team Crest
 
-1. Create a 32x32 SVG with the team crest. Use a transparent background.
-2. Add an entry to `src/lib/data/crests.ts`:
-   ```typescript
-   export const crests = {
-     // ...existing entries
-     "new-team": "/crests/new-team.svg",
-   };
-   ```
-3. Place the SVG file in `public/crests/`.
-4. Use via the Crest component:
+1. Create a square SVG (transparent background). Filename must match `slugifyTeamName(displayName)` from [src/lib/data/teamBadges.ts](src/lib/data/teamBadges.ts) — e.g. `new-club-name.svg`.
+2. Place it under `public/teams/` (e.g. `public/teams/new-club-name.svg`). Add a `SLUG_OVERRIDES` entry in `teamBadges.ts` if the display name does not slug cleanly.
+3. Use via the Crest component (falls back to `public/teams/other.svg` on missing file):
    ```tsx
-   <Crest name="new-team" size={32} />
+   <Crest name="New Club Name" size={32} />
    ```
 
 ## Animations

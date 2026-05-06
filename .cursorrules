@@ -28,7 +28,7 @@ onboarding flow for two brands.
 - `src/app/` — App Router. `onboarding/*` per-step pages, `home/page.tsx`, `api/preferences/route.ts`.
 - `src/components/` — UI grouped by feature: `onboarding/`, `home/`, `ui/`.
 - `src/state/OnboardingContext.tsx` — wizard state via `useReducer`. Do not introduce another state library.
-- `src/lib/data/` — static catalogs (crests, leagues, teams, providers, games). Pure TS, no React imports.
+- `src/lib/data/` — static catalogs (leagues, teams, team badges, providers, games). Pure TS, no React imports.
 - `src/lib/flow.ts` — single source of truth for step ordering per brand.
 - `src/lib/storedPreferences.ts` — localStorage persistence + “default home” detection.
 - `src/lib/supabase/{browser,server}.ts` — typed clients. Never import the service-role client into a client component.

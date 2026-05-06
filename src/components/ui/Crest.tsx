@@ -1,23 +1,35 @@
 "use client";
 
-import { CRESTS } from "@/lib/data/crests";
+import { useEffect, useState } from "react";
+import { getTeamBadgeUrl } from "@/lib/data/teamBadges";
 
 type CrestProps = {
   name: string;
   size?: number;
 };
 
+const FALLBACK = "/teams/other.svg";
+
 export const Crest = ({ name, size = 32 }: CrestProps) => {
-  const svg = CRESTS[name] ?? CRESTS["Other"];
-  const sized = svg.replace(
-    'viewBox="0 0 32 32"',
-    `viewBox="0 0 32 32" width="${size}" height="${size}"`
-  );
+  const initial = name === "Other" ? FALLBACK : getTeamBadgeUrl(name);
+  const [src, setSrc] = useState(initial);
+
+  useEffect(() => {
+    setSrc(name === "Other" ? FALLBACK : getTeamBadgeUrl(name));
+  }, [name]);
 
   return (
-    <span
-      className="inline-flex items-center justify-center"
-      dangerouslySetInnerHTML={{ __html: sized }}
+    <img
+      src={src}
+      alt={`${name} crest`}
+      width={size}
+      height={size}
+      className="inline-block object-contain"
+      loading="lazy"
+      decoding="async"
+      onError={() => {
+        setSrc((s) => (s !== FALLBACK ? FALLBACK : s));
+      }}
     />
   );
 };
