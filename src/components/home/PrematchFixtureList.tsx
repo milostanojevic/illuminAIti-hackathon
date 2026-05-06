@@ -30,17 +30,14 @@ function calendarDateKey(fx: PrematchFixtureUi): string {
   return fx.eventStart.slice(0, 10);
 }
 
+/** e.g. "Saturday, 24 August" */
 function dateHeaderLabel(dateKey: string): string {
   if (dateKey === DATE_UNKNOWN) return "Date TBD";
   const d = new Date(`${dateKey}T12:00:00`);
-  return d.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "short" });
-}
-
-function formatKickoffTime(iso: string | null): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
+  if (Number.isNaN(d.getTime())) return "Date TBD";
+  const weekday = d.toLocaleDateString("en-GB", { weekday: "long" });
+  const dayMonth = d.toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+  return `${weekday}, ${dayMonth}`;
 }
 
 function groupFixturesByCalendarDate(
@@ -64,7 +61,8 @@ function groupFixturesByCalendarDate(
   return keyOrder.map((dateKey) => ({ dateKey, items: byKey.get(dateKey) ?? [] }));
 }
 
-const GRID_COLS = "grid-cols-[2.75rem_minmax(0,1fr)_repeat(3,minmax(3.1rem,1fr))]";
+/** Teams column takes remaining width; odds columns size to pill content */
+const GRID_COLS = "grid-cols-[minmax(0,1fr)_repeat(3,auto)]";
 
 const BoostBolt = ({ className }: { className?: string }) => (
   <svg
@@ -206,15 +204,15 @@ export const PrematchFixtureList = ({
         </div>
       </div>
 
-      <div className="p-3 space-y-4">
+      <div className="py-3 space-y-4 px-0">
         {loadError && (
-          <div className="text-[11px] text-red-700 bg-red-50 rounded-lg px-3 py-2 border border-red-100">
+          <div className="text-[11px] text-red-700 bg-red-50 rounded-lg mx-3 px-3 py-2 border border-red-100">
             Could not load fixtures: {loadError}
           </div>
         )}
 
         {!loadError && blocks === null && (
-          <div className="text-[11px] text-gray-500 px-1 py-2 animate-pulse">Loading events…</div>
+          <div className="text-[11px] text-gray-500 px-3 py-2 animate-pulse">Loading events…</div>
         )}
 
         {blocks?.map((block) => {
@@ -222,7 +220,7 @@ export const PrematchFixtureList = ({
 
           return (
             <section key={`${block.leagueKey}-${block.competitionId}`} className="min-w-0">
-              <div className="flex items-baseline justify-between gap-2 mb-2">
+              <div className="flex items-baseline justify-between gap-2 mb-2 px-3">
                 <h3 className="text-[12px] font-extrabold text-[#1a1a2e] truncate">{block.leagueLabel}</h3>
                 {!block.ok && (
                   <span className="text-[9px] text-amber-700 font-semibold whitespace-nowrap">
@@ -232,27 +230,26 @@ export const PrematchFixtureList = ({
               </div>
 
               {!block.ok && block.error && (
-                <div className="text-[10px] text-amber-900/90 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5 mb-2 leading-snug break-words">
+                <div className="text-[10px] text-amber-900/90 bg-amber-50 border border-amber-100 rounded-lg mx-3 px-3 py-1.5 mb-2 leading-snug break-words">
                   {block.error}
                 </div>
               )}
 
               {block.fixtures.length === 0 && block.ok && (
-                <div className="text-[10px] text-gray-500 italic px-0.5">No events returned for this league.</div>
+                <div className="text-[10px] text-gray-500 italic px-3">
+                  No events returned for this league.
+                </div>
               )}
 
-              <div className="space-y-3">
+              <div className="divide-y divide-gray-100 border-y border-gray-100/90">
                 {dateGroups.map(({ dateKey, items }) => (
-                  <div
-                    key={`${block.competitionId}-${dateKey}`}
-                    className="rounded-[10px] border border-violet-100/80 overflow-hidden bg-white"
-                  >
+                  <div key={`${block.competitionId}-${dateKey}`}>
                     <div
-                      className={`grid ${GRID_COLS} gap-x-2 items-center px-2.5 py-2 border-b border-violet-200/40`}
+                      className={`grid ${GRID_COLS} gap-x-1.5 items-center px-2 py-2`}
                       style={{ backgroundColor: dateBarBg }}
                     >
                       <div
-                        className="col-span-2 min-w-0 text-[11px] font-extrabold tracking-tight truncate"
+                        className="min-w-0 text-[11px] font-extrabold tracking-tight leading-tight whitespace-normal break-words"
                         style={{ color: dateBarText }}
                       >
                         {dateHeaderLabel(dateKey)}
@@ -260,7 +257,7 @@ export const PrematchFixtureList = ({
                       {(["1", "X", "2"] as const).map((h) => (
                         <div
                           key={h}
-                          className="text-center text-[10px] font-extrabold tabular-nums"
+                          className="text-center text-[10px] font-extrabold tabular-nums shrink-0"
                           style={{ color: dateBarText }}
                         >
                           {h}
@@ -268,16 +265,10 @@ export const PrematchFixtureList = ({
                       ))}
                     </div>
 
-                    <ul className="divide-y divide-gray-100">
+                    <ul className="divide-y divide-gray-100 bg-white">
                       {items.map((fx) => (
-                        <li key={`${block.competitionId}-${fx.fixtureKey}`} className={`grid ${GRID_COLS} gap-x-2 items-center px-2.5 py-2.5 bg-white`}>
-                          <div
-                            className="text-[11px] font-bold tabular-nums text-slate-600 shrink-0"
-                            title={fx.eventStart ?? undefined}
-                          >
-                            {formatKickoffTime(fx.eventStart)}
-                          </div>
-                          <div className="min-w-0 pr-1">
+                        <li className="flex flex-row flex-nowrap items-center gap-x-1.5 px-2 py-2.5 bg-white">
+                          <div className="min-w-0 flex-1 pr-1">
                             <div className="text-[11px] font-bold text-[#1a1a2e] leading-snug break-words">
                               {fx.homeTeam}
                             </div>
@@ -287,39 +278,41 @@ export const PrematchFixtureList = ({
                           </div>
 
                           {fx.oneXtwo ? (
-                            (
-                              [
-                                {
-                                  price: fx.oneXtwo.priceHome,
-                                  boosted: Boolean(fx.oneXtwo.boostHome),
-                                },
-                                {
-                                  price: fx.oneXtwo.priceDraw,
-                                  boosted: Boolean(fx.oneXtwo.boostDraw),
-                                },
-                                {
-                                  price: fx.oneXtwo.priceAway,
-                                  boosted: Boolean(fx.oneXtwo.boostAway),
-                                },
-                              ] as const
-                            ).map((col, idx) => (
-                              <div
-                                key={idx}
-                                title={col.boosted ? "Boosted odds" : undefined}
-                                className="rounded-full px-2 py-1.5 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
-                                style={{ backgroundColor: pillBg }}
-                              >
-                                {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
-                                <span
-                                  className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
-                                  style={{ color: textDeep }}
+                            <div className="flex shrink-0 items-center gap-x-1.5">
+                              {(
+                                [
+                                  {
+                                    price: fx.oneXtwo.priceHome,
+                                    boosted: Boolean(fx.oneXtwo.boostHome),
+                                  },
+                                  {
+                                    price: fx.oneXtwo.priceDraw,
+                                    boosted: Boolean(fx.oneXtwo.boostDraw),
+                                  },
+                                  {
+                                    price: fx.oneXtwo.priceAway,
+                                    boosted: Boolean(fx.oneXtwo.boostAway),
+                                  },
+                                ] as const
+                              ).map((col, idx) => (
+                                <div
+                                  key={idx}
+                                  title={col.boosted ? "Boosted odds" : undefined}
+                                  className="rounded-full shrink-0 px-1.5 py-1 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
+                                  style={{ backgroundColor: pillBg }}
                                 >
-                                  {col.price}
-                                </span>
-                              </div>
-                            ))
+                                  {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
+                                  <span
+                                    className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
+                                    style={{ color: textDeep }}
+                                  >
+                                    {col.price}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           ) : (
-                            <div className="col-start-3 col-span-3 text-[9px] text-gray-500 text-center py-1">
+                            <div className="ml-auto shrink-0 py-1 text-right text-[9px] text-gray-500">
                               1X2 not available
                             </div>
                           )}

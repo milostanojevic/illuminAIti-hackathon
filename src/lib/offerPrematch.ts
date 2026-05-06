@@ -318,6 +318,8 @@ const fixtureKeyFor = (row: Record<string, unknown>, index: number): string => {
 /** Best-effort kickoff for sorting / grouping */
 const parseEventStartIso = (row: Record<string, unknown>): string | null => {
   const candidates: unknown[] = [
+    row.FixtureDateUtc,
+    row.fixtureDateUtc,
     row.KickOff,
     row.kickOff,
     row.StartTime,
