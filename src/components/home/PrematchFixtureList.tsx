@@ -21,6 +21,24 @@ type FlatFixture = { block: CompetitionBlock; fx: PrematchFixtureUi };
 /** Client-side pagination: max events (fixtures) per page; headers are not counted. */
 const PAGE_SIZE = 5;
 
+function normTeamName(s: string): string {
+  return s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+/** `fixtureNorm` and `favNorm` are already `normTeamName` outputs. */
+function teamMatchesNormalizedFixture(fixtureNorm: string, favNorm: string): boolean {
+  const a = fixtureNorm;
+  const b = favNorm;
+  if (!a || !b) return false;
+  return a === b || a.includes(b) || b.includes(a);
+}
+
+function fixtureSideIsFavourite(teamName: string, normalizedFavourites: string[]): boolean {
+  const a = normTeamName(teamName);
+  if (!a) return false;
+  return normalizedFavourites.some((b) => teamMatchesNormalizedFixture(a, b));
+}
+
 const DATE_UNKNOWN = "__unknown";
 
 function compareEventStart(a: PrematchFixtureUi, b: PrematchFixtureUi): number {
@@ -93,12 +111,29 @@ const BoostBolt = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const FavStar = ({ className, title }: { className?: string; title?: string }) => (
+  <svg
+    className={className}
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    role="img"
+    aria-label={title ?? "Favourite team"}
+  >
+    <title>{title ?? "Favourite team"}</title>
+    <path d="M12 2l2.9 6.9 7.4.6-5.6 4.9 1.7 7.3L12 17.8 5.6 21.7l1.7-7.3L1.7 9.5l7.4-.6L12 2z" />
+  </svg>
+);
+
 export const PrematchFixtureList = ({
   leagueKeys,
   brand,
+  favouriteTeams = [],
 }: {
   leagueKeys: LeagueKey[];
   brand: Brand;
+  favouriteTeams?: string[];
 }) => {
   const isBk = brand === "bk";
   const accentBg = isBk ? "#1a2b6b" : "#1a2db8";
@@ -107,6 +142,11 @@ export const PrematchFixtureList = ({
   const pillBg = "#dbeafe";
   const dateBarBg = "#ede9fe";
   const dateBarText = "#312e81";
+
+  const normalizedFavourites = useMemo(
+    () => favouriteTeams.map(normTeamName).filter(Boolean),
+    [favouriteTeams]
+  );
 
   const sectionKeys = useMemo(
     () => leagueKeys.filter((k, i) => leagueKeys.indexOf(k) === i),
@@ -301,14 +341,37 @@ export const PrematchFixtureList = ({
                       </div>
 
                       <ul className="divide-y divide-gray-100 bg-white">
-                        {items.map((fx) => (
-                          <li key={`${block.competitionId}-${fx.fixtureKey}`} className={`${ROW_FLEX_FIXTURE} bg-white`}>
+                        {items.map((fx) => {
+                          const homeIsFav = fixtureSideIsFavourite(fx.homeTeam, normalizedFavourites);
+                          const awayIsFav = fixtureSideIsFavourite(fx.awayTeam, normalizedFavourites);
+                          const isFavourite = homeIsFav || awayIsFav;
+                          const liClass = `${ROW_FLEX_FIXTURE} ${isFavourite ? "bg-amber-50 border-l-[3px]" : "bg-white"}`;
+                          const liStyle = isFavourite ? { borderLeftColor: accentSoft } : undefined;
+
+                          return (
+                          <li
+                            key={`${block.competitionId}-${fx.fixtureKey}`}
+                            className={liClass}
+                            style={liStyle}
+                          >
                             <div className={LEFT_COL}>
                               <div className="text-[11px] font-bold text-[#1a1a2e] leading-snug break-words">
                                 {fx.homeTeam}
+                                {homeIsFav && (
+                                  <FavStar
+                                    className="ml-1 inline-block align-[-1px] text-amber-500"
+                                    title="Your favourite team"
+                                  />
+                                )}
                               </div>
                               <div className="text-[11px] font-semibold text-slate-600 leading-snug break-words">
                                 {fx.awayTeam}
+                                {awayIsFav && (
+                                  <FavStar
+                                    className="ml-1 inline-block align-[-1px] text-amber-500"
+                                    title="Your favourite team"
+                                  />
+                                )}
                               </div>
                             </div>
 
@@ -353,7 +416,8 @@ export const PrematchFixtureList = ({
                               </div>
                             )}
                           </li>
-                        ))}
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}
