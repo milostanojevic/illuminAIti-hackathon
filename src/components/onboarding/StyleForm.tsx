@@ -121,7 +121,7 @@ type StyleGroupProps = {
 };
 
 const StyleGroup = ({ label, hint, children }: StyleGroupProps) => (
-  <div className="mb-[18px]">
+  <div className="mb-3.5 sm:mb-[18px]">
     <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
       {label}
       {hint && (
@@ -130,7 +130,7 @@ const StyleGroup = ({ label, hint, children }: StyleGroupProps) => (
         </span>
       )}
     </div>
-    <div className="grid grid-cols-2 gap-2">{children}</div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">{children}</div>
   </div>
 );
 
@@ -146,7 +146,7 @@ type StyleCardProps = {
 const StyleCard = ({ option, isSelected, onClick, onClass, tickColor, checkStroke }: StyleCardProps) => (
   <button
     onClick={onClick}
-    className={`rounded-[14px] border-[1.5px] bg-[#fafafa] cursor-pointer p-3 flex flex-col items-center text-center gap-1.5 relative transition-colors ${
+    className={`rounded-[14px] border-[1.5px] bg-[#fafafa] cursor-pointer p-2.5 sm:p-3 flex flex-row sm:flex-col items-center text-left sm:text-center gap-2.5 sm:gap-1.5 relative transition-colors ${
       isSelected ? onClass : "border-gray-200 hover:border-[#aab0d8] hover:bg-[#f4f6ff]"
     }`}
   >
@@ -160,8 +160,10 @@ const StyleCard = ({ option, isSelected, onClick, onClass, tickColor, checkStrok
         </svg>
       </div>
     )}
-    <div className="text-2xl leading-none mb-0.5">{option.icon}</div>
-    <div className="text-[11px] font-bold text-[#1a1a2e] leading-tight">{option.title}</div>
-    <div className="text-[9px] text-gray-400 leading-snug">{option.sub}</div>
+    <div className="text-xl sm:text-2xl leading-none sm:mb-0.5">{option.icon}</div>
+    <div>
+      <div className="text-[11px] font-bold text-[#1a1a2e] leading-tight">{option.title}</div>
+      <div className="text-[9px] text-gray-400 leading-snug">{option.sub}</div>
+    </div>
   </button>
 );

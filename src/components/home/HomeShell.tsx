@@ -29,10 +29,10 @@ export const HomeShell = () => {
   return (
     <div className="flex flex-1 flex-col min-h-0 w-full min-w-0 bg-[#f5f6fa]">
       <div
-        className="flex-shrink-0 px-3.5 pt-3.5 pb-3 w-full min-w-0"
+        className="flex-shrink-0 px-3 pt-3 pb-2.5 sm:px-4 sm:pt-4 sm:pb-3.5 md:px-5 md:pt-5 md:pb-4 w-full min-w-0"
         style={{ background: isBk ? "#1a2b6b" : "#1a2db8" }}
       >
-        <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center justify-between mb-2 sm:mb-2.5 md:mb-3">
           <div>
             <div className="text-[11px] text-white/60">Good morning 👋</div>
             <div className="text-base font-bold text-white">
@@ -46,7 +46,7 @@ export const HomeShell = () => {
         <LeagueChips leagues={state.leagues} />
       </div>
 
-      <div className="scroll-touch flex flex-1 min-h-0 flex-col gap-2.5 overflow-y-auto overflow-x-hidden overscroll-y-contain p-3 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+      <div className="scroll-touch flex flex-1 min-h-0 flex-col gap-2 sm:gap-3 md:gap-3.5 overflow-y-auto overflow-x-hidden overscroll-y-contain p-2.5 sm:p-3.5 md:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
         <HomeCTA
           icon="💳"
           title="Deposit now"

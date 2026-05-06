@@ -11,7 +11,7 @@ export const LeagueChips = ({ leagues }: LeagueChipsProps) => {
   if (leagues.length === 0) return null;
 
   return (
-    <div className="flex gap-1.5 overflow-hidden">
+    <div className="scroll-touch flex flex-nowrap gap-1.5 overflow-x-auto overflow-y-hidden overscroll-x-contain">
       {leagues.map((key) => (
         <div
           key={key}

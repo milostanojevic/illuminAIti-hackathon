@@ -1,18 +1,19 @@
 "use client";
 
+import { AppPhoneFrame } from "@/components/layout/AppPhoneFrame";
 import { OnboardingProvider } from "@/state/OnboardingContext";
 import { HomePreferencesHydrate } from "@/components/home/HomePreferencesHydrate";
 import { HomeShell } from "@/components/home/HomeShell";
 
 const HomePage = () => {
   return (
-    <div className="modal">
+    <AppPhoneFrame>
       <OnboardingProvider>
         <HomePreferencesHydrate>
           <HomeShell />
         </HomePreferencesHydrate>
       </OnboardingProvider>
-    </div>
+    </AppPhoneFrame>
   );
 };
 

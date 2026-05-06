@@ -46,13 +46,13 @@ export const ScreenHeader = ({
 
   return (
     <div
-      className="relative w-full min-w-0 flex-shrink-0 px-4 pt-4 pb-0"
+      className="relative w-full min-w-0 flex-shrink-0 px-3 pt-3 pb-0 sm:px-4 sm:pt-4 md:px-5 md:pt-5"
       style={{ background: isBk ? "#1a2b6b" : "#1a2db8" }}
     >
       <div className="close-btn" />
       <button
         onClick={handleBack}
-        className="inline-flex items-center gap-1.5 bg-transparent border-none text-xs text-white/70 cursor-pointer mb-2.5 p-0"
+        className="inline-flex items-center gap-1 bg-transparent border-none text-[11px] text-white/70 cursor-pointer mb-2 p-0 sm:gap-1.5 sm:text-xs sm:mb-2.5"
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path
@@ -65,14 +65,14 @@ export const ScreenHeader = ({
         </svg>
         Back
       </button>
-      <div className="text-[11px] text-white/55 mb-1">
+      <div className="text-[10px] text-white/55 mb-0.5 sm:text-[11px] sm:mb-1 md:text-xs">
         Personalise your experience
       </div>
-      <div className="text-[17px] font-semibold text-white mb-2">{title}</div>
-      <div className="text-[11px] text-white/55 leading-relaxed mb-3.5">
+      <div className="text-base font-semibold text-white mb-1.5 sm:text-[17px] sm:mb-2 md:text-lg">{title}</div>
+      <div className="text-[11px] text-white/55 leading-relaxed mb-3 sm:text-xs sm:mb-3.5 md:text-[13px]">
         {subtitle}
       </div>
-      <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-[5px] text-[11px] text-white/85 mb-3.5 bg-white/10">
+      <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] text-white/85 mb-3 bg-white/10 sm:px-3 sm:py-[5px] sm:text-[11px] sm:mb-3.5">
         <div
           className="w-1.5 h-1.5 rounded-full flex-shrink-0"
           style={{ background: isBk ? "#4dd9ac" : "#FFCD00" }}

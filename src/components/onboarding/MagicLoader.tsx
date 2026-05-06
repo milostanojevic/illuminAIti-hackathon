@@ -155,20 +155,20 @@ export const MagicLoader = () => {
 
   return (
     <div
-      className="flex flex-1 flex-col items-center justify-center min-h-0 px-6 py-7 relative overflow-hidden"
+      className="flex flex-1 flex-col items-center justify-center min-h-0 px-4 py-5 sm:px-6 sm:py-7 md:px-7 md:py-8 relative overflow-hidden"
       style={{ background: bgGradient }}
     >
-      <div className="relative text-center mb-5">
-        <div className="text-[44px] mb-2.5">✨</div>
-        <div className="text-xl font-extrabold text-white leading-tight mb-2">
+      <div className="relative text-center mb-4 sm:mb-5 md:mb-6">
+        <div className="text-[36px] sm:text-[44px] md:text-5xl mb-1.5 sm:mb-2.5">✨</div>
+        <div className="text-lg sm:text-xl md:text-2xl font-extrabold text-white leading-tight mb-1.5 sm:mb-2">
           Building your<br />personal experience
         </div>
-        <div className="text-xs text-white/60 leading-relaxed">
+        <div className="text-[11px] sm:text-xs md:text-sm text-white/60 leading-tight sm:leading-relaxed">
           Hang tight — setting<br />everything up just for you.
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 w-full relative">
+      <div className="flex flex-col gap-1.5 sm:gap-2 md:gap-2.5 w-full relative">
         {steps.map((step, i) => {
           if (i > activeStep) return null;
           const isCompleted = completedSteps.includes(i);
@@ -177,7 +177,7 @@ export const MagicLoader = () => {
           return (
             <div
               key={i}
-              className={`flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 w-full animate-fadeUp border ${
+              className={`flex items-center gap-2 sm:gap-2.5 rounded-[9px] sm:rounded-[10px] px-2.5 sm:px-3 py-2 sm:py-2.5 w-full animate-fadeUp border ${
                 emphasize ? "bg-white/[0.12]" : "bg-white/[0.07] border-white/10"
               }`}
               style={
@@ -190,7 +190,7 @@ export const MagicLoader = () => {
               }
             >
               <div
-                className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-[13px] ${
+                className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0 text-xs sm:text-[13px] ${
                   emphasize ? "bg-white/[0.16]" : "bg-white/[0.08]"
                 }`}
               >
@@ -198,10 +198,12 @@ export const MagicLoader = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <div className="text-[11px] font-semibold text-white">{step.name}</div>
+                  <div className="text-[10px] sm:text-[11px] md:text-xs font-semibold text-white">
+                    {step.name}
+                  </div>
                   {emphasize && (
                     <span
-                      className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-px rounded-full"
+                      className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wide px-1.5 py-px rounded-full"
                       style={{ background: `${accentColor}33`, color: accentColor }}
                     >
                       Set
@@ -209,7 +211,7 @@ export const MagicLoader = () => {
                   )}
                 </div>
                 <div
-                  className={`text-[10px] leading-snug break-words ${
+                  className={`text-[9px] sm:text-[10px] md:text-[11px] leading-snug break-words ${
                     emphasize ? "text-white/80" : "text-white/45"
                   }`}
                 >
@@ -236,14 +238,14 @@ export const MagicLoader = () => {
         })}
       </div>
 
-      <div className="w-full relative mt-3.5">
+      <div className="w-full relative mt-3 sm:mt-3.5 md:mt-4">
         <div className="magic-bar-track">
           <div
             className="magic-bar-fill"
             style={{ width: `${progress}%`, background: accentColor }}
           />
         </div>
-        <div className="text-[10px] text-white/50 text-center mt-1.5">
+        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-white/50 text-center mt-1 sm:mt-1.5">
           {progress}%
         </div>
       </div>
