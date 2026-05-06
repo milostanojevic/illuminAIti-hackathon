@@ -7,6 +7,7 @@ import { isEffectivelyDefault } from "@/lib/storedPreferences";
 import { LeagueChips } from "./LeagueChips";
 import { HomeCTA } from "./HomeCTA";
 import { TrendingCarousel } from "./TrendingCarousel";
+import { PrematchFixtureList } from "./PrematchFixtureList";
 
 export const HomeShell = () => {
   const { state } = useOnboarding();
@@ -85,6 +86,10 @@ export const HomeShell = () => {
           buttonBg={isBk ? "#0d1580" : "#003030"}
           buttonColor="#fff"
         />
+
+        {state.leagues.length > 0 && (
+          <PrematchFixtureList leagueKeys={state.leagues} brand={brand} />
+        )}
 
         <TrendingCarousel cards={trendingCards} />
       </div>
