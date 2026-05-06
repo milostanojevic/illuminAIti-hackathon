@@ -113,6 +113,7 @@ export const PrematchFixtureList = ({
 
   const [blocks, setBlocks] = useState<CompetitionBlock[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -204,18 +205,46 @@ export const PrematchFixtureList = ({
 
   return (
     <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
-      <div
-        className="px-4 py-3 flex items-center gap-2 border-b border-black/5"
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls="featured-matches-panel"
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full px-4 py-3 flex items-center gap-2 border-b border-black/5 text-left cursor-pointer hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white/40 transition-colors"
         style={{ background: `linear-gradient(135deg, ${accentBg}, ${isBk ? "#0d1a3a" : "#0d1580"})` }}
       >
-        <span className="text-[15px] leading-none">⚽</span>
-        <div>
-          <div className="text-[12px] font-extrabold text-white">Your competitions</div>
+        <span className="text-[15px] leading-none shrink-0" aria-hidden>
+          ⚽
+        </span>
+        <div className="min-w-0 flex-1">
+          <div id="featured-matches-heading" className="text-[12px] font-extrabold text-white">
+            Featured Matches
+          </div>
           <div className="text-[9px] text-white/70 mt-0.5">Prematch — 1X2</div>
         </div>
-      </div>
+        <svg
+          className={`shrink-0 w-4 h-4 text-white/85 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M2 4.5L6 8l4-3.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
 
-      <div className="py-3 space-y-4 px-0">
+      <div
+        id="featured-matches-panel"
+        role="region"
+        aria-labelledby="featured-matches-heading"
+        hidden={!expanded}
+        className="py-3 space-y-4 px-0"
+      >
         {loadError && (
           <div className="text-[11px] text-red-700 bg-red-50 rounded-lg mx-3 px-3 py-2 border border-red-100">
             Could not load fixtures: {loadError}
@@ -337,12 +366,11 @@ export const PrematchFixtureList = ({
             </section>
           );
         })}
+        <div
+          className="h-1 w-full opacity-80"
+          style={{ background: `linear-gradient(90deg, transparent, ${accentSoft}, transparent)` }}
+        />
       </div>
-
-      <div
-        className="h-1 w-full opacity-80"
-        style={{ background: `linear-gradient(90deg, transparent, ${accentSoft}, transparent)` }}
-      />
     </div>
   );
 };
