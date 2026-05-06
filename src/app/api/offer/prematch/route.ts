@@ -19,7 +19,7 @@ const querySchema = z.object({
 });
 
 const DEFAULT_BASE =
-  "https://st-feeds-offer-api-int.int.kingmakers.tech/api/offer-api/v1/fixtures/prematch";
+  "https://st-feeds-offer-api-int.kingmakers.tech/api/offer-api/v1/fixtures/prematch";
 
 function upstreamUrlForCompetition(competitionId: number): string {
   const base = (process.env.OFFER_API_PREMATCH_BASE_URL ?? DEFAULT_BASE).trim().replace(/\/$/, "");
