@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { buildTeamPool } from "@/lib/data/teams";
-import { LEAGUE_NAMES, LEAGUE_FLAGS } from "@/lib/data/leagues";
+import { LEAGUE_NAMES } from "@/lib/data/leagues";
+import { CountryFlag } from "@/components/ui/CountryFlag";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
 import { goToNextPreferenceStep } from "@/lib/onboardingNav";
 import { OnboardingStepShell } from "./OnboardingStepShell";
@@ -56,9 +57,9 @@ export const TeamGrid = () => {
                   : "bg-[#eef2ff] border-[#a0b0e8] text-ss-primary"
               }`}
             >
-              <div
-                className="w-3.5 h-2.5 rounded-sm flex-shrink-0"
-                style={{ background: LEAGUE_FLAGS[key] }}
+              <CountryFlag
+                league={key}
+                className="w-3.5 h-2.5 rounded-sm flex-shrink-0 object-cover"
               />
               {LEAGUE_NAMES[key]}
             </div>
