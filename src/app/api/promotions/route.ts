@@ -39,12 +39,23 @@ type RawBanner = {
   shortDescription?: string | null;
   ctaButtonText?: string | null;
   ctaButtonLink?: string | null;
+  /** ISO-like datetime from upstream; when in the past, the promo is excluded. */
+  expiryDateTime?: string;
 };
 
 type RawPocket = { activePromotions?: RawBanner[]; availablePromotions?: RawBanner[] };
 
 const isRecord = (x: unknown): x is Record<string, unknown> =>
   typeof x === "object" && x !== null;
+
+/** True if `expiryDateTime` parses to a time strictly before `now`. Missing/empty/invalid → not expired. */
+const isExpiredPromotion = (raw: RawBanner, now: number): boolean => {
+  const s = raw.expiryDateTime?.trim();
+  if (!s) return false;
+  const t = new Date(s).getTime();
+  if (Number.isNaN(t)) return false;
+  return t < now;
+};
 
 const toUi = (raw: RawBanner, category: PromoCategoryKey): PromotionUi | null => {
   const title = (raw.title ?? "").trim();
@@ -62,9 +73,15 @@ const toUi = (raw: RawBanner, category: PromoCategoryKey): PromotionUi | null =>
   };
 };
 
-const flattenPocket = (p: RawPocket | undefined, category: PromoCategoryKey): PromotionUi[] => {
+const flattenPocket = (
+  p: RawPocket | undefined,
+  category: PromoCategoryKey,
+  now: number
+): PromotionUi[] => {
   if (!p) return [];
-  const all = [...(p.activePromotions ?? []), ...(p.availablePromotions ?? [])];
+  const all = [...(p.activePromotions ?? []), ...(p.availablePromotions ?? [])].filter(
+    (r) => !isExpiredPromotion(r, now)
+  );
   const seen = new Set<string>();
   const out: PromotionUi[] = [];
   for (const r of all) {
@@ -91,6 +108,7 @@ const mergeUniqueById = (a: PromotionUi[], b: PromotionUi[]): PromotionUi[] => {
 
 export async function GET(req: NextRequest) {
   const noCache = req.nextUrl.searchParams.get("refresh") === "1";
+  const now = Date.now();
   try {
     const res = await fetch(SOURCE, {
       headers: UPSTREAM_HEADERS,
@@ -105,8 +123,12 @@ export async function GET(req: NextRequest) {
     }
 
     const basics = Array.isArray(json.basicPromotions) ? (json.basicPromotions as RawBanner[]) : [];
-    const sportsBasics = basics.filter((p) => (p.category ?? "").toLowerCase() === "sports");
-    const gamesBasics = basics.filter((p) => (p.category ?? "").toLowerCase() === "games");
+    const sportsBasics = basics
+      .filter((p) => (p.category ?? "").toLowerCase() === "sports")
+      .filter((r) => !isExpiredPromotion(r, now));
+    const gamesBasics = basics
+      .filter((p) => (p.category ?? "").toLowerCase() === "games")
+      .filter((r) => !isExpiredPromotion(r, now));
 
     const freespinPocket = isRecord(json.freespinPromotions)
       ? (json.freespinPromotions as RawPocket)
@@ -115,7 +137,7 @@ export async function GET(req: NextRequest) {
       ? (json.betAndGetPromotions as RawPocket)
       : undefined;
 
-    const fromFreespinPocket = flattenPocket(freespinPocket, "freespins");
+    const fromFreespinPocket = flattenPocket(freespinPocket, "freespins", now);
     const fromGames = gamesBasics
       .map((r) => toUi(r, "freespins"))
       .filter((x): x is PromotionUi => x !== null);
@@ -123,7 +145,7 @@ export async function GET(req: NextRequest) {
     const data: PromotionsResponse = {
       freebets: sportsBasics.map((r) => toUi(r, "freebets")).filter((x): x is PromotionUi => x !== null),
       freespins: mergeUniqueById(fromFreespinPocket, fromGames),
-      cashback: flattenPocket(betAndGetPocket, "cashback"),
+      cashback: flattenPocket(betAndGetPocket, "cashback", now),
     };
     return NextResponse.json(data);
   } catch (e) {

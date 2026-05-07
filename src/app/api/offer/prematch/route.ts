@@ -27,7 +27,7 @@ function upstreamUrlForCompetition(competitionId: number): string {
   const params = new URLSearchParams({
     SportId: "1",
     DateFilterType: "2",
-    DateFilterRange: "30",
+    DateFilterRange: "50",
     PageSize: "400",
     PageNumber: "1",
     CompetitionIds: String(competitionId),
