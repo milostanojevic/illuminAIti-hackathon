@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
+import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 
 const CROWD_HEIGHTS = [
   32, 24, 40, 28, 44, 30, 36, 26, 42, 22, 38, 46, 28, 34, 40,
@@ -170,24 +171,8 @@ export const BrandHero = () => {
       />
 
       <div className="relative z-10 mt-auto px-4 sm:px-5 md:px-6 pt-4 sm:pt-5 md:pt-6 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M2 7 C2 4 4 2 7 2 C10 2 12 4 12 7"
-              stroke="#FFCD00"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M4 10 C4 10 5.5 12 7 12 C8.5 12 10 10 10 10"
-              stroke="#FFCD00"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </svg>
-          <span className="text-xs sm:text-[13px] font-black text-white">
-            SuperSport<span className="text-ss-accent">BET</span>
-          </span>
+        <div className="flex items-center gap-2 sm:gap-2.5 mb-3 sm:mb-4">
+          <SuperSportBetLogo height={22} className="sm:!h-6" />
           <div className="w-px h-4 sm:h-[18px] bg-white/25" />
           <span className="text-[9px] sm:text-[10px] font-semibold text-white/50 uppercase tracking-wider">
             Official Betting Partner

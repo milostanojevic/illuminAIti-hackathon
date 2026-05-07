@@ -60,8 +60,7 @@ describe("home mobile-first density", () => {
   it("uses tighter home shell spacing with progressive expansion", () => {
     renderWithOnboarding(<HomeShell />);
 
-    const header = screen.getByText("SuperSportBET").closest("div")?.parentElement?.parentElement
-      ?.parentElement;
+    const header = screen.getByAltText("SuperSportBET").closest("div")?.parentElement?.parentElement;
     const content = screen.getByRole("button", { name: "Deposit" }).parentElement?.parentElement;
 
     expect(header).toHaveClass("px-3", "pt-3", "pb-2.5", "sm:px-4", "sm:pt-4", "sm:pb-3.5");

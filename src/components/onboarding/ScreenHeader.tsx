@@ -9,6 +9,7 @@ import {
   getPreviousStep,
   STEP_ROUTES,
 } from "@/lib/flow";
+import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { StepProgress } from "./StepProgress";
 
 type ScreenHeaderProps = {
@@ -50,6 +51,11 @@ export const ScreenHeader = ({
       style={{ background: isBk ? "#1a2b6b" : "#1a2db8" }}
     >
       <div className="close-btn" />
+      {!isBk && (
+        <div className="flex items-center mb-2 sm:mb-2.5">
+          <SuperSportBetLogo height={20} className="sm:!h-[22px]" />
+        </div>
+      )}
       <button
         onClick={handleBack}
         className="inline-flex items-center gap-1 bg-transparent border-none text-[11px] text-white/70 cursor-pointer mb-2 p-0 sm:gap-1.5 sm:text-xs sm:mb-2.5"

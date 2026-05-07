@@ -4,6 +4,7 @@ import { useOnboarding } from "@/state/OnboardingContext";
 import { LEAGUE_NAMES } from "@/lib/data/leagues";
 import { buildPopularDefaultCards, buildTrendingCards } from "@/lib/trending";
 import { isEffectivelyDefault } from "@/lib/storedPreferences";
+import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { HomeCTA } from "./HomeCTA";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
@@ -35,9 +36,11 @@ export const HomeShell = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="text-[11px] text-white/60">Good morning 👋</div>
-            <div className="text-base font-bold text-white">
-              {isBk ? "BetKing" : "SuperSportBET"}
-            </div>
+            {isBk ? (
+              <div className="text-base font-bold text-white">BetKing</div>
+            ) : (
+              <SuperSportBetLogo height={22} alt="SuperSportBET" />
+            )}
           </div>
           <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-sm">
             👤
