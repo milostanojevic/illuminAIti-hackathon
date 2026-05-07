@@ -469,3 +469,129 @@ export function extractPrematchFixtures(payload: unknown): PrematchFixtureUi[] {
 
   return out;
 }
+
+/** Boosted prematch feed — first market per fixture with arbitrary selection shapes */
+export type BoostedSelectionUi = {
+  name: string;
+  price: string;
+  boosted: boolean;
+  original?: string;
+};
+
+export type BoostedMarketUi = {
+  name: string;
+  marketTypeId: number | null;
+  selections: BoostedSelectionUi[];
+};
+
+export type BoostedFixtureUi = {
+  fixtureKey: string;
+  fixtureName: string;
+  competitionName: string;
+  categoryName: string;
+  eventStart: string | null;
+  market: BoostedMarketUi | null;
+};
+
+const rowLooksLikeBoostedFixture = (o: Record<string, unknown>): boolean =>
+  Boolean(str(o.fixtureName ?? o.FixtureName)) && Array.isArray(o.markets ?? o.Markets);
+
+const extractBoostedFixtureRows = (root: Record<string, unknown>): Record<string, unknown>[] => {
+  const sports = root.sports ?? root.Sports;
+  if (isRecord(sports)) {
+    const fx = sports.fixtures ?? sports.Fixtures;
+    if (Array.isArray(fx)) {
+      const objs = fx.filter(isRecord);
+      if (objs.some(rowLooksLikeBoostedFixture)) return objs;
+    }
+  }
+
+  const queue: unknown[] = [root];
+  for (let depth = 0; depth < 16 && queue.length; depth++) {
+    const nextQueue: unknown[] = [];
+    for (const node of queue) {
+      if (!isRecord(node)) continue;
+      for (const v of Object.values(node)) {
+        if (!Array.isArray(v) || v.length === 0) continue;
+        const first = v[0];
+        if (!isRecord(first)) continue;
+        if (rowLooksLikeBoostedFixture(first)) return v.filter(isRecord);
+        if (isRecord(first)) nextQueue.push(first);
+      }
+      nextQueue.push(...Object.values(node).filter(isRecord));
+    }
+    queue.length = 0;
+    queue.push(...nextQueue.slice(0, 60));
+  }
+
+  return [];
+};
+
+const resolveBoostedMarketDisplayName = (m: Record<string, unknown>): string => {
+  let name = str(m.name ?? m.Name);
+  const lineVal = readFiniteNumber(m.lineValue ?? m.LineValue ?? m.specialValue ?? m.SpecialValue);
+  const spec = m.specifiers ?? m.Specifiers;
+  let lineStr = "";
+  if (isRecord(spec)) {
+    lineStr = str(spec.line ?? spec.Line);
+  }
+  if (!lineStr && lineVal !== null) lineStr = String(lineVal);
+  if (name.includes("{line}") && lineStr) {
+    name = name.replace(/\{line\}/gi, lineStr);
+  }
+  return name.trim() || "Market";
+};
+
+const mapFirstMarketToBoostedUi = (market: Record<string, unknown>): BoostedMarketUi | null => {
+  const selections = market.selections ?? market.Selections;
+  if (!Array.isArray(selections)) return null;
+
+  const out: BoostedSelectionUi[] = [];
+  for (const raw of selections) {
+    if (!isRecord(raw)) continue;
+    const nm = selectionName(raw);
+    const priceField = raw.price ?? raw.Price;
+    if (!isRecord(priceField)) continue;
+    const pr = parsePriceObject(priceField);
+    if (!pr.price) continue;
+    out.push({ name: nm || "?", price: pr.price, boosted: pr.boosted, original: pr.original });
+  }
+
+  if (out.length === 0) return null;
+
+  return {
+    name: resolveBoostedMarketDisplayName(market),
+    marketTypeId: normalizedMarketTypeId(market),
+    selections: out,
+  };
+};
+
+export function extractBoostedFixtures(payload: unknown): BoostedFixtureUi[] {
+  if (!isRecord(payload)) return [];
+
+  const rows = extractBoostedFixtureRows(payload);
+  const out: BoostedFixtureUi[] = [];
+
+  rows.forEach((row, index) => {
+    const markets = row.markets ?? row.Markets;
+    if (!Array.isArray(markets) || markets.length === 0) return;
+    const first = markets[0];
+    if (!isRecord(first)) return;
+    const marketUi = mapFirstMarketToBoostedUi(first);
+    if (!marketUi) return;
+
+    const fid = str(row.fixtureId ?? row.FixtureId ?? row.id);
+    const fixtureKey = fid.length > 0 ? fid : `boosted-${index}`;
+
+    out.push({
+      fixtureKey,
+      fixtureName: str(row.fixtureName ?? row.FixtureName),
+      competitionName: str(row.competitionName ?? row.CompetitionName),
+      categoryName: str(row.categoryName ?? row.CategoryName),
+      eventStart: parseEventStartIso(row),
+      market: marketUi,
+    });
+  });
+
+  return out;
+}

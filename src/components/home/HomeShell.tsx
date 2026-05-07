@@ -8,6 +8,7 @@ import { HomeCTA } from "./HomeCTA";
 import { HomeDepositWidget } from "./HomeDepositWidget";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
+import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
 
 export const HomeShell = () => {
@@ -66,6 +67,8 @@ export const HomeShell = () => {
         {state.leagues.length > 0 && (
           <PrematchFixtureList leagueKeys={state.leagues} brand={brand} favouriteTeams={state.teams} />
         )}
+
+        {state.style.promos.includes("odds") && <BoostedFixtureList brand={brand} />}
 
         <TrendingCarousel cards={trendingCards} />
       </div>
