@@ -61,8 +61,10 @@ export const PromoCarousel = ({
   const showCarousel = !loading && !error && promotions.length > 0;
 
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [collapsed, setCollapsed] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeInfoId, setActiveInfoId] = useState<string | null>(null);
+  const panelId = `promo-panel-${category}`;
   const isDragging = useRef(false);
   const startX = useRef(0);
   const startLeft = useRef(0);
@@ -91,6 +93,10 @@ export const PromoCarousel = ({
     setActiveIdx(0);
     if (carouselRef.current) carouselRef.current.scrollLeft = 0;
   }, [promotions]);
+
+  useEffect(() => {
+    if (collapsed) setActiveInfoId(null);
+  }, [collapsed]);
 
   const move = (direction: number) => {
     const el = carouselRef.current;
@@ -128,23 +134,50 @@ export const PromoCarousel = ({
   const headerSub =
     loading ? "Loading offers…" : empty ? "No live offers right now" : `${promotions.length} offer${promotions.length === 1 ? "" : "s"}`;
 
-  const showNav = showCarousel && promotions.length >= 2;
+  const showNav = showCarousel && promotions.length >= 2 && !collapsed;
 
   return (
     <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
       <div
-        className="px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-2 border-b border-black/5"
+        className={`px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-2 ${collapsed ? "" : "border-b border-black/5"}`}
         style={{ background: `linear-gradient(135deg, ${accentBg}, ${isBk ? "#0d1a3a" : "#0d1580"})` }}
       >
-        <span className="text-base leading-none shrink-0" aria-hidden>
-          {icon}
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="text-xs sm:text-[13px] font-extrabold text-white">{title}</div>
-          <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">{headerSub}</div>
-        </div>
+        <button
+          type="button"
+          className="flex flex-1 min-w-0 items-center gap-2 text-left bg-transparent border-none cursor-pointer p-0 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          aria-controls={!collapsed ? panelId : undefined}
+          aria-label={collapsed ? `Expand ${title}` : `Collapse ${title}`}
+        >
+          <span className="text-base leading-none shrink-0" aria-hidden>
+            {icon}
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs sm:text-[13px] font-extrabold text-white">{title}</div>
+            <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">{headerSub}</div>
+          </div>
+          <svg
+            className={`w-3 h-3 shrink-0 text-white transition-transform ${collapsed ? "" : "rotate-180"}`}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden
+          >
+            <path
+              d="M6 9l6 6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
         {showNav && (
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div
+            className="flex items-center gap-1.5 shrink-0"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
               onClick={() => move(-1)}
@@ -173,7 +206,9 @@ export const PromoCarousel = ({
         )}
       </div>
 
-      <div className="relative px-3 py-2.5 sm:px-4 sm:py-3 min-h-[120px]">
+      {!collapsed && (
+        <>
+          <div id={panelId} className="relative px-3 py-2.5 sm:px-4 sm:py-3 min-h-[120px]">
         {activePromotion?.shortDescription && (
           <div
             className="absolute inset-0 z-40 flex items-end sm:items-center justify-center p-3 bg-black/45"
@@ -296,12 +331,14 @@ export const PromoCarousel = ({
             ))}
           </div>
         )}
-      </div>
+          </div>
 
-      <div
-        className="h-1 w-full opacity-80"
-        style={{ background: `linear-gradient(90deg, transparent, ${accentSoft}, transparent)` }}
-      />
+          <div
+            className="h-1 w-full opacity-80"
+            style={{ background: `linear-gradient(90deg, transparent, ${accentSoft}, transparent)` }}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -25,6 +25,7 @@ export function usePromotionsCatalog(enabled: boolean) {
   const [s, setS] = useState<CatalogState>({ data: null, loading: false, error: null });
   const mounted = useRef(true);
   useEffect(() => {
+    mounted.current = true;
     return () => {
       mounted.current = false;
     };
