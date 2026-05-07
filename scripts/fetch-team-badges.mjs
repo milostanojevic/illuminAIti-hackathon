@@ -18,7 +18,6 @@ const THROTTLE_MS = 1500;
 const SLUG_OVERRIDES = {
   "Man City": "man-city",
   "Man Utd": "man-utd",
-  "SuperSport Utd": "supersport-utd",
   "Chippa Utd": "chippa-utd",
 };
 
@@ -45,11 +44,9 @@ const SEARCH_OVERRIDES = {
   Freiburg: "SC Freiburg",
   PSG: "Paris Saint-Germain",
   Inter: "Inter Milan",
-  "SuperSport Utd": "SuperSport United",
   "Chippa Utd": "Chippa United",
   Sekhukhune: "Sekhukhune United",
   "Richards Bay": "Richards Bay FC",
-  "Cape Town City": "Cape Town City FC",
   Stellenbosch: "Stellenbosch FC",
 };
 
@@ -58,9 +55,7 @@ const PSL_DISPLAY_NAMES = new Set([
   "Mamelodi Sundowns",
   "Orlando Pirates",
   "Kaizer Chiefs",
-  "Cape Town City",
   "Stellenbosch",
-  "SuperSport Utd",
   "AmaZulu",
   "Sekhukhune",
   "Richards Bay",
@@ -99,9 +94,7 @@ const TEAM_NAMES = [
   "Mamelodi Sundowns",
   "Orlando Pirates",
   "Kaizer Chiefs",
-  "Cape Town City",
   "Stellenbosch",
-  "SuperSport Utd",
   "AmaZulu",
   "Sekhukhune",
   "Richards Bay",
