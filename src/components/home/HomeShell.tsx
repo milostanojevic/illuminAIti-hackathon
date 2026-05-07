@@ -63,14 +63,6 @@ export const HomeShell = () => {
         <HomeCasinoWidget brand={brand} />
 
         <HomeCTA
-          icon="⚽"
-          title="Sports"
-          subtitle="Matches, markets & live odds"
-          buttonLabel="Bet"
-          bg={isBk ? "#c8102e" : "linear-gradient(135deg, #1a3dc8, #0d1580)"}
-        />
-
-        <HomeCTA
           icon="🎁"
           title="Promos"
           subtitle="Offers and rewards"
