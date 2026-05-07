@@ -21,7 +21,7 @@ type Action =
   | { type: "TOGGLE_CASINO_GAME"; payload: string }
   | { type: "TOGGLE_PROVIDER"; payload: ProviderKey }
   | { type: "TOGGLE_SS_GAME"; payload: string }
-  | { type: "TOGGLE_SS_GAME_DETAIL"; payload: { name: string; thumbnailUrl: string } }
+  | { type: "TOGGLE_SS_GAME_DETAIL"; payload: { name: string; thumbnailUrl: string; providerKey: ProviderKey } }
   | { type: "SET_RISK"; payload: RiskLevel }
   | { type: "SET_SESSION"; payload: SessionStyle }
   | { type: "TOGGLE_PROMO"; payload: PromoKey }
@@ -37,7 +37,7 @@ type OnboardingContextValue = {
   toggleCasinoGame: (game: string) => void;
   toggleProvider: (provider: ProviderKey) => void;
   toggleSSGame: (game: string) => void;
-  toggleSSGameDetail: (payload: { name: string; thumbnailUrl: string }) => void;
+  toggleSSGameDetail: (payload: { name: string; thumbnailUrl: string; providerKey: ProviderKey }) => void;
   setRisk: (risk: RiskLevel) => void;
   setSession: (session: SessionStyle) => void;
   togglePromo: (promo: PromoKey) => void;
@@ -70,29 +70,35 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
     case "TOGGLE_SS_GAME": {
       const name = action.payload;
       const thumbs = { ...state.ssGameThumbs };
+      const provs = { ...state.ssGameProviders };
       if (state.ssGames.includes(name)) {
         const ssGames = state.ssGames.filter((n) => n !== name);
         delete thumbs[name];
-        return { ...state, ssGames, ssGameThumbs: thumbs };
+        delete provs[name];
+        return { ...state, ssGames, ssGameThumbs: thumbs, ssGameProviders: provs };
       }
       return {
         ...state,
         ssGames: [...state.ssGames, name],
         ssGameThumbs: { ...thumbs, [name]: thumbs[name] ?? "" },
+        ssGameProviders: provs,
       };
     }
     case "TOGGLE_SS_GAME_DETAIL": {
-      const { name, thumbnailUrl } = action.payload;
+      const { name, thumbnailUrl, providerKey } = action.payload;
       const thumbs = { ...state.ssGameThumbs };
+      const provs = { ...state.ssGameProviders };
       if (state.ssGames.includes(name)) {
         const ssGames = state.ssGames.filter((n) => n !== name);
         delete thumbs[name];
-        return { ...state, ssGames, ssGameThumbs: thumbs };
+        delete provs[name];
+        return { ...state, ssGames, ssGameThumbs: thumbs, ssGameProviders: provs };
       }
       return {
         ...state,
         ssGames: [...state.ssGames, name],
         ssGameThumbs: { ...thumbs, [name]: thumbnailUrl },
+        ssGameProviders: { ...provs, [name]: providerKey },
       };
     }
     case "SET_RISK":
@@ -101,8 +107,14 @@ const reducer = (state: OnboardingState, action: Action): OnboardingState => {
       return { ...state, style: { ...state.style, session: action.payload } };
     case "TOGGLE_PROMO":
       return { ...state, style: { ...state.style, promos: toggle(state.style.promos, action.payload) } };
-    case "HYDRATE":
-      return action.payload;
+    case "HYDRATE": {
+      const p = action.payload;
+      return {
+        ...p,
+        ssGameThumbs: p.ssGameThumbs ?? {},
+        ssGameProviders: p.ssGameProviders ?? {},
+      };
+    }
     case "RESET":
       return defaultState();
   }

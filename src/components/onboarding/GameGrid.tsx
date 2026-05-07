@@ -71,7 +71,10 @@ export const GameGrid = () => {
           .map((r) => `${PROVIDER_LABELS[r.providerKey]}: ${r.error}`);
         setPartialErrors(errs);
 
-        setGames(mergeGames(results));
+        const merged = mergeGames(results);
+        const order = new Map(state.providers.map((k, i) => [k, i]));
+        merged.sort((a, b) => (order.get(a.providerKey) ?? 99) - (order.get(b.providerKey) ?? 99));
+        setGames(merged);
       } catch (e) {
         if (cancelled) return;
         setLoadError(
@@ -166,51 +169,71 @@ export const GameGrid = () => {
 
       {!loadError && games !== null && games.length > 0 && (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {pageSlice.map((g) => {
-              const isSelected = state.ssGames.includes(g.name);
-              const rowKey = `${g.providerKey}-${g.slug}`;
+          <div className="space-y-3">
+            {state.providers.map((providerKey) => {
+              const cards = pageSlice.filter((g) => g.providerKey === providerKey);
+              if (cards.length === 0) return null;
               return (
-                <button
-                  key={rowKey}
-                  type="button"
-                  onClick={() => toggleSSGameDetail({ name: g.name, thumbnailUrl: g.thumbnailUrl })}
-                  className={`relative rounded-lg border-[1.5px] overflow-hidden h-[88px] cursor-pointer ${
-                    isSelected ? onClass : "border-gray-200 bg-white"
-                  }`}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-600 to-slate-800 pointer-events-none">
-                    <span className="text-lg font-black text-white/90 tracking-tight">{initials(g.name)}</span>
+                <section key={providerKey} className="min-w-0">
+                  <div className="text-[10px] font-bold text-ss-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    {PROVIDER_LABELS[providerKey]}
+                    <span className="flex-1 h-px bg-[#e8e8f0]" />
                   </div>
-                  {g.thumbnailUrl ? (
-                    <img
-                      src={g.thumbnailUrl}
-                      alt=""
-                      className="absolute inset-0 z-[1] w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.opacity = "0";
-                      }}
-                    />
-                  ) : null}
-                  <div className="absolute inset-x-0 bottom-0 z-[2] bg-black/55 text-white text-[10px] font-semibold px-2 py-1 truncate text-left">
-                    {g.name}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {cards.map((g) => {
+                      const isSelected = state.ssGames.includes(g.name);
+                      const rowKey = `${g.providerKey}-${g.slug}`;
+                      return (
+                        <button
+                          key={rowKey}
+                          type="button"
+                          onClick={() =>
+                            toggleSSGameDetail({
+                              name: g.name,
+                              thumbnailUrl: g.thumbnailUrl,
+                              providerKey: g.providerKey,
+                            })
+                          }
+                          className={`relative rounded-lg border-[1.5px] overflow-hidden h-[88px] cursor-pointer ${
+                            isSelected ? onClass : "border-gray-200 bg-white"
+                          }`}
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-600 to-slate-800 pointer-events-none">
+                            <span className="text-lg font-black text-white/90 tracking-tight">{initials(g.name)}</span>
+                          </div>
+                          {g.thumbnailUrl ? (
+                            <img
+                              src={g.thumbnailUrl}
+                              alt=""
+                              className="absolute inset-0 z-[1] w-full h-full object-cover"
+                              loading="lazy"
+                              decoding="async"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).style.opacity = "0";
+                              }}
+                            />
+                          ) : null}
+                          <div className="absolute inset-x-0 bottom-0 z-[2] bg-black/55 text-white text-[10px] font-semibold px-2 py-1 truncate text-left">
+                            {g.name}
+                          </div>
+                          {isSelected && (
+                            <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-ss-accent flex items-center justify-center z-10">
+                              <svg width="8" height="6" viewBox="0 0 8 6" fill="none" aria-hidden>
+                                <path
+                                  d="M1 3l2 2 4-4"
+                                  stroke="#0d1580"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
-                  {isSelected && (
-                    <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-ss-accent flex items-center justify-center z-10">
-                      <svg width="8" height="6" viewBox="0 0 8 6" fill="none" aria-hidden>
-                        <path
-                          d="M1 3l2 2 4-4"
-                          stroke="#0d1580"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </button>
+                </section>
               );
             })}
           </div>

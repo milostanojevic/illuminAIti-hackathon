@@ -15,5 +15,7 @@ export type OnboardingState = {
   ssGames: string[];
   /** SS: game display name -> thumbnail URL from CMS */
   ssGameThumbs: Record<string, string>;
+  /** SS: game display name -> provider key (for grouping on home) */
+  ssGameProviders: Record<string, ProviderKey>;
   style: BettingStyle;
 };

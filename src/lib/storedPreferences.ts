@@ -19,6 +19,7 @@ export const createDefaultOnboardingState = (): OnboardingState => ({
   providers: [],
   ssGames: [],
   ssGameThumbs: {},
+  ssGameProviders: {},
   style: {
     risk: null,
     session: null,
@@ -33,6 +34,7 @@ export const isEffectivelyDefault = (state: OnboardingState): boolean =>
   state.providers.length === 0 &&
   state.ssGames.length === 0 &&
   Object.keys(state.ssGameThumbs ?? {}).length === 0 &&
+  Object.keys(state.ssGameProviders ?? {}).length === 0 &&
   state.style.promos.length === 0 &&
   state.style.risk === null &&
   state.style.session === null;
@@ -59,6 +61,19 @@ export const sanitizeOnboardingState = (raw: unknown): OnboardingState | null =>
     for (const name of ssGames) {
       const v = (thumbsRaw as Record<string, unknown>)[name];
       if (typeof v === "string") ssGameThumbs[name] = v;
+    }
+  }
+
+  let ssGameProviders: Record<string, ProviderKey> = {};
+  const providersRaw = obj.ssGameProviders;
+  if (providersRaw && typeof providersRaw === "object" && !Array.isArray(providersRaw)) {
+    for (const name of ssGames) {
+      const rawKey = (providersRaw as Record<string, unknown>)[name];
+      const migrated =
+        typeof rawKey === "string" ? (rawKey === "lw" ? "netent" : rawKey) : "";
+      if (migrated && PROVIDERS_SET.has(migrated)) {
+        ssGameProviders[name] = migrated as ProviderKey;
+      }
     }
   }
 
@@ -92,6 +107,7 @@ export const sanitizeOnboardingState = (raw: unknown): OnboardingState | null =>
     providers,
     ssGames,
     ssGameThumbs,
+    ssGameProviders,
     style: {
       risk,
       session,
