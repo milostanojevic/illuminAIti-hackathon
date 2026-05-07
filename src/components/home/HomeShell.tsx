@@ -11,6 +11,8 @@ import { TrendingCarousel } from "./TrendingCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
 import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
+import { PromoCarousel } from "./PromoCarousel";
+import { usePromotionsCatalog } from "@/hooks/usePromotionsCatalog";
 
 export const HomeShell = () => {
   const { state } = useOnboarding();
@@ -22,6 +24,13 @@ export const HomeShell = () => {
     : state.ssGames.length > 0 || state.providers.length > 0;
 
   const hasNonOddsPromos = state.style.promos.some((p) => p !== "odds");
+
+  const showFreeBets = state.style.promos.includes("freebets");
+  const showFreeSpins = state.style.promos.includes("freespins");
+  const showCashback = state.style.promos.includes("cashback");
+  const promoCatalogEnabled = showFreeBets || showFreeSpins || showCashback;
+  const { data: promoData, loading: promoLoading, error: promoError, refresh: refreshPromos } =
+    usePromotionsCatalog(promoCatalogEnabled);
 
   const usePopularFallback = isEffectivelyDefault(state);
 
@@ -72,6 +81,43 @@ export const HomeShell = () => {
             subtitleColor={isBk ? "rgba(13,21,128,0.72)" : "rgba(0,48,48,0.72)"}
             buttonBg={isBk ? "#0d1580" : "#003030"}
             buttonColor="#fff"
+          />
+        )}
+
+        {showFreeBets && (
+          <PromoCarousel
+            category="freebets"
+            title="Free bets"
+            icon="🎟️"
+            brand={brand}
+            promotions={promoData?.freebets ?? []}
+            loading={promoLoading}
+            error={promoError}
+            onRefresh={refreshPromos}
+          />
+        )}
+        {showFreeSpins && (
+          <PromoCarousel
+            category="freespins"
+            title="Free spins"
+            icon="🎰"
+            brand={brand}
+            promotions={promoData?.freespins ?? []}
+            loading={promoLoading}
+            error={promoError}
+            onRefresh={refreshPromos}
+          />
+        )}
+        {showCashback && (
+          <PromoCarousel
+            category="cashback"
+            title="Cashback offers"
+            icon="💸"
+            brand={brand}
+            promotions={promoData?.cashback ?? []}
+            loading={promoLoading}
+            error={promoError}
+            onRefresh={refreshPromos}
           />
         )}
 
