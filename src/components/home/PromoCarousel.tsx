@@ -5,30 +5,30 @@ import type { Brand } from "@/types/brand";
 import type { PromoCategoryKey, PromotionUi } from "@/app/api/promotions/route";
 
 type PromoCarouselProps = {
-  category: PromoCategoryKey;
-  title: string;
-  icon: string;
   brand: Brand;
+  /** Categories the user filtered for, in display order. */
+  selectedCategories: PromoCategoryKey[];
+  /** Pre-merged promotions for those categories. */
   promotions: PromotionUi[];
   loading: boolean;
   error: string | null;
   onRefresh: () => void;
 };
 
-const EMPTY_COPY: Record<PromoCategoryKey, { title: string; body: string }> = {
-  freebets: {
-    title: "Nothing to show yet",
-    body: "We're out of free bets right now — check back soon.",
-  },
-  freespins: {
-    title: "Nothing to show yet",
-    body: "No free spins are live right now — pull again in a bit.",
-  },
-  cashback: {
-    title: "Nothing to show yet",
-    body: "No cashback offers live right now — refresh to look again.",
-  },
+const CATEGORY_META: Record<PromoCategoryKey, { icon: string; label: string }> = {
+  freebets: { icon: "🎟️", label: "Free bets" },
+  freespins: { icon: "🎰", label: "Free spins" },
+  cashback: { icon: "💸", label: "Cashback" },
 };
+
+const EMPTY_COPY = {
+  title: "Nothing to show yet",
+  body: "No live offers right now — refresh to look again.",
+};
+
+const WIDGET_TITLE = "Promos";
+const WIDGET_ICON = "🎁";
+const panelId = "promo-panel-all";
 
 function RefreshIcon({ className }: { className?: string }) {
   return (
@@ -45,10 +45,8 @@ function RefreshIcon({ className }: { className?: string }) {
 }
 
 export const PromoCarousel = ({
-  category,
-  title,
-  icon,
   brand,
+  selectedCategories,
   promotions,
   loading,
   error,
@@ -60,12 +58,26 @@ export const PromoCarousel = ({
   const empty = !loading && !error && promotions.length === 0;
   const showCarousel = !loading && !error && promotions.length > 0;
 
+  const categoryHint =
+    selectedCategories.length > 0
+      ? selectedCategories.map((k) => CATEGORY_META[k].label).join(", ")
+      : "";
+
+  const headerSub = loading
+    ? "Loading offers…"
+    : error && !loading
+      ? "Could not load offers"
+      : empty
+        ? categoryHint
+          ? `Watching: ${categoryHint}`
+          : "No live offers right now"
+        : `${promotions.length} offer${promotions.length === 1 ? "" : "s"}`;
+
   const carouselRef = useRef<HTMLDivElement>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [pageCount, setPageCount] = useState(1);
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeInfoId, setActiveInfoId] = useState<string | null>(null);
-  const panelId = `promo-panel-${category}`;
   const isDragging = useRef(false);
   const startX = useRef(0);
   const startLeft = useRef(0);
@@ -148,9 +160,6 @@ export const PromoCarousel = ({
 
   const activePromotion = activeInfoId ? promotions.find((p) => p.id === activeInfoId) : null;
 
-  const headerSub =
-    loading ? "Loading offers…" : empty ? "No live offers right now" : `${promotions.length} offer${promotions.length === 1 ? "" : "s"}`;
-
   const showNav = showCarousel && !collapsed && pageCount >= 2;
 
   return (
@@ -165,13 +174,13 @@ export const PromoCarousel = ({
           onClick={() => setCollapsed((c) => !c)}
           aria-expanded={!collapsed}
           aria-controls={!collapsed ? panelId : undefined}
-          aria-label={collapsed ? `Expand ${title}` : `Collapse ${title}`}
+          aria-label={collapsed ? `Expand ${WIDGET_TITLE}` : `Collapse ${WIDGET_TITLE}`}
         >
           <span className="text-base leading-none shrink-0" aria-hidden>
-            {icon}
+            {WIDGET_ICON}
           </span>
           <div className="min-w-0 flex-1">
-            <div className="text-xs sm:text-[13px] font-extrabold text-white">{title}</div>
+            <div className="text-xs sm:text-[13px] font-extrabold text-white">{WIDGET_TITLE}</div>
             <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">{headerSub}</div>
           </div>
         </button>
@@ -232,128 +241,135 @@ export const PromoCarousel = ({
       {!collapsed && (
         <>
           <div id={panelId} className="relative px-3 py-2.5 sm:px-4 sm:py-3 min-h-[120px]">
-        {activePromotion?.shortDescription && (
-          <div
-            className="absolute inset-0 z-40 flex items-end sm:items-center justify-center p-3 bg-black/45"
-            role="presentation"
-            onClick={() => setActiveInfoId(null)}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={`promo-info-${activePromotion.id}`}
-              className="bg-white rounded-xl max-w-sm w-full shadow-xl border border-gray-100 p-3 sm:p-4 text-left"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div id={`promo-info-${activePromotion.id}`} className="text-[12px] font-extrabold text-[#1a1a2e] pr-2">
-                  {activePromotion.title}
+            {activePromotion?.shortDescription && (
+              <div
+                className="absolute inset-0 z-40 flex items-end sm:items-center justify-center p-3 bg-black/45"
+                role="presentation"
+                onClick={() => setActiveInfoId(null)}
+              >
+                <div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby={`promo-info-${activePromotion.id}`}
+                  className="bg-white rounded-xl max-w-sm w-full shadow-xl border border-gray-100 p-3 sm:p-4 text-left"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div id={`promo-info-${activePromotion.id}`} className="text-[12px] font-extrabold text-[#1a1a2e] pr-2">
+                      {activePromotion.title}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveInfoId(null)}
+                      className="shrink-0 text-[11px] font-bold text-slate-500 px-2 py-0.5 rounded-full hover:bg-slate-100"
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <p className="text-[10.5px] sm:text-[11px] text-slate-600 leading-relaxed">{activePromotion.shortDescription}</p>
                 </div>
+              </div>
+            )}
+
+            {loading && (
+              <div className="flex gap-2">
+                <div className="flex-1 h-28 rounded-xl bg-slate-100 animate-pulse" />
+                <div className="flex-1 h-28 rounded-xl bg-slate-100 animate-pulse hidden sm:block" />
+              </div>
+            )}
+
+            {error && !loading && (
+              <div className="px-1 py-3 sm:py-4 text-center">
+                <div className="text-[12px] font-bold text-[#1a1a2e] mb-1">Could not load offers</div>
+                <div className="text-[10.5px] text-slate-600 mb-3">{error}</div>
                 <button
                   type="button"
-                  onClick={() => setActiveInfoId(null)}
-                  className="shrink-0 text-[11px] font-bold text-slate-500 px-2 py-0.5 rounded-full hover:bg-slate-100"
+                  onClick={onRefresh}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-white text-[11px] font-extrabold text-[#1a1a2e] cursor-pointer"
                 >
-                  Close
+                  <RefreshIcon className="w-3 h-3" /> Refresh
                 </button>
               </div>
-              <p className="text-[10.5px] sm:text-[11px] text-slate-600 leading-relaxed">{activePromotion.shortDescription}</p>
-            </div>
-          </div>
-        )}
+            )}
 
-        {loading && (
-          <div className="flex gap-2">
-            <div className="flex-1 h-28 rounded-xl bg-slate-100 animate-pulse" />
-            <div className="flex-1 h-28 rounded-xl bg-slate-100 animate-pulse hidden sm:block" />
-          </div>
-        )}
+            {empty && !loading && (
+              <div className="px-1 py-3 sm:py-4 text-center">
+                <div className="text-[20px] mb-1" aria-hidden>
+                  {WIDGET_ICON}
+                </div>
+                <div className="text-[12px] font-bold text-[#1a1a2e] mb-1">{EMPTY_COPY.title}</div>
+                <div className="text-[10.5px] text-slate-600 mb-3">{EMPTY_COPY.body}</div>
+                <button
+                  type="button"
+                  onClick={onRefresh}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-white text-[11px] font-extrabold text-[#1a1a2e] cursor-pointer"
+                >
+                  <RefreshIcon className="w-3 h-3" /> Refresh
+                </button>
+              </div>
+            )}
 
-        {error && !loading && (
-          <div className="px-1 py-3 sm:py-4 text-center">
-            <div className="text-[12px] font-bold text-[#1a1a2e] mb-1">Could not load offers</div>
-            <div className="text-[10.5px] text-slate-600 mb-3">{error}</div>
-            <button
-              type="button"
-              onClick={onRefresh}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-white text-[11px] font-extrabold text-[#1a1a2e] cursor-pointer"
-            >
-              <RefreshIcon className="w-3 h-3" /> Refresh
-            </button>
-          </div>
-        )}
-
-        {empty && !loading && (
-          <div className="px-1 py-3 sm:py-4 text-center">
-            <div className="text-[20px] mb-1" aria-hidden>
-              {icon}
-            </div>
-            <div className="text-[12px] font-bold text-[#1a1a2e] mb-1">{EMPTY_COPY[category].title}</div>
-            <div className="text-[10.5px] text-slate-600 mb-3">{EMPTY_COPY[category].body}</div>
-            <button
-              type="button"
-              onClick={onRefresh}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-white text-[11px] font-extrabold text-[#1a1a2e] cursor-pointer"
-            >
-              <RefreshIcon className="w-3 h-3" /> Refresh
-            </button>
-          </div>
-        )}
-
-        {showCarousel && (
-          <div
-            ref={carouselRef}
-            className="trending-carousel"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            onPointerLeave={handlePointerUp}
-          >
-            {promotions.map((p) => (
-              <article
-                key={p.id}
-                className="promo-card-item flex-none w-[240px] sm:w-[280px] md:w-[300px] rounded-xl overflow-hidden bg-slate-100 border border-gray-100 scroll-snap-start"
+            {showCarousel && (
+              <div
+                ref={carouselRef}
+                className="trending-carousel"
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+                onPointerLeave={handlePointerUp}
               >
-                <div className="aspect-[16/9] w-full bg-slate-200 relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={p.bannerImageUrl}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.opacity = "0";
-                    }}
-                  />
-                  {p.shortDescription ? (
-                    <button
-                      type="button"
-                      onClick={() => setActiveInfoId(p.id)}
-                      aria-label="More info"
-                      className="absolute top-1.5 right-1.5 z-[2] w-6 h-6 rounded-full bg-black/55 text-white text-[11px] font-extrabold inline-flex items-center justify-center cursor-pointer hover:bg-black/70"
+                {promotions.map((p) => {
+                  const meta = CATEGORY_META[p.category];
+                  return (
+                    <article
+                      key={p.id}
+                      className="promo-card-item flex-none w-[240px] sm:w-[280px] md:w-[300px] rounded-xl overflow-hidden bg-slate-100 border border-gray-100 scroll-snap-start"
                     >
-                      i
-                    </button>
-                  ) : null}
-                </div>
-                <div className="p-2.5">
-                  <div className="text-[12px] font-extrabold text-[#1a1a2e] line-clamp-2 mb-1.5 min-h-[2.25rem]">{p.title}</div>
-                  {p.ctaButtonText ? (
-                    <button
-                      type="button"
-                      className="w-full rounded-full px-3 py-1.5 text-[11px] font-extrabold cursor-pointer border-none"
-                      style={{ background: accentSoft, color: isBk ? "#0d1580" : "#003030" }}
-                    >
-                      {p.ctaButtonText}
-                    </button>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+                      <div className="aspect-[16/9] w-full bg-slate-200 relative">
+                        <span className="absolute top-1.5 left-1.5 z-[2] inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/55 text-white text-[10px] font-bold leading-none">
+                          <span aria-hidden>{meta.icon}</span>
+                          {meta.label}
+                        </span>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={p.bannerImageUrl}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).style.opacity = "0";
+                          }}
+                        />
+                        {p.shortDescription ? (
+                          <button
+                            type="button"
+                            onClick={() => setActiveInfoId(p.id)}
+                            aria-label="More info"
+                            className="absolute top-1.5 right-1.5 z-[2] w-6 h-6 rounded-full bg-black/55 text-white text-[11px] font-extrabold inline-flex items-center justify-center cursor-pointer hover:bg-black/70"
+                          >
+                            i
+                          </button>
+                        ) : null}
+                      </div>
+                      <div className="p-2.5">
+                        <div className="text-[12px] font-extrabold text-[#1a1a2e] line-clamp-2 mb-1.5 min-h-[2.25rem]">{p.title}</div>
+                        {p.ctaButtonText ? (
+                          <button
+                            type="button"
+                            className="w-full rounded-full px-3 py-1.5 text-[11px] font-extrabold cursor-pointer border-none"
+                            style={{ background: accentSoft, color: isBk ? "#0d1580" : "#003030" }}
+                          >
+                            {p.ctaButtonText}
+                          </button>
+                        ) : null}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div

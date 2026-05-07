@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { LEAGUE_NAMES } from "@/lib/data/leagues";
 import { buildPopularDefaultCards, buildTrendingCards } from "@/lib/trending";
@@ -13,6 +14,7 @@ import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
 import { PromoCarousel } from "./PromoCarousel";
 import { usePromotionsCatalog } from "@/hooks/usePromotionsCatalog";
+import type { PromoCategoryKey, PromotionUi } from "@/app/api/promotions/route";
 
 export const HomeShell = () => {
   const { state } = useOnboarding();
@@ -29,6 +31,23 @@ export const HomeShell = () => {
   const promoCatalogEnabled = showFreeBets || showFreeSpins || showCashback;
   const { data: promoData, loading: promoLoading, error: promoError, refresh: refreshPromos } =
     usePromotionsCatalog(promoCatalogEnabled);
+
+  const selectedCategories = useMemo((): PromoCategoryKey[] => {
+    const out: PromoCategoryKey[] = [];
+    if (showFreeBets) out.push("freebets");
+    if (showFreeSpins) out.push("freespins");
+    if (showCashback) out.push("cashback");
+    return out;
+  }, [showFreeBets, showFreeSpins, showCashback]);
+
+  const mergedPromotions = useMemo(() => {
+    if (!promoData) return [];
+    const out: PromotionUi[] = [];
+    if (showFreeBets) out.push(...promoData.freebets);
+    if (showFreeSpins) out.push(...promoData.freespins);
+    if (showCashback) out.push(...promoData.cashback);
+    return out;
+  }, [promoData, showFreeBets, showFreeSpins, showCashback]);
 
   const usePopularFallback = isEffectivelyDefault(state);
 
@@ -70,45 +89,19 @@ export const HomeShell = () => {
 
         {hasCasinoSelections && <HomeCasinoWidget brand={brand} />}
 
-        {showFreeBets && (
-          <PromoCarousel
-            category="freebets"
-            title="Free bets"
-            icon="🎟️"
-            brand={brand}
-            promotions={promoData?.freebets ?? []}
-            loading={promoLoading}
-            error={promoError}
-            onRefresh={refreshPromos}
-          />
-        )}
-        {showFreeSpins && (
-          <PromoCarousel
-            category="freespins"
-            title="Free spins"
-            icon="🎰"
-            brand={brand}
-            promotions={promoData?.freespins ?? []}
-            loading={promoLoading}
-            error={promoError}
-            onRefresh={refreshPromos}
-          />
-        )}
-        {showCashback && (
-          <PromoCarousel
-            category="cashback"
-            title="Cashback offers"
-            icon="💸"
-            brand={brand}
-            promotions={promoData?.cashback ?? []}
-            loading={promoLoading}
-            error={promoError}
-            onRefresh={refreshPromos}
-          />
-        )}
-
         {state.leagues.length > 0 && (
           <PrematchFixtureList leagueKeys={state.leagues} brand={brand} favouriteTeams={state.teams} />
+        )}
+
+        {promoCatalogEnabled && (
+          <PromoCarousel
+            brand={brand}
+            selectedCategories={selectedCategories}
+            promotions={mergedPromotions}
+            loading={promoLoading}
+            error={promoError}
+            onRefresh={refreshPromos}
+          />
         )}
 
         {state.style.promos.includes("odds") && <BoostedFixtureList brand={brand} />}
