@@ -78,7 +78,7 @@ describe("home mobile-first density", () => {
   });
 
   it("sizes trending cards progressively from mobile to md", () => {
-    render(<TrendingCarousel cards={cards} />);
+    render(<TrendingCarousel brand="ss" cards={cards} />);
 
     const card = screen.getByText("Derby night").closest(".trending-card-item");
 

@@ -68,7 +68,7 @@ export const TeamGrid = () => {
         <div className={`text-[10px] mb-2.5 ${isBk ? "text-bk-primary" : "text-ss-primary"}`}>
           <span className="font-semibold">{state.teams.length}</span> team{state.teams.length !== 1 ? "s" : ""} selected
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2.5 sm:gap-2">
           {pool.map((name) => {
             const isSelected = state.teams.includes(name);
             const onClass = isBk ? "bg-[#eef1fb] border-bk-primary" : "bg-[#eef2ff] border-ss-primary";
@@ -78,13 +78,13 @@ export const TeamGrid = () => {
               <button
                 key={name}
                 onClick={() => toggleTeam(name)}
-                className={`rounded-[10px] border-[1.5px] p-2 sm:p-1.5 text-center cursor-pointer h-[72px] sm:h-[68px] flex flex-col items-center justify-center relative ${
+                className={`rounded-[10px] border-[1.5px] p-2.5 sm:p-3 text-center cursor-pointer h-[100px] sm:h-[104px] md:h-[112px] flex flex-col items-center justify-center relative ${
                   isSelected ? onClass : "border-gray-200 bg-[#f5f6fa]"
                 }`}
               >
                 {isSelected && (
                   <div
-                    className="absolute -top-[3px] -right-[3px] w-3 h-3 rounded-full flex items-center justify-center border-[1.5px] border-white"
+                    className="absolute -top-[3px] -right-[3px] w-3.5 h-3.5 rounded-full flex items-center justify-center border-[1.5px] border-white"
                     style={{ background: isBk ? "#4dd9ac" : "#FFCD00" }}
                   >
                     <svg width="7" height="5" viewBox="0 0 7 5" fill="none">
@@ -98,10 +98,10 @@ export const TeamGrid = () => {
                     </svg>
                   </div>
                 )}
-                <div className="w-8 h-8 mb-1 flex-shrink-0">
-                  <Crest name={name} size={32} />
+                <div className="w-12 h-12 mb-1.5 flex-shrink-0">
+                  <Crest name={name} size={48} />
                 </div>
-                <div className={`text-[9px] sm:text-[8px] leading-tight break-words ${isSelected ? textClass : "text-gray-500 font-medium"}`}>
+                <div className={`text-[11px] sm:text-[11px] md:text-[12px] leading-tight break-words ${isSelected ? textClass : "text-gray-500 font-medium"}`}>
                   {name}
                 </div>
               </button>

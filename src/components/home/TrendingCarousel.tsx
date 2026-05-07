@@ -1,13 +1,16 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
+import type { Brand } from "@/types/brand";
 import type { TrendingCard } from "@/lib/trending";
 
 type TrendingCarouselProps = {
+  brand: Brand;
   cards: TrendingCard[];
 };
 
-export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
+export const TrendingCarousel = ({ brand, cards }: TrendingCarouselProps) => {
+  const isBk = brand === "bk";
   const carouselRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const isDragging = useRef(false);
@@ -68,13 +71,15 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
   return (
     <div className="shrink-0 bg-white rounded-[14px] p-2.5 sm:p-3 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
       <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-        <div className="text-xs font-extrabold text-[#1a1a2e] flex items-center gap-1.5">
+        <div className="text-xs font-extrabold text-ss-ink flex items-center gap-1.5">
           <span>🔥</span><span>Trending now</span>
         </div>
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => move(-1)}
-            className="w-6 h-6 rounded-full border-none bg-[#eef1fb] text-bk-primary text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95"
+            className={`w-6 h-6 rounded-full border-none bg-ss-navWell text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95 ${
+              isBk ? "text-bk-primary" : "text-ss-deep"
+            }`}
           >
             ‹
           </button>
@@ -82,13 +87,21 @@ export const TrendingCarousel = ({ cards }: TrendingCarouselProps) => {
             {cards.map((_, i) => (
               <div
                 key={i}
-                className={`w-[5px] h-[5px] rounded-full ${i === activeIdx ? "bg-bk-primary" : "bg-[#d8dbe5]"}`}
+                className={`w-[5px] h-[5px] rounded-full ${
+                  i === activeIdx
+                    ? isBk
+                      ? "bg-bk-primary"
+                      : "bg-ss-deep"
+                    : "bg-ss-dotMuted"
+                }`}
               />
             ))}
           </div>
           <button
             onClick={() => move(1)}
-            className="w-6 h-6 rounded-full border-none bg-[#eef1fb] text-bk-primary text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95"
+            className={`w-6 h-6 rounded-full border-none bg-ss-navWell text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95 ${
+              isBk ? "text-bk-primary" : "text-ss-deep"
+            }`}
           >
             ›
           </button>

@@ -113,7 +113,7 @@ export const HomeShell = () => {
             <HotGamesCarousel brand={brand} />
           </>
         ) : (
-          <TrendingCarousel cards={trendingCards} />
+          <TrendingCarousel brand={brand} cards={trendingCards} />
         )}
       </div>
     </div>

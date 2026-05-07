@@ -2,6 +2,12 @@
 
 import type { ReactElement } from "react";
 import type { Brand } from "@/types/brand";
+import {
+  bkPalette,
+  depositWidgetBackground,
+  ssPalette,
+  textOnAccentButton,
+} from "@/lib/brand/designTokens";
 
 type HomeDepositWidgetProps = {
   brand: Brand;
@@ -43,17 +49,14 @@ function StackedCoinsGraphic() {
 
 export const HomeDepositWidget = ({ brand }: HomeDepositWidgetProps): ReactElement => {
   const isBk = brand === "bk";
-  const accentA = isBk ? "#00d8c8" : "#FFCD00";
-  const accentB = isBk ? "#FFCD00" : "#00d8c8";
-  const buttonFg = isBk ? "#003030" : "#0d1580";
-  const bg = isBk
-    ? "linear-gradient(135deg, #1a2b6b, #0f1a4d)"
-    : "linear-gradient(135deg, #1a2db8, #0d1580)";
+  const accentA = isBk ? bkPalette.accent : ssPalette.accent;
+  const accentB = isBk ? ssPalette.accent : bkPalette.accent;
+  const buttonFg = textOnAccentButton(brand);
 
   return (
     <div
       className="shrink-0 relative overflow-hidden rounded-xl px-4 py-4 sm:px-5 sm:py-5 min-h-[140px] sm:min-h-[152px]"
-      style={{ background: bg }}
+      style={{ background: depositWidgetBackground(brand) }}
     >
       <h3 className="relative z-10 text-2xl sm:text-3xl font-extrabold leading-[1.05] text-white max-w-[78%]">
         Deposit and <span style={{ color: accentA }}>Play Now!</span>

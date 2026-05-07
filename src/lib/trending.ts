@@ -1,4 +1,5 @@
 import type { Brand } from "@/types/brand";
+import { brandGradients } from "@/lib/brand/designTokens";
 
 export type TrendingCard = {
   chip: string;
@@ -12,15 +13,10 @@ export type TrendingCard = {
 /** Curated “most popular” row when onboarding did not capture meaningful prefs (local POC). */
 export const buildPopularDefaultCards = (brand: Brand): TrendingCard[] => {
   const isBk = brand === "bk";
-  const casinoBg = isBk
-    ? "linear-gradient(135deg, #1a2b6b, #0d1a3a)"
-    : "linear-gradient(135deg, #1a2db8, #0d1580)";
-  const sportsBg = isBk
-    ? "linear-gradient(135deg, #c8102e, #740015)"
-    : "linear-gradient(135deg, #1a3dc8, #0d1580)";
-  const promoBg = isBk
-    ? "linear-gradient(135deg, #003030, #00a89c)"
-    : "linear-gradient(135deg, #0d1580, #00a89c)";
+  const g = isBk ? brandGradients.bk : brandGradients.ss;
+  const casinoBg = g.cardCasino;
+  const sportsBg = g.cardSports;
+  const promoBg = g.promo;
 
   return [
     {
@@ -65,15 +61,10 @@ export const buildTrendingCards = (
   preferredGame: string
 ): TrendingCard[] => {
   const isBk = brand === "bk";
-  const casinoBg = isBk
-    ? "linear-gradient(135deg, #1a2b6b, #0d1a3a)"
-    : "linear-gradient(135deg, #1a2db8, #0d1580)";
-  const sportsBg = isBk
-    ? "linear-gradient(135deg, #c8102e, #740015)"
-    : "linear-gradient(135deg, #1a3dc8, #0d1580)";
-  const promoBg = isBk
-    ? "linear-gradient(135deg, #003030, #00a89c)"
-    : "linear-gradient(135deg, #0d1580, #00a89c)";
+  const g = isBk ? brandGradients.bk : brandGradients.ss;
+  const casinoBg = g.cardCasino;
+  const sportsBg = g.cardSports;
+  const promoBg = g.promo;
 
   return [
     {

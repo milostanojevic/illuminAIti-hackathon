@@ -2,6 +2,12 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Brand } from "@/types/brand";
+import {
+  bkPalette,
+  headerBackground,
+  ssPalette,
+  textOnAccentButton,
+} from "@/lib/brand/designTokens";
 import type { PromoCategoryKey, PromotionUi } from "@/app/api/promotions/route";
 
 type PromoCarouselProps = {
@@ -53,8 +59,7 @@ export const PromoCarousel = ({
   onRefresh,
 }: PromoCarouselProps) => {
   const isBk = brand === "bk";
-  const accentBg = isBk ? "#1a2b6b" : "#1a2db8";
-  const accentSoft = isBk ? "#00d8c8" : "#FFCD00";
+  const accentSoft = isBk ? bkPalette.accent : ssPalette.accent;
   const empty = !loading && !error && promotions.length === 0;
   const showCarousel = !loading && !error && promotions.length > 0;
 
@@ -166,7 +171,7 @@ export const PromoCarousel = ({
     <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
       <div
         className={`px-3 py-2.5 sm:px-4 sm:py-3 flex items-center gap-2 ${collapsed ? "" : "border-b border-black/5"}`}
-        style={{ background: `linear-gradient(135deg, ${accentBg}, ${isBk ? "#0d1a3a" : "#0d1580"})` }}
+        style={{ background: headerBackground(brand) }}
       >
         <button
           type="button"
@@ -359,7 +364,7 @@ export const PromoCarousel = ({
                           <button
                             type="button"
                             className="w-full rounded-full px-3 py-1.5 text-[11px] font-extrabold cursor-pointer border-none"
-                            style={{ background: accentSoft, color: isBk ? "#0d1580" : "#003030" }}
+                            style={{ background: accentSoft, color: textOnAccentButton(brand) }}
                           >
                             {p.ctaButtonText}
                           </button>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { STEP_ROUTES, getNextStep } from "@/lib/flow";
 import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
+import { brandGradients } from "@/lib/brand/designTokens";
 
 const CROWD_HEIGHTS = [
   32, 24, 40, 28, 44, 30, 36, 26, 42, 22, 38, 46, 28, 34, 40,
@@ -99,10 +100,7 @@ export const BrandHero = () => {
     <div className="relative flex flex-1 flex-col min-h-0 w-full overflow-hidden bg-ss-deep">
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(160deg, #2a3dc8 0%, #1a2db8 45%, #0d1580 100%)",
-        }}
+        style={{ background: brandGradients.ss.brandHero }}
       />
       <div className="ss-dots absolute inset-0 opacity-50" />
 

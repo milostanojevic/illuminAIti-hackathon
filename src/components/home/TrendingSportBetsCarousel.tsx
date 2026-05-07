@@ -180,7 +180,7 @@ export const TrendingSportBetsCarousel = ({
   }
 
   if (items.length === 0) {
-    if (fallbackCards?.length) return <TrendingCarousel cards={fallbackCards} />;
+    if (fallbackCards?.length) return <TrendingCarousel brand={brand} cards={fallbackCards} />;
     return null;
   }
 

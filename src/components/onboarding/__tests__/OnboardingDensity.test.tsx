@@ -48,12 +48,12 @@ describe("onboarding mobile-first density", () => {
     expect(title).toHaveClass("text-base", "sm:text-[17px]", "md:text-lg");
   });
 
-  it("starts preference grids at one mobile column before expanding", () => {
+  it("uses two mobile columns and grows wider tiles before expanding", () => {
     renderWithOnboarding(<LeagueGrid />);
 
     const leagueGrid = screen.getByText("SA Premiership").closest("button")?.parentElement;
 
-    expect(leagueGrid).toHaveClass("grid-cols-1", "sm:grid-cols-2", "md:grid-cols-3");
+    expect(leagueGrid).toHaveClass("grid-cols-2", "sm:grid-cols-2", "md:grid-cols-3");
   });
 
   it("uses compact MagicLoader title text with progressive expansion", () => {
