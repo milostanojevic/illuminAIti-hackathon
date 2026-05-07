@@ -7,7 +7,7 @@ export const COMPETITION_ID_BY_LEAGUE: Record<LeagueKey, number> = {
   bl: 1007,
   psl: 1522545,
   ucl: 15099,
-  wc: 25273903,
+  wc: 5273903,
 };
 
 /** Distinct competition ids in the order of first appearance of each league key. */

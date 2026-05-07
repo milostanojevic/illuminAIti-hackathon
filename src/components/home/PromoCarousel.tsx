@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Brand } from "@/types/brand";
 import type { PromoCategoryKey, PromotionUi } from "@/app/api/promotions/route";
 
@@ -62,6 +62,7 @@ export const PromoCarousel = ({
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [pageCount, setPageCount] = useState(1);
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeInfoId, setActiveInfoId] = useState<string | null>(null);
   const panelId = `promo-panel-${category}`;
@@ -69,28 +70,42 @@ export const PromoCarousel = ({
   const startX = useRef(0);
   const startLeft = useRef(0);
 
-  const updateDots = useCallback(() => {
+  const recalcCarousel = useCallback(() => {
     const el = carouselRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>(".promo-card-item");
     const amount = card ? card.offsetWidth + 8 : 248;
-    setActiveIdx(Math.round(el.scrollLeft / amount));
+    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+    const pages = Math.max(1, Math.floor(maxScroll / amount) + 1);
+    setPageCount(pages);
+    const rawIdx = Math.round(el.scrollLeft / amount);
+    const idx = Math.min(pages - 1, Math.max(0, rawIdx));
+    setActiveIdx(idx);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (collapsed || !showCarousel) return;
     const el = carouselRef.current;
     if (!el) return;
     let timer: ReturnType<typeof setTimeout>;
-    const handler = () => {
+    const onScroll = () => {
       clearTimeout(timer);
-      timer = setTimeout(updateDots, 80);
+      timer = setTimeout(recalcCarousel, 80);
     };
-    el.addEventListener("scroll", handler);
-    return () => el.removeEventListener("scroll", handler);
-  }, [updateDots, promotions.length]);
+    el.addEventListener("scroll", onScroll);
+    const ro = new ResizeObserver(() => recalcCarousel());
+    ro.observe(el);
+    recalcCarousel();
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+      ro.disconnect();
+    };
+  }, [collapsed, showCarousel, promotions, recalcCarousel]);
 
   useEffect(() => {
     setActiveIdx(0);
+    setPageCount(1);
     if (carouselRef.current) carouselRef.current.scrollLeft = 0;
   }, [promotions]);
 
@@ -103,8 +118,10 @@ export const PromoCarousel = ({
     if (!el) return;
     const card = el.querySelector<HTMLElement>(".promo-card-item");
     const amount = card ? card.offsetWidth + 8 : 248;
-    el.scrollBy({ left: direction * amount, behavior: "smooth" });
-    setTimeout(updateDots, 260);
+    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+    const target = el.scrollLeft + direction * amount;
+    el.scrollTo({ left: Math.max(0, Math.min(maxScroll, target)), behavior: "smooth" });
+    setTimeout(recalcCarousel, 260);
   };
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -126,7 +143,7 @@ export const PromoCarousel = ({
     if (!isDragging.current) return;
     isDragging.current = false;
     carouselRef.current?.classList.remove("dragging");
-    updateDots();
+    recalcCarousel();
   };
 
   const activePromotion = activeInfoId ? promotions.find((p) => p.id === activeInfoId) : null;
@@ -134,7 +151,7 @@ export const PromoCarousel = ({
   const headerSub =
     loading ? "Loading offers…" : empty ? "No live offers right now" : `${promotions.length} offer${promotions.length === 1 ? "" : "s"}`;
 
-  const showNav = showCarousel && promotions.length >= 2 && !collapsed;
+  const showNav = showCarousel && !collapsed && pageCount >= 2;
 
   return (
     <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
@@ -157,37 +174,20 @@ export const PromoCarousel = ({
             <div className="text-xs sm:text-[13px] font-extrabold text-white">{title}</div>
             <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">{headerSub}</div>
           </div>
-          <svg
-            className={`w-3 h-3 shrink-0 text-white transition-transform ${collapsed ? "" : "rotate-180"}`}
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden
-          >
-            <path
-              d="M6 9l6 6 6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </button>
         {showNav && (
-          <div
-            className="flex items-center gap-1.5 shrink-0"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={() => move(-1)}
-              className="w-6 h-6 rounded-full border-none bg-white/15 text-white text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95"
+              disabled={activeIdx === 0}
+              className="w-6 h-6 rounded-full border-none bg-white/15 text-white text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Previous offer"
             >
               ‹
             </button>
             <div className="flex gap-1 mx-0.5">
-              {promotions.map((_, i) => (
+              {Array.from({ length: pageCount }, (_, i) => (
                 <div
                   key={i}
                   className={`w-[5px] h-[5px] rounded-full ${i === activeIdx ? "bg-white" : "bg-white/35"}`}
@@ -197,13 +197,36 @@ export const PromoCarousel = ({
             <button
               type="button"
               onClick={() => move(1)}
-              className="w-6 h-6 rounded-full border-none bg-white/15 text-white text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95"
+              disabled={activeIdx >= pageCount - 1}
+              className="w-6 h-6 rounded-full border-none bg-white/15 text-white text-[15px] font-extrabold cursor-pointer flex items-center justify-center leading-none active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Next offer"
             >
               ›
             </button>
           </div>
         )}
+        <button
+          type="button"
+          className="shrink-0 w-6 h-6 rounded-full border-none bg-transparent text-white/85 cursor-pointer flex items-center justify-center hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <svg
+            className={`shrink-0 w-4 h-4 text-white/85 transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden
+          >
+            <path
+              d="M2 4.5L6 8l4-3.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
 
       {!collapsed && (
