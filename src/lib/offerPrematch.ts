@@ -10,6 +10,10 @@ export type OneXtwoPrices = {
   boostHome?: boolean;
   boostDraw?: boolean;
   boostAway?: boolean;
+  /** Pre-boost price when `finalPrice > originalPrice` for that selection */
+  originalHome?: string;
+  originalDraw?: string;
+  originalAway?: string;
 };
 
 export type PrematchFixtureUi = {
@@ -58,9 +62,15 @@ const normalizedMarketTypeId = (m: Record<string, unknown>): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 
-/** Parse nested Price { Original, Final, … } — show higher when two values differ; boost when they differ */
-const parsePriceObject = (po: Record<string, unknown>): { price: string; boosted: boolean } => {
+/** Parse nested Price { Original, Final, originalPrice, finalPrice, … } — boost when Final > Original */
+const parsePriceObject = (po: Record<string, unknown>): {
+  price: string;
+  boosted: boolean;
+  original?: string;
+} => {
   const ORIGINAL_KEYS = [
+    "original",
+    "originalPrice",
     "Original",
     "OriginalDecimal",
     "DecimalOriginal",
@@ -72,6 +82,8 @@ const parsePriceObject = (po: Record<string, unknown>): { price: string; boosted
     "oldPrice",
   ];
   const FINAL_KEYS = [
+    "final",
+    "finalPrice",
     "Final",
     "FinalDecimal",
     "DecimalFinal",
@@ -101,10 +113,8 @@ const parsePriceObject = (po: Record<string, unknown>): { price: string; boosted
   }
 
   if (orig !== null && fin !== null) {
-    const diff = Math.abs(orig - fin);
-    if (diff > 1e-6) {
-      const hi = Math.max(orig, fin);
-      return { price: hi.toFixed(2), boosted: true };
+    if (fin > orig + 1e-6) {
+      return { price: fin.toFixed(2), boosted: true, original: orig.toFixed(2) };
     }
     return { price: fin.toFixed(2), boosted: false };
   }
@@ -122,6 +132,8 @@ const parsePriceObject = (po: Record<string, unknown>): { price: string; boosted
 
   return { price: "", boosted: false };
 };
+
+type SelectionOddsResult = { price: string; boosted: boolean; original?: string };
 
 /** Prefer explicit team names from common provider shapes. */
 const pickTeams = (
@@ -167,7 +179,7 @@ const selectionName = (s: Record<string, unknown>): string => {
   return n;
 };
 
-const selectionOdds = (s: Record<string, unknown>): { price: string; boosted: boolean } => {
+const selectionOdds = (s: Record<string, unknown>): SelectionOddsResult => {
   const priceField = s.Price ?? s.price;
   if (isRecord(priceField)) {
     const fromObj = parsePriceObject(priceField);
@@ -176,6 +188,17 @@ const selectionOdds = (s: Record<string, unknown>): { price: string; boosted: bo
     const scalar = priceStr(priceField);
     if (scalar) return { price: scalar, boosted: false };
   }
+
+  const origN = readFiniteNumber(s.originalPrice ?? s.OriginalPrice ?? s.original);
+  const finN = readFiniteNumber(s.finalPrice ?? s.FinalPrice ?? s.final ?? s.Final);
+  if (origN !== null && finN !== null) {
+    if (finN > origN + 1e-6) {
+      return { price: finN.toFixed(2), boosted: true, original: origN.toFixed(2) };
+    }
+    return { price: finN.toFixed(2), boosted: false };
+  }
+  if (finN !== null && origN === null) return { price: finN.toFixed(2), boosted: false };
+  if (origN !== null && finN === null) return { price: origN.toFixed(2), boosted: false };
 
   const p =
     priceStr(s.DecimalPrice) ||
@@ -247,7 +270,7 @@ const pick1x2Market = (markets: unknown): Record<string, unknown> | null => {
   return fallback;
 };
 
-type SideSlot = { price: string; boosted: boolean } | undefined;
+type SideSlot = { price: string; boosted: boolean; original?: string } | undefined;
 
 const mapMarketTo1x2 = (market: Record<string, unknown>): OneXtwoPrices | null => {
   const selections =
@@ -263,20 +286,20 @@ const mapMarketTo1x2 = (market: Record<string, unknown>): OneXtwoPrices | null =
     labels: { h: "1", d: "X", a: "2" },
   };
 
-  const orderedPrices: { price: string; boosted: boolean }[] = [];
+  const orderedPrices: { price: string; boosted: boolean; original?: string }[] = [];
 
   for (let i = 0; i < selections.length; i++) {
     const raw = selections[i];
     if (!isRecord(raw)) continue;
     const nm = selectionName(raw);
-    const { price: pr, boosted } = selectionOdds(raw);
+    const { price: pr, boosted, original } = selectionOdds(raw);
     if (!pr || pr === "0.00") continue;
 
     const bucket = classify1x2(nm || `slot${i}`);
-    if (bucket === "home") triple.home = { price: pr, boosted };
-    else if (bucket === "draw") triple.draw = { price: pr, boosted };
-    else if (bucket === "away") triple.away = { price: pr, boosted };
-    else orderedPrices.push({ price: pr, boosted });
+    if (bucket === "home") triple.home = { price: pr, boosted, original };
+    else if (bucket === "draw") triple.draw = { price: pr, boosted, original };
+    else if (bucket === "away") triple.away = { price: pr, boosted, original };
+    else orderedPrices.push({ price: pr, boosted, original });
     if (nm) {
       if (bucket === "home") triple.labels.h = nm;
       if (bucket === "draw") triple.labels.d = nm;
@@ -305,6 +328,9 @@ const mapMarketTo1x2 = (market: Record<string, unknown>): OneXtwoPrices | null =
     boostHome: home.boosted || undefined,
     boostDraw: draw.boosted || undefined,
     boostAway: away.boosted || undefined,
+    ...(home.boosted && home.original ? { originalHome: home.original } : {}),
+    ...(draw.boosted && draw.original ? { originalDraw: draw.original } : {}),
+    ...(away.boosted && away.original ? { originalAway: away.original } : {}),
   };
 };
 
@@ -438,6 +464,132 @@ export function extractPrematchFixtures(payload: unknown): PrematchFixtureUi[] {
       eventTitle: `${teams.home} vs ${teams.away}`,
       eventStart: parseEventStartIso(row),
       oneXtwo,
+    });
+  });
+
+  return out;
+}
+
+/** Boosted prematch feed — first market per fixture with arbitrary selection shapes */
+export type BoostedSelectionUi = {
+  name: string;
+  price: string;
+  boosted: boolean;
+  original?: string;
+};
+
+export type BoostedMarketUi = {
+  name: string;
+  marketTypeId: number | null;
+  selections: BoostedSelectionUi[];
+};
+
+export type BoostedFixtureUi = {
+  fixtureKey: string;
+  fixtureName: string;
+  competitionName: string;
+  categoryName: string;
+  eventStart: string | null;
+  market: BoostedMarketUi | null;
+};
+
+const rowLooksLikeBoostedFixture = (o: Record<string, unknown>): boolean =>
+  Boolean(str(o.fixtureName ?? o.FixtureName)) && Array.isArray(o.markets ?? o.Markets);
+
+const extractBoostedFixtureRows = (root: Record<string, unknown>): Record<string, unknown>[] => {
+  const sports = root.sports ?? root.Sports;
+  if (isRecord(sports)) {
+    const fx = sports.fixtures ?? sports.Fixtures;
+    if (Array.isArray(fx)) {
+      const objs = fx.filter(isRecord);
+      if (objs.some(rowLooksLikeBoostedFixture)) return objs;
+    }
+  }
+
+  const queue: unknown[] = [root];
+  for (let depth = 0; depth < 16 && queue.length; depth++) {
+    const nextQueue: unknown[] = [];
+    for (const node of queue) {
+      if (!isRecord(node)) continue;
+      for (const v of Object.values(node)) {
+        if (!Array.isArray(v) || v.length === 0) continue;
+        const first = v[0];
+        if (!isRecord(first)) continue;
+        if (rowLooksLikeBoostedFixture(first)) return v.filter(isRecord);
+        if (isRecord(first)) nextQueue.push(first);
+      }
+      nextQueue.push(...Object.values(node).filter(isRecord));
+    }
+    queue.length = 0;
+    queue.push(...nextQueue.slice(0, 60));
+  }
+
+  return [];
+};
+
+const resolveBoostedMarketDisplayName = (m: Record<string, unknown>): string => {
+  let name = str(m.name ?? m.Name);
+  const lineVal = readFiniteNumber(m.lineValue ?? m.LineValue ?? m.specialValue ?? m.SpecialValue);
+  const spec = m.specifiers ?? m.Specifiers;
+  let lineStr = "";
+  if (isRecord(spec)) {
+    lineStr = str(spec.line ?? spec.Line);
+  }
+  if (!lineStr && lineVal !== null) lineStr = String(lineVal);
+  if (name.includes("{line}") && lineStr) {
+    name = name.replace(/\{line\}/gi, lineStr);
+  }
+  return name.trim() || "Market";
+};
+
+const mapFirstMarketToBoostedUi = (market: Record<string, unknown>): BoostedMarketUi | null => {
+  const selections = market.selections ?? market.Selections;
+  if (!Array.isArray(selections)) return null;
+
+  const out: BoostedSelectionUi[] = [];
+  for (const raw of selections) {
+    if (!isRecord(raw)) continue;
+    const nm = selectionName(raw);
+    const priceField = raw.price ?? raw.Price;
+    if (!isRecord(priceField)) continue;
+    const pr = parsePriceObject(priceField);
+    if (!pr.price) continue;
+    out.push({ name: nm || "?", price: pr.price, boosted: pr.boosted, original: pr.original });
+  }
+
+  if (out.length === 0) return null;
+
+  return {
+    name: resolveBoostedMarketDisplayName(market),
+    marketTypeId: normalizedMarketTypeId(market),
+    selections: out,
+  };
+};
+
+export function extractBoostedFixtures(payload: unknown): BoostedFixtureUi[] {
+  if (!isRecord(payload)) return [];
+
+  const rows = extractBoostedFixtureRows(payload);
+  const out: BoostedFixtureUi[] = [];
+
+  rows.forEach((row, index) => {
+    const markets = row.markets ?? row.Markets;
+    if (!Array.isArray(markets) || markets.length === 0) return;
+    const first = markets[0];
+    if (!isRecord(first)) return;
+    const marketUi = mapFirstMarketToBoostedUi(first);
+    if (!marketUi) return;
+
+    const fid = str(row.fixtureId ?? row.FixtureId ?? row.id);
+    const fixtureKey = fid.length > 0 ? fid : `boosted-${index}`;
+
+    out.push({
+      fixtureKey,
+      fixtureName: str(row.fixtureName ?? row.FixtureName),
+      competitionName: str(row.competitionName ?? row.CompetitionName),
+      categoryName: str(row.categoryName ?? row.CategoryName),
+      eventStart: parseEventStartIso(row),
+      market: marketUi,
     });
   });
 

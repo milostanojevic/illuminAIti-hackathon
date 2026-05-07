@@ -6,8 +6,10 @@ import { buildPopularDefaultCards, buildTrendingCards } from "@/lib/trending";
 import { isEffectivelyDefault } from "@/lib/storedPreferences";
 import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { HomeCTA } from "./HomeCTA";
+import { HomeDepositWidget } from "./HomeDepositWidget";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
+import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
 
 export const HomeShell = () => {
@@ -49,17 +51,7 @@ export const HomeShell = () => {
       </div>
 
       <div className="scroll-touch flex flex-1 min-h-0 flex-col gap-2 sm:gap-3 md:gap-3.5 overflow-y-auto overflow-x-hidden overscroll-y-contain p-2.5 sm:p-3.5 md:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
-        <HomeCTA
-          icon="💳"
-          title="Deposit now"
-          subtitle="Top up your account"
-          buttonLabel="Deposit"
-          bg={isBk ? "#00d8c8" : "#FFCD00"}
-          titleColor={isBk ? "#003030" : "#0d1580"}
-          subtitleColor={isBk ? "rgba(0,48,48,0.72)" : "rgba(13,21,128,0.72)"}
-          buttonBg={isBk ? "#003030" : "#0d1580"}
-          buttonColor="#fff"
-        />
+        <HomeDepositWidget brand={brand} />
 
         <HomeCasinoWidget brand={brand} />
 
@@ -78,6 +70,8 @@ export const HomeShell = () => {
         {state.leagues.length > 0 && (
           <PrematchFixtureList leagueKeys={state.leagues} brand={brand} favouriteTeams={state.teams} />
         )}
+
+        {state.style.promos.includes("odds") && <BoostedFixtureList brand={brand} />}
 
         <TrendingCarousel cards={trendingCards} />
       </div>
