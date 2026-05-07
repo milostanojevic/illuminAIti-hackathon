@@ -393,30 +393,44 @@ export const PrematchFixtureList = ({
                                     {
                                       price: fx.oneXtwo.priceHome,
                                       boosted: Boolean(fx.oneXtwo.boostHome),
+                                      original: fx.oneXtwo.originalHome,
                                     },
                                     {
                                       price: fx.oneXtwo.priceDraw,
                                       boosted: Boolean(fx.oneXtwo.boostDraw),
+                                      original: fx.oneXtwo.originalDraw,
                                     },
                                     {
                                       price: fx.oneXtwo.priceAway,
                                       boosted: Boolean(fx.oneXtwo.boostAway),
+                                      original: fx.oneXtwo.originalAway,
                                     },
                                   ] as const
                                 ).map((col, idx) => (
                                   <div key={idx} className={ODDS_SLOT}>
-                                    <div
-                                      title={col.boosted ? "Boosted odds" : undefined}
-                                      className="rounded-full max-w-full shrink-0 px-1.5 py-1 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
-                                      style={{ backgroundColor: pillBg }}
-                                    >
-                                      {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
-                                      <span
-                                        className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
-                                        style={{ color: textDeep }}
+                                    <div className="flex flex-col items-center gap-0.5 min-w-0">
+                                      <div
+                                        title={
+                                          col.boosted && col.original
+                                            ? `Boosted from ${col.original} to ${col.price}`
+                                            : undefined
+                                        }
+                                        className="rounded-full max-w-full shrink-0 px-1.5 py-1 text-center flex items-center justify-center gap-0.5 min-w-0 shadow-sm border border-sky-200/60"
+                                        style={{ backgroundColor: pillBg }}
                                       >
-                                        {col.price}
-                                      </span>
+                                        {col.boosted && <BoostBolt className="shrink-0 text-amber-500" />}
+                                        <span
+                                          className="text-[11px] font-extrabold tabular-nums truncate min-w-0"
+                                          style={{ color: textDeep }}
+                                        >
+                                          {col.price}
+                                        </span>
+                                      </div>
+                                      {col.boosted && col.original ? (
+                                        <span className="text-[9px] font-semibold tabular-nums text-gray-500 line-through leading-none">
+                                          {col.original}
+                                        </span>
+                                      ) : null}
                                     </div>
                                   </div>
                                 ))}
