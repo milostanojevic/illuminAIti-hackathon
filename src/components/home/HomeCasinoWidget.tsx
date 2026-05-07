@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Brand, ProviderKey } from "@/types/brand";
+import type { CasinoGame, CasinoGamesProviderResult } from "@/app/api/casino/games/route";
 import { useOnboarding } from "@/state/OnboardingContext";
 import { BK_GAMES, GAME_COLORS } from "@/lib/data/bkGames";
 import { PROVIDER_LABELS } from "@/lib/data/providers";
+import { fetchCasinoGamesByProviders } from "@/lib/casinoGamesClient";
 
 const PAGE_SIZE = 6;
 
@@ -19,6 +21,21 @@ function initials(name: string): string {
 
 function isKnownProviderKey(x: string): x is ProviderKey {
   return x in PROVIDER_LABELS;
+}
+
+function mergeProviderGames(results: CasinoGamesProviderResult[]): CasinoGame[] {
+  const seen = new Set<string>();
+  const out: CasinoGame[] = [];
+  for (const block of results) {
+    if (!block.ok) continue;
+    for (const g of block.games) {
+      const k = g.name.toLowerCase();
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(g);
+    }
+  }
+  return out;
 }
 
 type HomeCasinoWidgetProps = {
@@ -42,17 +59,76 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
     return [...state.ssGames].sort((a, b) => rank(a) - rank(b));
   }, [isBk, state.casinoGames, state.providers, state.ssGames, state.ssGameProviders]);
 
-  const gameNamesKey = useMemo(() => sortedGameNames.join("|"), [sortedGameNames]);
-  const hasGames = sortedGameNames.length > 0;
+  const shouldFallback = !isBk && state.ssGames.length === 0 && state.providers.length > 0;
+  const providersKey = useMemo(() => state.providers.join("|"), [state.providers]);
+
+  const [providerGames, setProviderGames] = useState<CasinoGame[] | null>(null);
+  const [providerGamesLoading, setProviderGamesLoading] = useState(false);
+
+  useEffect(() => {
+    if (!shouldFallback) {
+      setProviderGames(null);
+      setProviderGamesLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setProviderGamesLoading(true);
+    setProviderGames(null);
+    void (async () => {
+      try {
+        const results = await fetchCasinoGamesByProviders(state.providers);
+        if (cancelled) return;
+        const merged = mergeProviderGames(results);
+        const order = new Map(state.providers.map((k, i) => [k, i]));
+        merged.sort((a, b) => (order.get(a.providerKey) ?? 99) - (order.get(b.providerKey) ?? 99));
+        setProviderGames(merged);
+      } catch {
+        if (!cancelled) setProviderGames([]);
+      } finally {
+        if (!cancelled) setProviderGamesLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [shouldFallback, providersKey, state.providers]);
+
+  const effectiveSortedGameNames = useMemo(() => {
+    if (!shouldFallback) return sortedGameNames;
+    return providerGames ? providerGames.map((g) => g.name) : [];
+  }, [shouldFallback, sortedGameNames, providerGames]);
+
+  const effectiveThumbs = useMemo(() => {
+    if (!shouldFallback) return state.ssGameThumbs;
+    const out: Record<string, string> = {};
+    for (const g of providerGames ?? []) out[g.name] = g.thumbnailUrl;
+    return out;
+  }, [shouldFallback, state.ssGameThumbs, providerGames]);
+
+  const effectiveProviders = useMemo(() => {
+    if (!shouldFallback) return state.ssGameProviders;
+    const out: Record<string, ProviderKey> = {};
+    for (const g of providerGames ?? []) out[g.name] = g.providerKey;
+    return out;
+  }, [shouldFallback, state.ssGameProviders, providerGames]);
+
+  const gameNamesKey = useMemo(() => effectiveSortedGameNames.join("|"), [effectiveSortedGameNames]);
+  const hasGames = effectiveSortedGameNames.length > 0;
+
+  const headerSubtitle = hasGames
+    ? shouldFallback
+      ? `${effectiveSortedGameNames.length} game${effectiveSortedGameNames.length !== 1 ? "s" : ""} from your providers`
+      : `${effectiveSortedGameNames.length} game${effectiveSortedGameNames.length !== 1 ? "s" : ""} pinned`
+    : "Slots, live games & more";
 
   const [expanded, setExpanded] = useState(true);
   const [page, setPage] = useState(1);
 
-  const totalPages = Math.max(1, Math.ceil(sortedGameNames.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(effectiveSortedGameNames.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const pageNames = useMemo(
-    () => sortedGameNames.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
-    [sortedGameNames, safePage]
+    () => effectiveSortedGameNames.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
+    [effectiveSortedGameNames, safePage]
   );
 
   useEffect(() => {
@@ -67,7 +143,7 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
     if (isBk) return [] as { providerKey: BucketKey; names: string[] }[];
     const out: { providerKey: BucketKey; names: string[] }[] = [];
     for (const name of pageNames) {
-      const raw = state.ssGameProviders[name];
+      const raw = effectiveProviders[name];
       const k: BucketKey =
         raw !== undefined && isKnownProviderKey(raw) ? raw : "other";
       const last = out[out.length - 1];
@@ -75,7 +151,7 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
       else out.push({ providerKey: k, names: [name] });
     }
     return out;
-  }, [isBk, pageNames, state.ssGameProviders]);
+  }, [isBk, pageNames, effectiveProviders]);
 
   return (
     <div className="shrink-0 rounded-xl border border-gray-200/80 bg-white overflow-hidden shadow-sm">
@@ -94,11 +170,7 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
           <div id="home-casino-heading" className="text-xs sm:text-[13px] font-extrabold text-white">
             Casino
           </div>
-          <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">
-            {hasGames
-              ? `${sortedGameNames.length} game${sortedGameNames.length !== 1 ? "s" : ""} pinned`
-              : "Slots, live games & more"}
-          </div>
+          <div className="text-[9px] sm:text-[10px] text-white/70 mt-0.5">{headerSubtitle}</div>
         </div>
         <svg
           className={`shrink-0 w-4 h-4 text-white/85 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
@@ -123,7 +195,11 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
         hidden={!expanded}
         className="px-3 py-2.5 sm:px-4 sm:py-3"
       >
-        {!hasGames && (
+        {!hasGames && shouldFallback && providerGamesLoading && (
+          <div className="text-[10px] text-gray-500 px-1 py-2 animate-pulse">Loading games for your providers…</div>
+        )}
+
+        {!hasGames && !(shouldFallback && providerGamesLoading) && (
           <div className="flex items-center justify-between gap-2">
             <div className="text-[10px] text-gray-500 leading-snug">Pick games during onboarding to pin them here.</div>
             <button
@@ -209,7 +285,7 @@ export const HomeCasinoWidget = ({ brand }: HomeCasinoWidgetProps) => {
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {bucket.names.map((name) => {
-                      const thumb = state.ssGameThumbs[name] ?? "";
+                      const thumb = effectiveThumbs[name] ?? "";
                       const ssFallbackBg = "linear-gradient(135deg,#475569,#1e293b)";
 
                       return (
