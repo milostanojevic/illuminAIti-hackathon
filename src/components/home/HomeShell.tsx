@@ -17,6 +17,12 @@ export const HomeShell = () => {
   const brand = state.brand;
   const isBk = brand === "bk";
 
+  const hasCasinoSelections = isBk
+    ? state.casinoGames.length > 0
+    : state.ssGames.length > 0 || state.providers.length > 0;
+
+  const hasNonOddsPromos = state.style.promos.some((p) => p !== "odds");
+
   const usePopularFallback = isEffectivelyDefault(state);
 
   const preferredTeam = state.teams.length > 0 ? state.teams[0] : "your team";
@@ -53,19 +59,21 @@ export const HomeShell = () => {
       <div className="scroll-touch flex flex-1 min-h-0 flex-col gap-2 sm:gap-3 md:gap-3.5 overflow-y-auto overflow-x-hidden overscroll-y-contain p-2.5 sm:p-3.5 md:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
         <HomeDepositWidget brand={brand} />
 
-        <HomeCasinoWidget brand={brand} />
+        {hasCasinoSelections && <HomeCasinoWidget brand={brand} />}
 
-        <HomeCTA
-          icon="🎁"
-          title="Promos"
-          subtitle="Offers and rewards"
-          buttonLabel="View"
-          bg={isBk ? "#FFCD00" : "#00d8c8"}
-          titleColor={isBk ? "#0d1580" : "#003030"}
-          subtitleColor={isBk ? "rgba(13,21,128,0.72)" : "rgba(0,48,48,0.72)"}
-          buttonBg={isBk ? "#0d1580" : "#003030"}
-          buttonColor="#fff"
-        />
+        {hasNonOddsPromos && (
+          <HomeCTA
+            icon="🎁"
+            title="Promos"
+            subtitle="Offers and rewards"
+            buttonLabel="View"
+            bg={isBk ? "#FFCD00" : "#00d8c8"}
+            titleColor={isBk ? "#0d1580" : "#003030"}
+            subtitleColor={isBk ? "rgba(13,21,128,0.72)" : "rgba(0,48,48,0.72)"}
+            buttonBg={isBk ? "#0d1580" : "#003030"}
+            buttonColor="#fff"
+          />
+        )}
 
         {state.leagues.length > 0 && (
           <PrematchFixtureList leagueKeys={state.leagues} brand={brand} favouriteTeams={state.teams} />
