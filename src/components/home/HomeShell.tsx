@@ -5,7 +5,6 @@ import { LEAGUE_NAMES } from "@/lib/data/leagues";
 import { buildPopularDefaultCards, buildTrendingCards } from "@/lib/trending";
 import { isEffectivelyDefault } from "@/lib/storedPreferences";
 import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
-import { HomeCTA } from "./HomeCTA";
 import { HomeDepositWidget } from "./HomeDepositWidget";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { TrendingSportBetsCarousel } from "./TrendingSportBetsCarousel";
@@ -23,8 +22,6 @@ export const HomeShell = () => {
   const hasCasinoSelections = isBk
     ? state.casinoGames.length > 0
     : state.ssGames.length > 0 || state.providers.length > 0;
-
-  const hasNonOddsPromos = state.style.promos.some((p) => p !== "odds");
 
   const showFreeBets = state.style.promos.includes("freebets");
   const showFreeSpins = state.style.promos.includes("freespins");
@@ -72,20 +69,6 @@ export const HomeShell = () => {
         <HomeDepositWidget brand={brand} />
 
         {hasCasinoSelections && <HomeCasinoWidget brand={brand} />}
-
-        {hasNonOddsPromos && (
-          <HomeCTA
-            icon="🎁"
-            title="Promos"
-            subtitle="Offers and rewards"
-            buttonLabel="View"
-            bg={isBk ? "#FFCD00" : "#00d8c8"}
-            titleColor={isBk ? "#0d1580" : "#003030"}
-            subtitleColor={isBk ? "rgba(13,21,128,0.72)" : "rgba(0,48,48,0.72)"}
-            buttonBg={isBk ? "#0d1580" : "#003030"}
-            buttonColor="#fff"
-          />
-        )}
 
         {showFreeBets && (
           <PromoCarousel
