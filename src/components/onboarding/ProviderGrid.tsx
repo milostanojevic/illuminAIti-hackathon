@@ -19,7 +19,13 @@ type ProviderInfo = {
 };
 
 const PROVIDERS: ProviderInfo[] = [
-  { key: "habanero", icon: "🌶️", color: "#E8521A", sub: "177 Slots" },
+  {
+    key: "habanero",
+    icon: "🌶️",
+    color: "#E8521A",
+    sub: "177 Slots",
+    logoUrl: "https://habanerosystems.com/Content/img/habanero_white.png",
+  },
   { key: "spribe", icon: "🚀", color: "#1a2db8", sub: "Crash Games" },
   { key: "pragmatic", icon: "⚡", color: "#d40000", sub: "119 Slots" },
   {
