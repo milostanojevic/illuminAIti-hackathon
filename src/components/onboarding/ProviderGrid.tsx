@@ -51,7 +51,14 @@ const PROVIDERS: ProviderInfo[] = [
     sub: "Slots",
     logoUrl: "https://netent.com/images/tenants/netent/netent_og_image.webp",
   },
-  { key: "betgames", icon: "🎲", color: "#8b1a8b", sub: "Live Dealer" },
+  {
+    key: "betgames",
+    icon: "🎲",
+    color: "#8b1a8b",
+    sub: "Live Dealer",
+    logoUrl:
+      "https://www.betgames.tv/api/uploads/Bet_Games_logo_dark_blue_8dcefda24e.png",
+  },
   { key: "evolution", icon: "♠️", color: "#6d0a0a", sub: "961 Games" },
 ];
 
