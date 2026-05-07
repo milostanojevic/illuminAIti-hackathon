@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { HomeCTA } from "@/components/home/HomeCTA";
 import { HomeShell } from "@/components/home/HomeShell";
@@ -24,6 +24,20 @@ const cards = [
 ];
 
 describe("home mobile-first density", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ bookingCodes: [] }),
+      })
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("uses compact CTA spacing before expanding at sm", () => {
     render(
       <HomeCTA
@@ -57,8 +71,12 @@ describe("home mobile-first density", () => {
     expect(card).toHaveClass("w-[176px]", "sm:w-[210px]", "md:w-[230px]");
   });
 
-  it("uses tighter home shell spacing with progressive expansion", () => {
+  it("uses tighter home shell spacing with progressive expansion", async () => {
     renderWithOnboarding(<HomeShell />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Trending now")).toBeInTheDocument();
+    });
 
     const header = screen.getByAltText("SuperSportBET").closest("div")?.parentElement?.parentElement;
     const content = screen.getByRole("button", { name: "Deposit" }).parentElement?.parentElement;

@@ -8,6 +8,7 @@ import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { HomeCTA } from "./HomeCTA";
 import { HomeDepositWidget } from "./HomeDepositWidget";
 import { TrendingCarousel } from "./TrendingCarousel";
+import { TrendingSportBetsCarousel } from "./TrendingSportBetsCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
 import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
@@ -34,6 +35,8 @@ export const HomeShell = () => {
   const trendingCards = usePopularFallback
     ? buildPopularDefaultCards(brand)
     : buildTrendingCards(brand, preferredTeam, preferredLeague, preferredGame);
+
+  const showLiveTrendingBookingCodes = usePopularFallback && brand === "ss";
 
   return (
     <div className="flex flex-1 flex-col min-h-0 w-full min-w-0 bg-[#f5f6fa]">
@@ -81,7 +84,11 @@ export const HomeShell = () => {
 
         {state.style.promos.includes("odds") && <BoostedFixtureList brand={brand} />}
 
-        <TrendingCarousel cards={trendingCards} />
+        {showLiveTrendingBookingCodes ? (
+          <TrendingSportBetsCarousel brand={brand} fallbackCards={trendingCards} />
+        ) : (
+          <TrendingCarousel cards={trendingCards} />
+        )}
       </div>
     </div>
   );
