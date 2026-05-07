@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
   const settled = await Promise.allSettled(
     providers.map(async (key): Promise<CasinoGamesProviderResult> => {
       const slug = PROVIDER_API_SLUG[key];
-      const url = `${BASE}?filters[providerName]=${encodeURIComponent(slug)}&pagination[pageSize]=100&pagination[page]=1`;
+      const url = `${BASE}?filters[providerName]=${encodeURIComponent(slug)}&pagination[pageSize]=10&pagination[page]=1`;
       const res = await fetch(url, { headers: { Accept: "application/json" }, cache: "no-store" });
       const text = await res.text();
       let json: unknown = null;
