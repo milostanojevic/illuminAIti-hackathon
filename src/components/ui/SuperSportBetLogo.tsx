@@ -1,6 +1,6 @@
 type SuperSportBetLogoProps = {
   className?: string;
-  height?: number;
+  height?: number | string;
   alt?: string;
 };
 
@@ -16,7 +16,7 @@ export const SuperSportBetLogo = ({
     <img
       src={LOGO_SRC}
       alt={alt}
-      height={height}
+      height={typeof height === "number" ? height : undefined}
       style={{ height, width: "auto" }}
       className={`inline-block object-contain select-none ${className ?? ""}`.trim()}
       decoding="async"
