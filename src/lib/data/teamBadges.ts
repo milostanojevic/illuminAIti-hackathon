@@ -3,7 +3,6 @@
 const SLUG_OVERRIDES: Record<string, string> = {
   "Man City": "man-city",
   "Man Utd": "man-utd",
-  "SuperSport Utd": "supersport-utd",
   "Chippa Utd": "chippa-utd",
 };
 

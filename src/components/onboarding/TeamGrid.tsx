@@ -107,19 +107,6 @@ export const TeamGrid = () => {
               </button>
             );
           })}
-          <button
-            onClick={() => toggleTeam("Other")}
-            className={`rounded-[10px] border-[1.5px] border-dashed p-2 sm:p-1.5 text-center cursor-pointer h-[72px] sm:h-[68px] flex flex-col items-center justify-center ${
-              state.teams.includes("Other")
-                ? isBk ? "bg-[#eef1fb] border-bk-primary" : "bg-[#eef2ff] border-ss-primary"
-                : "border-gray-300 bg-[#f5f6fa]"
-            }`}
-          >
-            <div className="w-8 h-8 rounded-full bg-[#dde0ee] flex items-center justify-center mb-1 text-sm text-gray-400">
-              <Crest name="Other" size={28} />
-            </div>
-            <div className="text-[8.5px] text-gray-500">Other</div>
-          </button>
         </div>
         <div className="h-px bg-gray-100 my-3.5" />
         <ContinueButton brand={brand} disabled={!hasSelection} onClick={handleContinue} />
