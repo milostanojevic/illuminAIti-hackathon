@@ -59,7 +59,15 @@ const PROVIDERS: ProviderInfo[] = [
     logoUrl:
       "https://www.betgames.tv/api/uploads/Bet_Games_logo_dark_blue_8dcefda24e.png",
   },
-  { key: "evolution", icon: "♠️", color: "#6d0a0a", sub: "961 Games" },
+  {
+    key: "evolution",
+    icon: "♠️",
+    color: "#6d0a0a",
+    sub: "961 Games",
+    logoUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1k6hg6D5BFbzBfbCcarLiuKsTS8bJPctqrQ&s",
+    logoOnLight: true,
+  },
 ];
 
 export const ProviderGrid = () => {
