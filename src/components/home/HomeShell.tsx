@@ -37,12 +37,12 @@ export const HomeShell = () => {
       >
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-[11px] text-white/60">Good morning 👋</div>
             {isBk ? (
-              <div className="text-base font-bold text-white">BetKing</div>
+              <div className="text-base font-bold text-white mb-0.5">BetKing</div>
             ) : (
-              <SuperSportBetLogo height={22} alt="SuperSportBET" />
+              <SuperSportBetLogo height={22} alt="SuperSportBET" className="mb-1" />
             )}
+            <div className="text-[11px] text-white/60">Good morning 👋</div>
           </div>
           <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-sm">
             👤
