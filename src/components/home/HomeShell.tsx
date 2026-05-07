@@ -8,6 +8,7 @@ import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { HomeDepositWidget } from "./HomeDepositWidget";
 import { TrendingCarousel } from "./TrendingCarousel";
 import { TrendingSportBetsCarousel } from "./TrendingSportBetsCarousel";
+import { HotGamesCarousel } from "./HotGamesCarousel";
 import { PrematchFixtureList } from "./PrematchFixtureList";
 import { BoostedFixtureList } from "./BoostedFixtureList";
 import { HomeCasinoWidget } from "./HomeCasinoWidget";
@@ -114,7 +115,10 @@ export const HomeShell = () => {
         {state.style.promos.includes("odds") && <BoostedFixtureList brand={brand} />}
 
         {showLiveTrendingBookingCodes ? (
-          <TrendingSportBetsCarousel brand={brand} fallbackCards={trendingCards} />
+          <>
+            <TrendingSportBetsCarousel brand={brand} fallbackCards={trendingCards} />
+            <HotGamesCarousel brand={brand} />
+          </>
         ) : (
           <TrendingCarousel cards={trendingCards} />
         )}
