@@ -16,6 +16,8 @@ type ProviderInfo = {
   color: string;
   sub: string;
   logoUrl?: string;
+  /** Dark logos need a light tile background (logo tiles default to dark). */
+  logoOnLight?: boolean;
 };
 
 const PROVIDERS: ProviderInfo[] = [
@@ -26,7 +28,14 @@ const PROVIDERS: ProviderInfo[] = [
     sub: "177 Slots",
     logoUrl: "https://habanerosystems.com/Content/img/habanero_white.png",
   },
-  { key: "spribe", icon: "🚀", color: "#1a2db8", sub: "Crash Games" },
+  {
+    key: "spribe",
+    icon: "🚀",
+    color: "#1a2db8",
+    sub: "Crash Games",
+    logoUrl: "https://spribe.co/assets/images/spribe-logo-black.svg",
+    logoOnLight: true,
+  },
   { key: "pragmatic", icon: "⚡", color: "#d40000", sub: "119 Slots" },
   {
     key: "netent",
@@ -75,12 +84,13 @@ export const ProviderGrid = () => {
           Tap to toggle — multiple allowed
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-          {PROVIDERS.map(({ key, icon, color, sub, logoUrl }) => {
+          {PROVIDERS.map(({ key, icon, color, sub, logoUrl, logoOnLight }) => {
             const isSelected = state.providers.includes(key);
             const hasLogo = Boolean(logoUrl);
+            const logoTileBg = logoOnLight ? "bg-white" : "bg-[#1c1c1c]";
 
             const containerClass = hasLogo
-              ? `rounded-xl border-[1.5px] cursor-pointer h-16 sm:h-[86px] flex items-center justify-center relative flex-shrink-0 transition-colors overflow-hidden bg-[#1c1c1c] ${
+              ? `rounded-xl border-[1.5px] cursor-pointer h-16 sm:h-[86px] flex items-center justify-center relative flex-shrink-0 transition-colors overflow-hidden ${logoTileBg} ${
                   isSelected
                     ? "border-ss-primary"
                     : "border-gray-200 hover:border-[#aab0d8]"
