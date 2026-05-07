@@ -36,7 +36,14 @@ const PROVIDERS: ProviderInfo[] = [
     logoUrl: "https://spribe.co/assets/images/spribe-logo-black.svg",
     logoOnLight: true,
   },
-  { key: "pragmatic", icon: "⚡", color: "#d40000", sub: "119 Slots" },
+  {
+    key: "pragmatic",
+    icon: "⚡",
+    color: "#d40000",
+    sub: "119 Slots",
+    logoUrl:
+      "https://www.pragmaticplay.com/wp-content/themes/gp-theme-basic/libs/dist/images/PP-white-logo.svg",
+  },
   {
     key: "netent",
     icon: "🎰",
