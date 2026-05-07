@@ -6,9 +6,10 @@ import type { StepKey } from "@/lib/flow";
 import {
   getWizardStepIndex,
   getWizardStepCount,
-  getPreviousStep,
+  getSmartPreviousStep,
   STEP_ROUTES,
 } from "@/lib/flow";
+import { useOnboarding } from "@/state/OnboardingContext";
 import { SuperSportBetLogo } from "@/components/ui/SuperSportBetLogo";
 import { StepProgress } from "./StepProgress";
 
@@ -30,6 +31,7 @@ export const ScreenHeader = ({
   onBack,
 }: ScreenHeaderProps) => {
   const router = useRouter();
+  const { state } = useOnboarding();
   const isBk = brand === "bk";
   const stepIndex = getWizardStepIndex(brand, currentStep);
   const stepCount = getWizardStepCount(brand);
@@ -39,7 +41,7 @@ export const ScreenHeader = ({
       onBack();
       return;
     }
-    const prev = getPreviousStep(brand, currentStep);
+    const prev = getSmartPreviousStep(brand, currentStep, state);
     if (prev) {
       router.push(STEP_ROUTES[prev]);
     }

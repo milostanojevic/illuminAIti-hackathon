@@ -1,4 +1,5 @@
 import type { Brand } from "@/types/brand";
+import type { OnboardingState } from "@/types/preferences";
 
 export type StepKey =
   | "hero"
@@ -71,4 +72,50 @@ export const getPreviousStep = (brand: Brand, currentStep: StepKey): StepKey | n
 
 export const isStepInFlow = (brand: Brand, step: StepKey): boolean => {
   return FLOWS[brand].includes(step);
+};
+
+const isStepFilled = (step: StepKey, state: OnboardingState): boolean => {
+  switch (step) {
+    case "providers":
+      return state.providers.length > 0;
+    case "games":
+      return state.ssGames.length > 0;
+    case "leagues":
+      return state.leagues.length > 0;
+    case "teams":
+      return state.teams.length > 0;
+    case "casino":
+      return state.casinoGames.length > 0;
+    case "style":
+      return (
+        state.style.risk !== null ||
+        state.style.session !== null ||
+        state.style.promos.length > 0
+      );
+    case "hero":
+    case "magic":
+    default:
+      return true;
+  }
+};
+
+type SmartBackGroup = { brand: Brand; on: StepKey; through: readonly StepKey[] };
+
+const SMART_BACK_GROUPS: readonly SmartBackGroup[] = [
+  { brand: "ss", on: "leagues", through: ["providers", "games"] },
+  { brand: "ss", on: "style", through: ["leagues", "teams"] },
+  { brand: "bk", on: "casino", through: ["leagues", "teams"] },
+];
+
+export const getSmartPreviousStep = (
+  brand: Brand,
+  currentStep: StepKey,
+  state: OnboardingState,
+): StepKey | null => {
+  const group = SMART_BACK_GROUPS.find((g) => g.brand === brand && g.on === currentStep);
+  if (!group) return getPreviousStep(brand, currentStep);
+  for (const step of group.through) {
+    if (!isStepFilled(step, state)) return step;
+  }
+  return group.through[group.through.length - 1] ?? getPreviousStep(brand, currentStep);
 };
