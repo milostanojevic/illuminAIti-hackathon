@@ -27,9 +27,23 @@ describe("home mobile-first density", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({ bookingCodes: [] }),
+      vi.fn().mockImplementation((input: RequestInfo | URL) => {
+        const url =
+          typeof input === "string"
+            ? input
+            : input instanceof Request
+              ? input.url
+              : String(input);
+        if (url.includes("trending-hot-games")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ homepageGamesWidget: { enabled: true, games: [] } }),
+          });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ bookingCodes: [] }),
+        });
       })
     );
   });
