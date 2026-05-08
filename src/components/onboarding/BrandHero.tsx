@@ -112,6 +112,7 @@ export const BrandHero = () => {
             "max(clamp(0.75rem, 2vh, 1.25rem), env(safe-area-inset-bottom, 0px))",
         }}
       >
+        <div aria-hidden className="flex-[0.5] min-h-0" />
         <div className="flex flex-col items-center flex-shrink-0">
           <SuperSportBetLogo height="clamp(48px, 8vh, 80px)" />
 

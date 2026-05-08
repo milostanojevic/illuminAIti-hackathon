@@ -26,15 +26,15 @@ body {
   box-sizing: border-box;
 }
 
-/* ── App shell (fluid up to large-phone width; fills viewport height on phones) ── */
+/* ── App shell (default max 430x932; shrinks on smaller emulators via min(..., 100dvh/svh)) ── */
 .modal {
   width: 100%;
-  max-width: min(448px, 100%);
+  max-width: min(430px, 100%);
   min-width: 0;
-  min-height: 100dvh;
-  min-height: 100svh;
-  max-height: 100dvh;
-  max-height: 100svh;
+  min-height: min(932px, 100dvh);
+  min-height: min(932px, 100svh);
+  max-height: min(932px, 100dvh);
+  max-height: min(932px, 100svh);
   display: flex;
   flex-direction: column;
   border-radius: 0;
