@@ -484,7 +484,7 @@ export const PrematchFixtureList = ({
         })}
       </div>
 
-      {!loadError && blocks !== null && totalPages > 1 && (
+      {expanded && !loadError && blocks !== null && totalPages > 1 && (
         <div className="flex items-center justify-between gap-2 px-3 pt-3 pb-1 border-t border-gray-100">
           <button
             type="button"
